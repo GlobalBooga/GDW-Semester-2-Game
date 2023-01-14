@@ -1,5 +1,8 @@
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 public class PlayerMovement : MonoBehaviour
@@ -8,7 +11,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Movement Values"), Space(5f)]
     [SerializeField] internal float runSpeed = 10f;
-    [SerializeField] internal float maxSpeed = 5f;
     [SerializeField] internal float accelerationDrag = 1f;
     [SerializeField] internal float deccelerationDrag = 5f;
     private float moveSpeed;
@@ -84,19 +86,39 @@ public class PlayerMovement : MonoBehaviour
     private void Move()
     {
         if (!player) return;
-        
-        rb.AddForce(player.input.MoveDirection * moveSpeed * 10f, ForceMode2D.Force);
 
-        if (rb.velocity.magnitude > maxSpeed)
+        Vector2 dir = player.input.MoveDirection;
+
+        Debug.Log(dir);
+
+        // if input is horizontal
+        if (dir.x != 0)
         {
-            rb.velocity = player.input.MoveDirection * maxSpeed;
+            rb.AddForce(Vector2.right * dir.x * moveSpeed * 10f, ForceMode2D.Force);
+        }
+        
+        // if input is W
+        if (dir.y > 0)
+        {
+            TryJump();
+        }
+
+        // speed limiter while on ground
+        if (Mathf.Abs(rb.velocity.x) > moveSpeed && IsGrounded)
+        {
+            rb.velocity = new Vector2(dir.x * moveSpeed, rb.velocity.y);
+        }
+        // speed limiter in air
+        else 
+        {
+            rb.velocity = new Vector2(dir.x * runSpeed, rb.velocity.y);
         }
     }
 
     public void Crouch()
     {
         transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-        rb.AddForce(Vector2.down * 5f, ForceMode2D.Impulse);
+        if (IsGrounded) rb.AddForce(Vector2.down * 80f, ForceMode2D.Impulse);
     }
 
     public void UnCrouch()
@@ -104,13 +126,17 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
     }
 
-    public void Jump()
+    public void TryJump()
+    {
+        if (IsGrounded && canJump) Jump();
+    }
+
+    private void Jump()
     {
         canJump = false;
-
         rb.velocity = new Vector2(rb.velocity.x, 0f);
-        rb.AddForce(Vector2.up * jumpForce * 10f, ForceMode2D.Impulse);
-
+        rb.AddForce(Vector2.up * jumpForce * 10, ForceMode2D.Impulse);
+        Debug.Log("jump");
         Invoke(nameof(ResetJump), jumpCooldown);
     }
 
@@ -145,6 +171,7 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.air;
             moveSpeed = runSpeed * airSpeedMultiplier;
+            rb.drag = 0f;
         }
 
         // Idle

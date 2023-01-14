@@ -43,12 +43,8 @@ public class PlayerInput : MonoBehaviour
     {
 
         // JUMP
-        controls.General.Jump.started += ctx =>
-        {
-            if (player.movement.IsGrounded && player.movement.canJump)
-                player.movement.Jump();
-        };
-
+        controls.General.Jump.started += ctx => player.movement.TryJump();
+       
 
         // CROUCH
         controls.General.Crouch.started += ctx => player.movement.Crouch();

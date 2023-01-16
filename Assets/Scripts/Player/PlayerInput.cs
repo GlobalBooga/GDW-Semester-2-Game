@@ -51,8 +51,6 @@ public class PlayerInput : MonoBehaviour
 
         // UN-CROUCH
         controls.General.Crouch.canceled += ctx => player.movement.UnCrouch();
-       
-            
     }
 
     public void Resume()

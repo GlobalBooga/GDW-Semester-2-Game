@@ -1,8 +1,4 @@
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 public class PlayerMovement : MonoBehaviour
@@ -14,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] internal float accelerationDrag = 1f;
     [SerializeField] internal float deccelerationDrag = 5f;
     private float moveSpeed;
+    private float normalGravity;
 
     [Space(10f)]
 
@@ -34,8 +31,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Slope Movement"), Space(5f)]
     [SerializeField] internal float maxSlopeAngle = 40f;
-    private RaycastHit2D slopeHit;
-    private bool isExitingSlope;
 
 
     [Header("Masks"), Space(5f)]
@@ -45,17 +40,19 @@ public class PlayerMovement : MonoBehaviour
     internal Rigidbody2D rb;
     internal CapsuleCollider2D cc;
 
-    public bool IsGrounded => Physics2D.CircleCast(cc.bounds.min, 0.1f, Vector2.down, 0.2f, whatIsGround);
+    public RaycastHit2D IsGrounded => Physics2D.CircleCast(cc.bounds.min, 0.2f, Vector2.down, 0.4f, whatIsGround);
+
+    private float FloorAngle => Mathf.Abs(Vector2.Angle(IsGrounded.normal, Vector2.up));
 
     public enum MovementState
     {
         running,
         crouching,
-        air
+        falling,
+        idle
     }
 
-    private MovementState state;
-
+    private MovementState currentState;
 
     private void Awake()
     {
@@ -70,35 +67,74 @@ public class PlayerMovement : MonoBehaviour
         canJump = true;
         rb.freezeRotation = true;
         rb.drag = accelerationDrag;
+        normalGravity = rb.gravityScale;
     }
 
     private void Update()
     {
         StateHandler();
+        RotatePlayer();
+        //SlopeBehaviour();
+        
+
+        Debug.DrawLine(transform.position, transform.position + Vector3.Cross(IsGrounded.normal, transform.forward), Color.green, Time.deltaTime);
+
+    }
+
+    private void SlopeBehaviour()
+    {
+        if (IsGrounded)
+        {
+            rb.gravityScale = 0f;
+        }
+        else
+        {
+            rb.gravityScale = normalGravity;
+        }
+
     }
 
     private void FixedUpdate()
     {
-        // move
         Move();
+    }
+
+    public void RotatePlayer()
+    {
+        if (player.input.MoveDirection.x == 1)
+        {
+            transform.rotation = Quaternion.identity;
+        }
+        else if (player.input.MoveDirection.x == -1)
+        {
+            transform.rotation = Quaternion.Euler(0f,180f, 0f);
+        }
     }
 
     private void Move()
     {
         if (!player) return;
 
-        Vector2 dir = player.input.MoveDirection;
+        Vector2 rawDir = player.input.MoveDirection;
+        Vector2 forceDir = rawDir;
 
-        Debug.Log(dir);
+
+        if (FloorAngle > maxSlopeAngle)
+        {
+            return;
+        }
 
         // if input is horizontal
-        if (dir.x != 0)
+        if (rawDir.x != 0)
         {
-            rb.AddForce(Vector2.right * dir.x * moveSpeed * 10f, ForceMode2D.Force);
+            forceDir = Vector3.Cross(IsGrounded.normal, transform.forward);
+
+            rb.AddForce((forceDir * moveSpeed * 10f), ForceMode2D.Force);
+
         }
         
         // if input is W
-        if (dir.y > 0)
+        if (rawDir.y > 0)
         {
             TryJump();
         }
@@ -106,12 +142,12 @@ public class PlayerMovement : MonoBehaviour
         // speed limiter while on ground
         if (Mathf.Abs(rb.velocity.x) > moveSpeed && IsGrounded)
         {
-            rb.velocity = new Vector2(dir.x * moveSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(forceDir.x * moveSpeed, rb.velocity.y);
         }
         // speed limiter in air
         else 
         {
-            rb.velocity = new Vector2(dir.x * runSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(forceDir.x * runSpeed, rb.velocity.y);
         }
     }
 
@@ -145,39 +181,86 @@ public class PlayerMovement : MonoBehaviour
         canJump = true;
     }
 
+
+    private void ChangeMovementState(MovementState state)
+    {
+        //if (state == currentState) return;
+
+        switch (state)
+        {
+            case MovementState.running:
+                RunningState();
+                break;
+            case MovementState.crouching:
+                CrouchingState();
+                break;
+            case MovementState.falling:
+                FallingState();
+                break;
+            case MovementState.idle:
+                IdleState();
+                break;
+            default:
+                break;
+        }
+
+        Debug.Log(state);
+    }
+
+    private void RunningState()
+    {
+        moveSpeed = runSpeed;
+        rb.drag = accelerationDrag;
+    }
+
+    private void CrouchingState()
+    {
+        if (IsGrounded)
+        {
+            moveSpeed = crouchSpeed;
+            rb.drag = accelerationDrag;
+        }
+    }
+
+    private void FallingState()
+    {
+        moveSpeed = runSpeed * airSpeedMultiplier;
+        rb.drag = 0f;
+    }
+
+    private void IdleState()
+    {
+        rb.drag = deccelerationDrag;
+    }
+
     private void StateHandler()
     {
+        MovementState nextState;
+
         // Crouching
         if (player.input.IsCrouching)
         {
-            state = MovementState.crouching;
-            if (IsGrounded)
-            {
-                moveSpeed = crouchSpeed;
-                rb.drag = accelerationDrag;
-            }
+            nextState = MovementState.crouching;
         }
 
         // Running
         else if (IsGrounded && player.input.MoveDirection != Vector2.zero)
         {
-            state = MovementState.running;
-            moveSpeed = runSpeed;
-            rb.drag = accelerationDrag;
+            nextState = MovementState.running;
         }
 
-        // Floating
+        // Falling
         else if (!IsGrounded)
         {
-            state = MovementState.air;
-            moveSpeed = runSpeed * airSpeedMultiplier;
-            rb.drag = 0f;
+            nextState = MovementState.falling;
         }
 
         // Idle
         else
         {
-            rb.drag = deccelerationDrag;
+            nextState = MovementState.idle;
         }
+
+        ChangeMovementState(nextState);
     }
 }

@@ -40,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
     internal Rigidbody2D rb;
     internal CapsuleCollider2D cc;
 
-    public RaycastHit2D IsGrounded => Physics2D.CircleCast(cc.bounds.min, 0.2f, Vector2.down, 0.4f, whatIsGround);
+    public RaycastHit2D IsGrounded => Physics2D.CircleCast(cc.bounds.min, 0.1f, Vector2.down, 0.2f, whatIsGround);
 
     private float FloorAngle => Mathf.Abs(Vector2.Angle(IsGrounded.normal, Vector2.up));
 
@@ -74,23 +74,8 @@ public class PlayerMovement : MonoBehaviour
     {
         StateHandler();
         RotatePlayer();
-        //SlopeBehaviour();
-        
 
         Debug.DrawLine(transform.position, transform.position + Vector3.Cross(IsGrounded.normal, transform.forward), Color.green, Time.deltaTime);
-
-    }
-
-    private void SlopeBehaviour()
-    {
-        if (IsGrounded)
-        {
-            rb.gravityScale = 0f;
-        }
-        else
-        {
-            rb.gravityScale = normalGravity;
-        }
 
     }
 
@@ -118,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 rawDir = player.input.MoveDirection;
         Vector2 forceDir = rawDir;
 
-
+        Debug.Log(FloorAngle);
         if (FloorAngle > maxSlopeAngle)
         {
             return;
@@ -129,11 +114,11 @@ public class PlayerMovement : MonoBehaviour
         {
             forceDir = Vector3.Cross(IsGrounded.normal, transform.forward);
 
-            rb.AddForce((forceDir * moveSpeed * 10f), ForceMode2D.Force);
+            rb.AddForce((Vector2.right * forceDir.x * moveSpeed * 10f), ForceMode2D.Force);
         }
         else
         {
-            rb.AddForce((rawDir * moveSpeed * 10f), ForceMode2D.Force);
+            rb.AddForce((Vector2.right * rawDir.x * moveSpeed * 10f), ForceMode2D.Force);
         }
         
         // if input is W
@@ -237,8 +222,12 @@ public class PlayerMovement : MonoBehaviour
     private void IdleState()
     {
         rb.drag = deccelerationDrag;
-        rb.gravityScale = 0f;
-        rb.AddForce(IsGrounded.normal * -normalGravity, ForceMode2D.Force);
+
+        if (FloorAngle <= maxSlopeAngle)
+        {
+            rb.gravityScale = 0f;
+            rb.AddForce(IsGrounded.normal * -normalGravity, ForceMode2D.Force);
+        }
     }
 
     private void StateHandler()

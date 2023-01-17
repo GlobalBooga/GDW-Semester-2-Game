@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff1a5b2c87a2cb746ae2938d0c954180, type: 3}
+  m_Name: New Melee Enemy
+  m_EditorClassIdentifier: 
+  maxHealth: 0
+  attackDamage: 0
+  attackRate: 0
+  attackRange: 0
+  attackArcAngle: 0
+  reactionTime: 0
+  viewDistance: 0
+  viewArc: 0
+  maxSearchTime: 0
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 0
+  walkSpeed: 0
+  chaseSpeed: 0

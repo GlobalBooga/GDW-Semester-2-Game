@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerMovement), typeof(PlayerInput))]
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     public static List<Action> onPlayerRespawn = new List<Action>();
 
@@ -56,5 +56,10 @@ public class Player : MonoBehaviour
 
         originalPos = transform.position;
         originalRot = transform.rotation;
+    }
+
+    public void TakeDamage(float amount)
+    {
+
     }
 }

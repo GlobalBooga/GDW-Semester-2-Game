@@ -49,6 +49,7 @@ public class PlayerInput : MonoBehaviour
         // CROUCH
         controls.General.Crouch.started += ctx => player.movement.Crouch();
 
+
         // UN-CROUCH
         controls.General.Crouch.canceled += ctx => player.movement.UnCrouch();
     }

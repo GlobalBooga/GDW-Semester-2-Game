@@ -125,12 +125,15 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // if input is horizontal
-        if (rawDir.x != 0)
+        if (rawDir.x != 0 && IsGrounded)
         {
             forceDir = Vector3.Cross(IsGrounded.normal, transform.forward);
 
             rb.AddForce((forceDir * moveSpeed * 10f), ForceMode2D.Force);
-
+        }
+        else
+        {
+            rb.AddForce((rawDir * moveSpeed * 10f), ForceMode2D.Force);
         }
         
         // if input is W
@@ -211,6 +214,7 @@ public class PlayerMovement : MonoBehaviour
     {
         moveSpeed = runSpeed;
         rb.drag = accelerationDrag;
+        rb.gravityScale = normalGravity;
     }
 
     private void CrouchingState()
@@ -219,6 +223,7 @@ public class PlayerMovement : MonoBehaviour
         {
             moveSpeed = crouchSpeed;
             rb.drag = accelerationDrag;
+            rb.gravityScale = normalGravity;
         }
     }
 
@@ -226,11 +231,14 @@ public class PlayerMovement : MonoBehaviour
     {
         moveSpeed = runSpeed * airSpeedMultiplier;
         rb.drag = 0f;
+        rb.gravityScale = normalGravity;
     }
 
     private void IdleState()
     {
         rb.drag = deccelerationDrag;
+        rb.gravityScale = 0f;
+        rb.AddForce(IsGrounded.normal * -normalGravity, ForceMode2D.Force);
     }
 
     private void StateHandler()

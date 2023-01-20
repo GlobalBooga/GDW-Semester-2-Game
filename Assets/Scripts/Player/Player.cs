@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,7 +20,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float accelerationDrag = 1f;
     [SerializeField] private float deccelerationDrag = 5f;
     [SerializeField] private const float gravityScale = 18f;
+    [SerializeField] private float jumpGracePeriod = 0.2f;
     private float moveSpeed;
+    private bool wasGrounded;
 
     [Space(10f)]
 
@@ -78,13 +79,9 @@ public class Player : MonoBehaviour
 
 
     public RaycastHit2D IsGrounded => Physics2D.CircleCast(cc.bounds.min, 0.1f, Vector2.down, 0.2f, whatIsGround);
-
     private float FloorAngle => Mathf.Abs(Vector2.Angle(IsGrounded.normal, Vector2.up));
-
     public Vector2 MoveDirection => controls.General.Move.ReadValue<Vector2>();
-
     public bool IsCrouching => controls.General.Crouch.IsPressed();
-
     public bool IsJumping => controls.General.Jump.IsPressed();
 
 
@@ -112,6 +109,7 @@ public class Player : MonoBehaviour
         cc = gameObject.GetComponent<CapsuleCollider2D>();
         hpcomp = gameObject.GetComponent<HPComponent>();
         hpcomp.OnHPZero = OnDead;
+        hpcomp.OnHit.Add(OnHit);
 
         SetupInputEvents();
     }
@@ -139,6 +137,11 @@ public class Player : MonoBehaviour
 
         // UN-CROUCH
         controls.General.Crouch.canceled += ctx => UnCrouch();
+
+        controls.General.Attack.started += ctx =>
+        {
+            //GameObject.Find("Enemy").transform.Rotate(0f, 180f, 0f);
+        };
     }
 
     private void OnDead()
@@ -151,6 +154,7 @@ public class Player : MonoBehaviour
     {
         StateHandler();
         RotatePlayer();
+        CheckJumping();
 
         Debug.DrawLine(transform.position, transform.position + Vector3.Cross(IsGrounded.normal, transform.forward), Color.green, Time.deltaTime);
 
@@ -163,16 +167,27 @@ public class Player : MonoBehaviour
         {
             LandEffect();
         }
+
+        //if (IsGrounded) wasGrounded = true;
+        //if (rb.velocity.y < 0f) Invoke(nameof(EndJumpGracePeriod), jumpGracePeriod);
     }
 
 
     #region Movement
 
+    private void CheckJumping()
+    {
+        if (IsJumping)
+        {
+            TryJump();
+        }
+    }
+
     private void LandEffect()
     {
         landeffect = false;
         Transform obj = Instantiate(particles).transform;
-        obj.position = cc.bounds.min;
+        obj.position = cc.bounds.min + Vector3.up * 0.1f;
 
         ParticleSystem pf;
     }
@@ -194,8 +209,17 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void EndJumpGracePeriod()
+    { 
+        //wasGrounded = false;
+    }
+
     private void Move()
     {
+        bool isGrounded = IsGrounded;
+        //if (isGrounded) wasGrounded = true;
+        //if (rb.velocity.y < 0f) Invoke(nameof(EndJumpGracePeriod), jumpGracePeriod);
+
         Vector2 rawDir = MoveDirection;
         Vector2 forceDir = rawDir;
 
@@ -205,8 +229,9 @@ public class Player : MonoBehaviour
             return;
         }
 
+
         // if input is horizontal
-        if (rawDir.x != 0 && IsGrounded)
+        if (rawDir.x != 0 && isGrounded)
         {
             forceDir = Vector3.Cross(IsGrounded.normal, transform.forward);
 
@@ -224,7 +249,7 @@ public class Player : MonoBehaviour
         }
 
         // speed limiter while on ground
-        if (Mathf.Abs(rb.velocity.x) > moveSpeed && IsGrounded)
+        if (Mathf.Abs(rb.velocity.x) > moveSpeed && isGrounded)
         {
             rb.velocity = new Vector2(forceDir.x * moveSpeed, rb.velocity.y);
         }
@@ -248,11 +273,12 @@ public class Player : MonoBehaviour
 
     public void TryJump()
     {
-        if (IsGrounded && canJump) Jump();
+        if ((IsGrounded || wasGrounded) && canJump) Jump();
     }
 
     private void Jump()
     {
+        //wasGrounded = false;
         canJump = false;
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce * 10, ForceMode2D.Impulse);
@@ -354,6 +380,11 @@ public class Player : MonoBehaviour
         }
 
         ChangeMovementState(nextState);
+    }
+
+    private void OnHit()
+    {
+        Debug.Log("ouch");
     }
 
     #endregion

@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(Player))]
-public class PlayerEditor : Editor
+public class EnemyEditor : Editor
 {
     public enum ShowData
     {

@@ -6,16 +6,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Enemies/Dummy", fileName ="New Dummy")]
 public class EnemyScriptableObject : ScriptableObject
 {
-    [Header("Health"), Space(5f)]
-    public float maxHealth;
-    float health;
-    [Space(10f)]
-
-    [Header("Attack"), Space(5f)]
+    [Header("Aggressive Behaviour"), Space(5f)]
     public float attackDamage;
-    public float attackRate;
+    public float attackCooldown;
+    public float attackDelay;
     public float attackRange;
     public float attackArcAngle;
+    private bool attackReady;
     [Space(10f)]
 
     [Header("Detection"), Space(5f)]
@@ -23,12 +20,17 @@ public class EnemyScriptableObject : ScriptableObject
     public float viewDistance;
     public float viewArc;
     public float maxSearchTime;
-    public LayerMask whatIsPlayer;
+    [Space(10f)]
 
+    [Header("Search"), Space(5f)]
+    public float maxWaitTime = 1f;
+    public float minWaitTime = 3f;
+    [Space(10f)]
 
-
-    public virtual void TakeDamage(float amount)
-    {
-        health = Mathf.Clamp(health - amount, 0f, maxHealth);
-    }
+    [Header("Movement"), Space(5f)]
+    public float moveSpeed = 1f;
+    public float walkSpeed = 1f;
+    public float chaseSpeed;
+    public float accelerationDrag = 1f;
+    public float deccelerationDrag = 5f;
 }

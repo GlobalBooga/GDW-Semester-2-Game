@@ -25,14 +25,16 @@ public class HPComponent : MonoBehaviour
     {
         if (isInvincible) return;
 
+        // DEAD
         if ((health -= amount) <= 0f)
         {
-            gameObject.SetActive(false);
+            OnHPZero.Invoke();
+
         }
         UpdateHud();
 
 
-        // calling all onhits
+        // CALLING ONHIT
         if (OnHit.Count > 0f)
         {
             foreach (var item in OnHit)
@@ -69,14 +71,13 @@ public class HPComponent : MonoBehaviour
     }
 
 
-    public void SetHP(float hpPercentage)
+    public void SetHPBar(float hpPercentage)
     {
         hpBar.fillAmount = hpPercentage;
 
         // Dead
         if (hpPercentage <= 0f && OnHPZero != null)
         {
-            OnHPZero.Invoke();
         }
 
         /*// healthy hp color

@@ -20,7 +20,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float accelerationDrag = 1f;
     [SerializeField] private float deccelerationDrag = 5f;
     [SerializeField] private const float gravityScale = 18f;
-    [SerializeField] private float jumpGracePeriod = 0.2f;
     private float moveSpeed;
     private bool wasGrounded;
 
@@ -30,7 +29,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float airSpeedMultiplier = 0.5f;
     [SerializeField] private float jumpCooldown = 0.25f;
-    public bool canJump { get; private set; }
+    [SerializeField] private int jumpGracePeriod = 3; // In frames!
+    private bool canJump;
+    private int frameCount;
 
     [Space(10f)]
 
@@ -43,6 +44,7 @@ public class Player : MonoBehaviour
 
     [Header("Slope Movement"), Space(5f)]
     [SerializeField] private float maxSlopeAngle = 40f;
+    private Vector2 forceDir;
 
     [Space(10f)]
 
@@ -57,33 +59,34 @@ public class Player : MonoBehaviour
     public ParticleSystem particles;
     private PlayerControls controls;
 
-
-
     public enum MovementState
     {
         running,
         crouching,
         falling,
-        idle
+        idle,
+        knockback
     }
 
     private MovementState currentState;
 
-
     private bool landeffect;
 
-
-    internal Quaternion originalRot;
-    internal Vector3 originalPos;
-    internal Vector3 mousePos;
+    private Quaternion originalRot;
+    private Vector3 originalPos;
 
 
-    public RaycastHit2D IsGrounded => Physics2D.CircleCast(cc.bounds.min, 0.1f, Vector2.down, 0.2f, whatIsGround);
-    private float FloorAngle => Mathf.Abs(Vector2.Angle(IsGrounded.normal, Vector2.up));
+    // HELPFUL ONE LINER FUNCTIONS
+    private bool IsMoving => MoveDirection.x != 0;
     public Vector2 MoveDirection => controls.General.Move.ReadValue<Vector2>();
     public bool IsCrouching => controls.General.Crouch.IsPressed();
     public bool IsJumping => controls.General.Jump.IsPressed();
+    private float FloorAngle => Mathf.Abs(Vector2.Angle(GetGround.normal, Vector2.up));
+    private RaycastHit2D GetGround => Physics2D.Raycast(cc.bounds.min, Vector2.down, 0.2f, whatIsGround);
+    private bool isGrounded;
 
+
+    #region Unity Messages
 
     private void OnEnable()
     {
@@ -125,53 +128,26 @@ public class Player : MonoBehaviour
         rb.gravityScale = gravityScale;
     }
 
-    private void SetupInputEvents()
-    {
-        // JUMP
-        controls.General.Jump.started += ctx => TryJump();
-
-
-        // CROUCH
-        controls.General.Crouch.started += ctx => Crouch();
-
-
-        // UN-CROUCH
-        controls.General.Crouch.canceled += ctx => UnCrouch();
-
-        controls.General.Attack.started += ctx =>
-        {
-            //GameObject.Find("Enemy").transform.Rotate(0f, 180f, 0f);
-        };
-    }
-
-    private void OnDead()
-    {
-        Debug.Log("you died");
-    }
-
-
     private void Update()
     {
+        isGrounded = GetGround;
+
         StateHandler();
         RotatePlayer();
         CheckJumping();
+        JumpHelper();
+        HandleLandEffect();
 
-        Debug.DrawLine(transform.position, transform.position + Vector3.Cross(IsGrounded.normal, transform.forward), Color.green, Time.deltaTime);
-
-        if (!IsGrounded && particles && rb.velocity.y < -30f)
-        {
-            landeffect = true;
-        }
-
-        if (landeffect && IsGrounded)
-        {
-            LandEffect();
-        }
-
-        //if (IsGrounded) wasGrounded = true;
-        //if (rb.velocity.y < 0f) Invoke(nameof(EndJumpGracePeriod), jumpGracePeriod);
+        Debug.DrawLine(transform.position, transform.position + Vector3.Cross(GetGround.normal, transform.forward), Color.green, Time.deltaTime);
     }
 
+    private void FixedUpdate()
+    {
+        Move();
+        SpeedController();
+    }
+
+    #endregion
 
     #region Movement
 
@@ -183,19 +159,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void LandEffect()
-    {
-        landeffect = false;
-        Transform obj = Instantiate(particles).transform;
-        obj.position = cc.bounds.min + Vector3.up * 0.1f;
-
-        ParticleSystem pf;
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
-    }
 
     public void RotatePlayer()
     {
@@ -209,31 +172,20 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void EndJumpGracePeriod()
-    { 
-        //wasGrounded = false;
-    }
-
     private void Move()
     {
-        bool isGrounded = IsGrounded;
-        //if (isGrounded) wasGrounded = true;
-        //if (rb.velocity.y < 0f) Invoke(nameof(EndJumpGracePeriod), jumpGracePeriod);
-
         Vector2 rawDir = MoveDirection;
-        Vector2 forceDir = rawDir;
 
-        Debug.Log(FloorAngle);
+        //Debug.Log(FloorAngle);
         if (FloorAngle > maxSlopeAngle)
         {
             return;
         }
 
-
         // if input is horizontal
         if (rawDir.x != 0 && isGrounded)
         {
-            forceDir = Vector3.Cross(IsGrounded.normal, transform.forward);
+            forceDir = Vector3.Cross(GetGround.normal, transform.forward);
 
             rb.AddForce((Vector2.right * forceDir.x * moveSpeed * 10f), ForceMode2D.Force);
         }
@@ -247,23 +199,30 @@ public class Player : MonoBehaviour
         {
             TryJump();
         }
+    }
+
+    private void SpeedController()
+    {
+        bool isTooFast = Mathf.Abs(rb.velocity.x) > moveSpeed;
 
         // speed limiter while on ground
-        if (Mathf.Abs(rb.velocity.x) > moveSpeed && isGrounded)
+        if (isTooFast && isGrounded && IsMoving)
         {
             rb.velocity = new Vector2(forceDir.x * moveSpeed, rb.velocity.y);
         }
         // speed limiter in air
-        else
+        else if (isTooFast && !isGrounded)
         {
             rb.velocity = new Vector2(forceDir.x * runSpeed, rb.velocity.y);
         }
+        
+        
     }
 
     public void Crouch()
     {
         transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-        if (IsGrounded) rb.AddForce(Vector2.down * 80f, ForceMode2D.Impulse);
+        if (isGrounded) rb.AddForce(Vector2.down * 10f, ForceMode2D.Impulse);
     }
 
     public void UnCrouch()
@@ -273,17 +232,33 @@ public class Player : MonoBehaviour
 
     public void TryJump()
     {
-        if ((IsGrounded || wasGrounded) && canJump) Jump();
+        if ((isGrounded || wasGrounded) && canJump) Jump();
     }
 
     private void Jump()
     {
-        //wasGrounded = false;
+        wasGrounded = false;
         canJump = false;
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce * 10, ForceMode2D.Impulse);
-        Debug.Log("jump");
         Invoke(nameof(ResetJump), jumpCooldown);
+    }
+
+    private void JumpHelper()
+    {
+        if (isGrounded && !wasGrounded)
+        {
+            wasGrounded = true;
+            frameCount = 0;
+        }
+        if (!isGrounded && wasGrounded)
+        {
+            if (++frameCount == jumpGracePeriod)
+            {
+                frameCount = 0;
+                wasGrounded = false;
+            }
+        }
     }
 
     private void ResetJump()
@@ -325,7 +300,7 @@ public class Player : MonoBehaviour
 
     private void CrouchingState()
     {
-        if (IsGrounded)
+        if (isGrounded)
         {
             moveSpeed = crouchSpeed;
             rb.drag = accelerationDrag;
@@ -347,8 +322,12 @@ public class Player : MonoBehaviour
         if (FloorAngle <= maxSlopeAngle)
         {
             rb.gravityScale = 0f;
-            rb.AddForce(IsGrounded.normal * -gravityScale, ForceMode2D.Force);
+            rb.AddForce(GetGround.normal * -gravityScale, ForceMode2D.Force);
         }
+
+        rb.velocity = new Vector2(0f, rb.velocity.y);
+        Debug.Log("new");
+
     }
 
     private void StateHandler()
@@ -362,13 +341,13 @@ public class Player : MonoBehaviour
         }
 
         // Running
-        else if (IsGrounded && MoveDirection != Vector2.zero)
+        else if (isGrounded && MoveDirection != Vector2.zero)
         {
             nextState = MovementState.running;
         }
 
         // Falling
-        else if (!IsGrounded)
+        else if (!isGrounded)
         {
             nextState = MovementState.falling;
         }
@@ -382,10 +361,60 @@ public class Player : MonoBehaviour
         ChangeMovementState(nextState);
     }
 
-    private void OnHit()
+
+    #endregion
+
+    #region Effects
+    private void LandEffect()
     {
-        Debug.Log("ouch");
+        landeffect = false;
+        Transform obj = Instantiate(particles).transform;
+        obj.position = cc.bounds.min + Vector3.up * 0.1f;
+    }
+
+    private void HandleLandEffect()
+    {
+        if (!isGrounded && particles && rb.velocity.y < -30f)
+        {
+            landeffect = true;
+        }
+
+        if (landeffect && isGrounded)
+        {
+            LandEffect();
+        }
     }
 
     #endregion
+
+
+    private void SetupInputEvents()
+    {
+        // JUMP
+        controls.General.Jump.started += ctx => TryJump();
+
+
+        // CROUCH
+        controls.General.Crouch.started += ctx => Crouch();
+
+
+        // UN-CROUCH
+        controls.General.Crouch.canceled += ctx => UnCrouch();
+
+        controls.General.Attack.started += ctx =>
+        {
+            //GameObject.Find("Enemy").transform.Rotate(0f, 180f, 0f);
+        };
+    }
+
+    private void OnDead()
+    {
+        Debug.Log("you died");
+    }
+
+    private void OnHit()
+    {
+        ChangeMovementState(MovementState.knockback);
+        Debug.Log("ouch");
+    }
 }

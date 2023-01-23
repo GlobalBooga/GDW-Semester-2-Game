@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
@@ -10,16 +11,21 @@ public class Enemy : MonoBehaviour
     public float damageApplyDelay;
     public float damageableTimeWindow;
     public float attackRange;
+    public Vector2 knockBackForce;
     //public float attackArcAngle;
     private bool attackReady;
     private bool hit;
+    private bool isAttacking;
     [Space(10f)]
 
     [Header("Detection"), Space(5f)]
     public float reactionTime;
     public float viewDistance;
     //public float viewArc;
+    public float minSearchTime;
     public float maxSearchTime;
+    private bool discoveredPlayer;
+    private bool isChasingPlayer;
     [Space(10f)]
 
     [Header("Search"), Space(5f)]
@@ -28,15 +34,17 @@ public class Enemy : MonoBehaviour
     [Space(10f)]
 
     [Header("Movement"), Space(5f)]
-    public float moveSpeed = 1f;
-    public float walkSpeed = 1f;
-    public float chaseSpeed;
+    public float walkSpeed = 3f;
+    public float chaseSpeed = 8f;
+    private float moveSpeed;
     public float accelerationDrag = 1f;
     public float deccelerationDrag = 5f;
+    private bool isOnEdge;
     [Space(10f)]
 
     [Header("Masks"), Space(5f)]
     public LayerMask pathTriggerLayer;
+    private const int pathTriggerLayerValue = 7;
     public LayerMask whatIsPlayer;
     [Space(10f)]
 
@@ -54,6 +62,7 @@ public class Enemy : MonoBehaviour
 
     private bool pauseMovement;
 
+    #region Unity Messages
 
     private void Awake()
     {
@@ -67,22 +76,18 @@ public class Enemy : MonoBehaviour
         rb.drag = accelerationDrag;
         rb.freezeRotation = true;
         attackReady = true;
+        moveSpeed = walkSpeed;
     }
 
     private void Update()
     {
-        if (CanSeePlayer())
-        {
-            if (CanChasePlayer())
-            ChasePlayer();
-        }
-
-        if (CanAttack)
-        {
-            PauseMovement();
-            Invoke(nameof(Attack), attackDelay);
-        }
-
+        PlayerDetectionHandler();
+        AttackHandler();
+    }
+    
+    private void FixedUpdate()
+    {
+        MovementHandler();   
     }
 
     private void OnValidate()
@@ -93,19 +98,31 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    #endregion
 
     #region Movement
 
-    private void FixedUpdate()
+    private void MovementHandler()
     {
+        if (pauseMovement && discoveredPlayer && !isOnEdge)
+        {
+            Debug.Log("yes");
+            ResumeMovement();
+        }
+
+
         if (!pauseMovement) Move();
     }
 
-    void Move()
+    private void Move()
     {
+        if (discoveredPlayer && !IsFacingPlayer) Rotate();
 
+        
         rb.AddForce(transform.right * moveSpeed * 10f, ForceMode2D.Force);
 
+
+        // SPEED CONTROL
         if (Mathf.Abs(rb.velocity.x) > moveSpeed)
         {
             rb.velocity = new Vector2(transform.right.x * moveSpeed, rb.velocity.y);
@@ -116,6 +133,7 @@ public class Enemy : MonoBehaviour
     {
         if (cc.IsTouchingLayers(pathTriggerLayer))
         {
+            isOnEdge = true;
             PauseMovement();
             Invoke(nameof(RotateAndResumeWalking), Random.Range(minWaitTime, maxWaitTime));
         }
@@ -127,6 +145,14 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        
+        if (collision.gameObject.layer == pathTriggerLayerValue)
+        {
+            isOnEdge = false;
+        }
+    }
 
     private void PauseMovement()
     {
@@ -146,6 +172,7 @@ public class Enemy : MonoBehaviour
         rb.drag = accelerationDrag;
     }
 
+
     void Rotate() => transform.Rotate(0f, 180f, 0f);
 
 
@@ -157,11 +184,23 @@ public class Enemy : MonoBehaviour
     private bool IsFacingPlayer => ((transform.position - playerLoc.position) * transform.right.x).x < 0;
     private bool IsPlayerVisible => Physics2D.Raycast(transform.position, playerLoc.position - transform.position, viewDistance, whatIsPlayer);
 
-    private bool CanChasePlayer()
-    {
-        return false;
-    }
 
+    private void PlayerDetectionHandler()
+    {
+        if (CanSeePlayer() && !isChasingPlayer)
+        {
+            Debug.Log("update chase");
+            isChasingPlayer = true;
+            discoveredPlayer = true;
+            ChasePlayer();
+        }
+        else if (!CanSeePlayer() && isChasingPlayer)
+        {
+            Debug.Log("update endingchase");
+            isChasingPlayer = false;
+            Invoke(nameof(EndChase), Random.Range(minSearchTime, maxSearchTime));
+        }
+    }
 
     private bool CanSeePlayer()
     {
@@ -179,7 +218,16 @@ public class Enemy : MonoBehaviour
 
     private void ChasePlayer()
     {
+        moveSpeed = chaseSpeed;
+    }
 
+    private void EndChase()
+    {
+        if (CanSeePlayer()) return;
+
+        Debug.Log("EndChase");
+        discoveredPlayer = false;
+        moveSpeed = walkSpeed;
     }
 
 
@@ -187,8 +235,20 @@ public class Enemy : MonoBehaviour
 
     #region Aggressive Behaviour
 
-    private bool CanAttack => CanSeePlayer() && Vector3.Distance(playerLoc.position, transform.position) <= attackRange && attackReady;
+    private bool CanAttack => CanSeePlayer() && Vector3.Distance(playerLoc.position, transform.position) <= attackRange;
     private void ResetAttack() => attackReady = true;
+
+    private void AttackHandler()
+    {
+        if (CanAttack && attackReady && !isAttacking)
+        {
+            Debug.Log("update attack");
+            isAttacking = true;
+            PauseMovement();
+            Invoke(nameof(Attack), attackDelay);
+        }
+    }
+
 
     private void Attack()
     {
@@ -199,7 +259,7 @@ public class Enemy : MonoBehaviour
 
         Invoke(nameof(EnableDamageZone), damageApplyDelay);
         Invoke(nameof(ResetAttack), attackCooldown);
-        Invoke(nameof(ResumeMovement), damageApplyDelay + damageableTimeWindow + 0.2f);
+        if (!CanAttack) Invoke(nameof(ResumeMovement), damageApplyDelay + damageableTimeWindow + 0.2f);
     }
 
     private void EnableDamageZone()
@@ -211,6 +271,7 @@ public class Enemy : MonoBehaviour
     private void EndAttack()
     {
         attackArea.enabled = false;
+        isAttacking = false;
     }
 
     private void ApplyDamage(GameObject other)
@@ -219,10 +280,15 @@ public class Enemy : MonoBehaviour
         if (other.TryGetComponent<HPComponent>(out hp))
         {
             hp.Reduce(attackDamage);
+            if (!hp.isInvincible) ApplyKnockback(other.GetComponent<Rigidbody2D>());
         }
-
-        other.GetComponent<Rigidbody2D>().AddForce((transform.right * 300f) + (Vector3.up * 50f), ForceMode2D.Impulse);
     }
+
+    private void ApplyKnockback(Rigidbody2D body)
+    {
+        if (body) body.AddForce(knockBackForce, ForceMode2D.Impulse);
+    }
+    
 
     #endregion
 

@@ -982,7 +982,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 599216180}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -22.36, y: 0.88, z: 0}
+  m_LocalPosition: {x: 3.45, y: -11.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1007,10 +1007,10 @@ MonoBehaviour:
   runSpeed: 15
   accelerationDrag: 1
   deccelerationDrag: 5
-  jumpGracePeriod: 0.2
-  jumpForce: 5
+  jumpForce: 4
   airSpeedMultiplier: 0.5
   jumpCooldown: 0.25
+  jumpGracePeriod: 3
   crouchSpeed: 3
   crouchYScale: 0.5
   maxSlopeAngle: 40
@@ -1035,7 +1035,7 @@ MonoBehaviour:
   fullHpColor: {r: 0, g: 0, b: 0, a: 0}
   midHpColor: {r: 0, g: 0, b: 0, a: 0}
   lowHpColor: {r: 0, g: 0, b: 0, a: 0}
-  isInvincible: 1
+  isInvincible: 0
   maxHealth: 0
 --- !u!70 &599216190
 CapsuleCollider2D:
@@ -1073,7 +1073,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -2974,14 +2974,15 @@ MonoBehaviour:
   damageApplyDelay: 0.3
   damageableTimeWindow: 0.2
   attackRange: 2
+  knockBackForce: {x: 10, y: 10}
   reactionTime: 0
-  viewDistance: 5
-  maxSearchTime: 0
+  viewDistance: 10
+  minSearchTime: 3
+  maxSearchTime: 8
   maxWaitTime: 1
   minWaitTime: 3
-  moveSpeed: 3
-  walkSpeed: 1
-  chaseSpeed: 0
+  walkSpeed: 3
+  chaseSpeed: 5
   accelerationDrag: 1
   deccelerationDrag: 10
   pathTriggerLayer:
@@ -4792,7 +4793,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1248148480}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.42, y: -9.85, z: 0}
+  m_LocalPosition: {x: 19.51, y: -3.55, z: 0}
   m_LocalScale: {x: 13.486161, y: 1.0006706, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

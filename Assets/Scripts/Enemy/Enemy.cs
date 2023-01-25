@@ -1,5 +1,5 @@
-using Newtonsoft.Json.Bson;
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 public class Enemy : MonoBehaviour
@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
     public float maxSearchTime;
     private bool discoveredPlayer;
     private bool isChasingPlayer;
+    //private bool canReachPlayer;
     [Space(10f)]
 
     [Header("Search"), Space(5f)]
@@ -37,15 +38,18 @@ public class Enemy : MonoBehaviour
     public float walkSpeed = 3f;
     public float chaseSpeed = 8f;
     private float moveSpeed;
+    public float moveForce = 15f;
     public float accelerationDrag = 1f;
     public float deccelerationDrag = 5f;
     private bool isOnEdge;
+    private bool isOnSameGroundAsPlayer = true;
     [Space(10f)]
 
     [Header("Masks"), Space(5f)]
     public LayerMask pathTriggerLayer;
     private const int pathTriggerLayerValue = 7;
     public LayerMask whatIsPlayer;
+    public LayerMask whatIsGround;
     [Space(10f)]
 
     [Header("Preset"), Space(5f)]
@@ -104,10 +108,23 @@ public class Enemy : MonoBehaviour
 
     private void MovementHandler()
     {
-        if (pauseMovement && discoveredPlayer && !isOnEdge)
+        if (isChasingPlayer && Vector3.Distance(transform.position, playerLoc.position) < 2f)
         {
-            Debug.Log("yes");
+            PauseMovement();
+        }
+        else if (pauseMovement && discoveredPlayer && !isOnEdge)
+        {
             ResumeMovement();
+        }
+
+        if (discoveredPlayer && !IsFacingPlayer)
+        {
+            /*if (IsPlayerVisible)*/ Rotate();
+        }
+
+        if (!isOnSameGroundAsPlayer)
+        {
+            PauseMovement();
         }
 
 
@@ -116,11 +133,7 @@ public class Enemy : MonoBehaviour
 
     private void Move()
     {
-        if (discoveredPlayer && !IsFacingPlayer) Rotate();
-
-        
-        rb.AddForce(transform.right * moveSpeed * 10f, ForceMode2D.Force);
-
+        rb.AddForce(transform.right * moveForce * 10f, ForceMode2D.Force);
 
         // SPEED CONTROL
         if (Mathf.Abs(rb.velocity.x) > moveSpeed)
@@ -131,9 +144,12 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (isChasingPlayer) return;
+
         if (cc.IsTouchingLayers(pathTriggerLayer))
         {
             isOnEdge = true;
+
             PauseMovement();
             Invoke(nameof(RotateAndResumeWalking), Random.Range(minWaitTime, maxWaitTime));
         }
@@ -145,9 +161,16 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (cc.IsTouchingLayers(pathTriggerLayer))
+        {
+            ReactToEdge();
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
-        
         if (collision.gameObject.layer == pathTriggerLayerValue)
         {
             isOnEdge = false;
@@ -189,17 +212,16 @@ public class Enemy : MonoBehaviour
     {
         if (CanSeePlayer() && !isChasingPlayer)
         {
-            Debug.Log("update chase");
             isChasingPlayer = true;
             discoveredPlayer = true;
             ChasePlayer();
         }
         else if (!CanSeePlayer() && isChasingPlayer)
         {
-            Debug.Log("update endingchase");
             isChasingPlayer = false;
             Invoke(nameof(EndChase), Random.Range(minSearchTime, maxSearchTime));
         }
+       
     }
 
     private bool CanSeePlayer()
@@ -209,6 +231,7 @@ public class Enemy : MonoBehaviour
             // avoid raycasts when possible
             if (IsPlayerVisible)
             {
+                Debug.Log("can see");
                 return true;
             }
         }
@@ -225,11 +248,19 @@ public class Enemy : MonoBehaviour
     {
         if (CanSeePlayer()) return;
 
-        Debug.Log("EndChase");
         discoveredPlayer = false;
         moveSpeed = walkSpeed;
     }
 
+    private void ReactToEdge()
+    {
+        Vector2 dir = new(transform.right.x * 1f, -1f);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir.normalized, 1.5f, whatIsGround);
+        if (hit) isOnSameGroundAsPlayer = true;
+        else isOnSameGroundAsPlayer = false;
+
+        Debug.DrawLine(transform.position, (Vector2)transform.position + dir.normalized * 1.5f, Color.red, 1f);
+    }
 
     #endregion
 
@@ -242,7 +273,6 @@ public class Enemy : MonoBehaviour
     {
         if (CanAttack && attackReady && !isAttacking)
         {
-            Debug.Log("update attack");
             isAttacking = true;
             PauseMovement();
             Invoke(nameof(Attack), attackDelay);

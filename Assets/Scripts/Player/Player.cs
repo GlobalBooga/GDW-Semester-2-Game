@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     
     [Header("Movement Values"), Space(5f)]
     [SerializeField] private float runSpeed = 10f;
+    [SerializeField] private float moveForce = 15f;
     [SerializeField] private float accelerationDrag = 1f;
     [SerializeField] private float deccelerationDrag = 5f;
     [SerializeField] private const float gravityScale = 18f;
@@ -39,12 +40,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float crouchSpeed = 3f;
     [SerializeField] private float crouchYScale = 0.5f;
     private float normalYScale;
-
-    [Space(10f)]
-
-    [Header("Slope Movement"), Space(5f)]
-    [SerializeField] private float maxSlopeAngle = 40f;
-    private Vector2 forceDir;
 
     [Space(10f)]
 
@@ -74,14 +69,14 @@ public class Player : MonoBehaviour
 
     private Quaternion originalRot;
     private Vector3 originalPos;
+    private Vector2 lastDirection;
 
 
     // HELPFUL ONE LINER FUNCTIONS
     private bool IsMoving => MoveDirection.x != 0;
     public Vector2 MoveDirection => controls.General.Move.ReadValue<Vector2>();
     public bool IsCrouching => controls.General.Crouch.IsPressed();
-    public bool IsJumping => controls.General.Jump.IsPressed();
-    private float FloorAngle => Mathf.Abs(Vector2.Angle(GetGround.normal, Vector2.up));
+    public bool IsJumping => controls.General.Jump.IsPressed() || MoveDirection.y > 0;
     private RaycastHit2D GetGround => Physics2D.Raycast(cc.bounds.min, Vector2.down, 0.2f, whatIsGround);
     private bool isGrounded;
 
@@ -137,8 +132,6 @@ public class Player : MonoBehaviour
         CheckJumping();
         JumpHelper();
         HandleLandEffect();
-
-        Debug.DrawLine(transform.position, transform.position + Vector3.Cross(GetGround.normal, transform.forward), Color.green, Time.deltaTime);
     }
 
     private void FixedUpdate()
@@ -146,6 +139,8 @@ public class Player : MonoBehaviour
         Move();
         SpeedController();
     }
+
+    
 
     #endregion
 
@@ -174,50 +169,35 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        Vector2 rawDir = MoveDirection;
-
-        //Debug.Log(FloorAngle);
-        if (FloorAngle > maxSlopeAngle)
+        if (isGrounded && !IsSignEqual(rb.velocity.x, MoveDirection.x) && IsJumping && rb.velocity.x != 0f)
         {
-            return;
+            Debug.Log("this");
+            rb.velocity = new Vector2(0f, 0f);
         }
 
         // if input is horizontal
-        if (rawDir.x != 0 && isGrounded)
+        if (isGrounded)
         {
-            forceDir = Vector3.Cross(GetGround.normal, transform.forward);
-
-            rb.AddForce((Vector2.right * forceDir.x * moveSpeed * 10f), ForceMode2D.Force);
+            rb.AddForce(Vector2.right * MoveDirection.x * moveForce * 10f, ForceMode2D.Force);
         }
         else
         {
-            rb.AddForce((Vector2.right * rawDir.x * moveSpeed * 10f), ForceMode2D.Force);
-        }
-
-        // if input is W
-        if (rawDir.y > 0)
-        {
-            TryJump();
+            rb.AddForce(Vector2.right * MoveDirection.x * moveForce * 10f * airSpeedMultiplier, ForceMode2D.Force);
         }
     }
 
     private void SpeedController()
     {
-        bool isTooFast = Mathf.Abs(rb.velocity.x) > moveSpeed;
+        bool isTooFast = Mathf.Abs(rb.velocity.x) > moveSpeed && IsSignEqual(MoveDirection.x, rb.velocity.x);
 
-        // speed limiter while on ground
-        if (isTooFast && isGrounded && IsMoving)
-        {
-            rb.velocity = new Vector2(forceDir.x * moveSpeed, rb.velocity.y);
-        }
-        // speed limiter in air
-        else if (isTooFast && !isGrounded)
-        {
-            rb.velocity = new Vector2(forceDir.x * runSpeed, rb.velocity.y);
-        }
         
-        
+        if (isTooFast && IsMoving)
+        {
+            rb.velocity = new Vector2(MoveDirection.x * moveSpeed, rb.velocity.y);
+        }
     }
+
+    private bool IsSignEqual(float first, float second) => (float.IsNegative(first) && float.IsNegative(second)) || (!float.IsNegative(first) && !float.IsNegative(second));
 
     public void Crouch()
     {
@@ -288,7 +268,7 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        Debug.Log(state);
+        //Debug.Log(state);
     }
 
     private void RunningState()
@@ -310,7 +290,7 @@ public class Player : MonoBehaviour
 
     private void FallingState()
     {
-        moveSpeed = runSpeed * airSpeedMultiplier;
+        moveSpeed = runSpeed;
         rb.drag = 0f;
         rb.gravityScale = gravityScale;
     }
@@ -319,15 +299,7 @@ public class Player : MonoBehaviour
     {
         rb.drag = deccelerationDrag;
 
-        if (FloorAngle <= maxSlopeAngle)
-        {
-            rb.gravityScale = 0f;
-            rb.AddForce(GetGround.normal * -gravityScale, ForceMode2D.Force);
-        }
-
         rb.velocity = new Vector2(0f, rb.velocity.y);
-        Debug.Log("new");
-
     }
 
     private void StateHandler()
@@ -414,6 +386,7 @@ public class Player : MonoBehaviour
 
     private void OnHit()
     {
+        // disable movement until grounded
         ChangeMovementState(MovementState.knockback);
         Debug.Log("ouch");
     }

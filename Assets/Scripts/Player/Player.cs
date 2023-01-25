@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float moveForce = 15f;
     [SerializeField] private float accelerationDrag = 1f;
     [SerializeField] private float deccelerationDrag = 5f;
-    [SerializeField] private const float gravityScale = 18f;
+    [SerializeField] private const float gravityScale = 10f;
     private float moveSpeed;
     private bool wasGrounded;
 

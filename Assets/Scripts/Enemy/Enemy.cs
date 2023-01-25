@@ -225,7 +225,7 @@ public class Enemy : MonoBehaviour
             ChasePlayer();
             //Debug.Log("chase");
         }
-        else if (isChasingPlayer && discoveredPlayer && )
+        else if (isChasingPlayer && discoveredPlayer)
         {
             if (!isOnEdge) Invoke(nameof(EndChase), Random.Range(minSearchTime, maxSearchTime));
             else

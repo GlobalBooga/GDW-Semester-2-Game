@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 public class Enemy : MonoBehaviour
@@ -21,12 +23,10 @@ public class Enemy : MonoBehaviour
     [Header("Detection"), Space(5f)]
     public float reactionTime;
     public float viewDistance;
-    //public float viewArc;
     public float minSearchTime;
     public float maxSearchTime;
     private bool discoveredPlayer;
     private bool isChasingPlayer;
-    //private bool canReachPlayer;
     [Space(10f)]
 
     [Header("Search"), Space(5f)]
@@ -42,7 +42,6 @@ public class Enemy : MonoBehaviour
     public float accelerationDrag = 1f;
     public float deccelerationDrag = 5f;
     private bool isOnEdge;
-    private bool isOnSameGroundAsPlayer = true;
     [Space(10f)]
 
     [Header("Masks"), Space(5f)]
@@ -50,6 +49,7 @@ public class Enemy : MonoBehaviour
     private const int pathTriggerLayerValue = 7;
     public LayerMask whatIsPlayer;
     public LayerMask whatIsGround;
+    public LayerMask whatBlocksSight;
     [Space(10f)]
 
     [Header("Preset"), Space(5f)]
@@ -83,6 +83,11 @@ public class Enemy : MonoBehaviour
         moveSpeed = walkSpeed;
     }
 
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
     private void Update()
     {
         PlayerDetectionHandler();
@@ -108,26 +113,22 @@ public class Enemy : MonoBehaviour
 
     private void MovementHandler()
     {
-        if (isChasingPlayer && Vector3.Distance(transform.position, playerLoc.position) < 2f)
+        if ((isChasingPlayer && Vector3.Distance(transform.position, playerLoc.position) < 2f) ||
+            (isChasingPlayer && !IsOnSameGroundAsPlayer() && isOnEdge))
         {
             PauseMovement();
         }
-        else if (pauseMovement && discoveredPlayer && !isOnEdge)
+        else if (pauseMovement && discoveredPlayer && !isChasingPlayer)
         {
             ResumeMovement();
         }
-
-        if (discoveredPlayer && !IsFacingPlayer)
+        /*else if (pauseMovement)
         {
-            /*if (IsPlayerVisible)*/ Rotate();
-        }
+            RotateAndResumeWalking();
+        }*/
 
-        if (!isOnSameGroundAsPlayer)
-        {
-            PauseMovement();
-        }
-
-
+        if (discoveredPlayer && !IsFacingPlayer) Rotate();
+       
         if (!pauseMovement) Move();
     }
 
@@ -144,14 +145,15 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (isChasingPlayer) return;
-
         if (cc.IsTouchingLayers(pathTriggerLayer))
         {
             isOnEdge = true;
 
-            PauseMovement();
-            Invoke(nameof(RotateAndResumeWalking), Random.Range(minWaitTime, maxWaitTime));
+            if (!isChasingPlayer)
+            {
+                PauseMovement();
+                Invoke(nameof(RotateAndResumeWalking), Random.Range(minWaitTime, maxWaitTime));
+            }
         }
 
         if (attackArea.IsTouchingLayers(whatIsPlayer) && !hit)
@@ -161,13 +163,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    /*private void OnTriggerStay2D(Collider2D collision)
     {
         if (cc.IsTouchingLayers(pathTriggerLayer))
         {
             ReactToEdge();
         }
-    }
+    }*/
 
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -195,7 +197,6 @@ public class Enemy : MonoBehaviour
         rb.drag = accelerationDrag;
     }
 
-
     void Rotate() => transform.Rotate(0f, 180f, 0f);
 
 
@@ -205,23 +206,53 @@ public class Enemy : MonoBehaviour
 
     private bool IsPlayerInRange => Vector3.Distance(transform.position, playerLoc.position) < viewDistance;
     private bool IsFacingPlayer => ((transform.position - playerLoc.position) * transform.right.x).x < 0;
-    private bool IsPlayerVisible => Physics2D.Raycast(transform.position, playerLoc.position - transform.position, viewDistance, whatIsPlayer);
 
+    private bool IsPlayerVisible()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, playerLoc.position - transform.position, viewDistance, whatBlocksSight);
+        if (hit)
+        {
+            if (hit.transform.gameObject == playerLoc.gameObject)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool IsOnSameGroundAsPlayer()
+    {
+        RaycastHit2D ground = Physics2D.Raycast(transform.position, Vector2.down, 1.3f, whatIsGround);
+        RaycastHit2D playerGround = Physics2D.Raycast(playerLoc.position, Vector2.down, 4f, whatIsGround); 
+
+        if (ground && playerGround)
+        {
+            if (ground.transform.gameObject == playerGround.transform.gameObject)
+            {
+                //Debug.Log("is on same ground");
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void PlayerDetectionHandler()
     {
-        if (CanSeePlayer() && !isChasingPlayer)
+        //Debug.Log("playerdetectionhandler");
+        if (CanSeePlayer() && IsOnSameGroundAsPlayer() && !isChasingPlayer)
         {
-            isChasingPlayer = true;
-            discoveredPlayer = true;
             ChasePlayer();
+            //Debug.Log("chase");
         }
-        else if (!CanSeePlayer() && isChasingPlayer)
+        else /*if (!CanSeePlayer() && isChasingPlayer)*/
         {
-            isChasingPlayer = false;
-            Invoke(nameof(EndChase), Random.Range(minSearchTime, maxSearchTime));
+            if (!isOnEdge) Invoke(nameof(EndChase), Random.Range(minSearchTime, maxSearchTime));
+            else
+            {
+                EndChase();
+                Rotate();
+            }
         }
-       
     }
 
     private bool CanSeePlayer()
@@ -229,9 +260,8 @@ public class Enemy : MonoBehaviour
         if (IsPlayerInRange && IsFacingPlayer)
         {
             // avoid raycasts when possible
-            if (IsPlayerVisible)
+            if (IsPlayerVisible())
             {
-                Debug.Log("can see");
                 return true;
             }
         }
@@ -241,18 +271,21 @@ public class Enemy : MonoBehaviour
 
     private void ChasePlayer()
     {
+        isChasingPlayer = true;
+        discoveredPlayer = true;
         moveSpeed = chaseSpeed;
     }
 
     private void EndChase()
     {
-        if (CanSeePlayer()) return;
+        if (CanSeePlayer() && IsOnSameGroundAsPlayer()) return;
 
         discoveredPlayer = false;
+        isChasingPlayer = false;
         moveSpeed = walkSpeed;
     }
 
-    private void ReactToEdge()
+    /*private void ReactToEdge()
     {
         Vector2 dir = new(transform.right.x * 1f, -1f);
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir.normalized, 1.5f, whatIsGround);
@@ -260,7 +293,7 @@ public class Enemy : MonoBehaviour
         else isOnSameGroundAsPlayer = false;
 
         Debug.DrawLine(transform.position, (Vector2)transform.position + dir.normalized * 1.5f, Color.red, 1f);
-    }
+    }*/
 
     #endregion
 
@@ -307,7 +340,7 @@ public class Enemy : MonoBehaviour
     private void ApplyDamage(GameObject other)
     {
         HPComponent hp;
-        if (other.TryGetComponent<HPComponent>(out hp))
+        if (other.TryGetComponent(out hp))
         {
             hp.Reduce(attackDamage);
             if (!hp.isInvincible) ApplyKnockback(other.GetComponent<Rigidbody2D>());

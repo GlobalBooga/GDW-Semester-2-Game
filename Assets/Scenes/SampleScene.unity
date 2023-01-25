@@ -351,8 +351,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 35966801}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.8341002, y: -13.159901, z: 0}
-  m_LocalScale: {x: 13.486161, y: 3.0506227, z: 1}
+  m_LocalPosition: {x: -5.8341002, y: -13.6873, z: 0}
+  m_LocalScale: {x: 13.486161, y: 1.9957174, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2060572449}
@@ -2042,7 +2042,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 599216180}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 24.93, y: 9.2, z: 0}
+  m_LocalPosition: {x: -20.56, y: 11.54, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2068,10 +2068,10 @@ MonoBehaviour:
   moveForce: 15
   accelerationDrag: 1
   deccelerationDrag: 5
-  jumpForce: 5
+  jumpForce: 2.5
   airSpeedMultiplier: 0.2
   jumpCooldown: 0.25
-  jumpGracePeriod: 3
+  jumpGracePeriod: 5
   crouchSpeed: 3
   crouchYScale: 0.5
   whatIsGround:
@@ -2592,6 +2592,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  whatBlocksSight:
     serializedVersion: 2
     m_Bits: 0
   enemyScriptable: {fileID: 0}
@@ -3843,7 +3846,7 @@ MonoBehaviour:
   maxWaitTime: 1
   minWaitTime: 3
   walkSpeed: 3
-  chaseSpeed: 10
+  chaseSpeed: 6
   moveForce: 15
   accelerationDrag: 1
   deccelerationDrag: 5
@@ -3855,7 +3858,10 @@ MonoBehaviour:
     m_Bits: 256
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
+  whatBlocksSight:
+    serializedVersion: 2
+    m_Bits: 320
   enemyScriptable: {fileID: 0}
   animator: {fileID: 651707939}
   sr: {fileID: 651707940}

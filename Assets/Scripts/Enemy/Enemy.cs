@@ -96,7 +96,9 @@ public class Enemy : MonoBehaviour
     
     private void FixedUpdate()
     {
-        MovementHandler();   
+        if (discoveredPlayer && !IsFacingPlayer) Rotate();
+       
+        if (!pauseMovement) Move();
     }
 
     private void OnValidate()
@@ -110,27 +112,6 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Movement
-
-    private void MovementHandler()
-    {
-        if ((isChasingPlayer && Vector3.Distance(transform.position, playerLoc.position) < 2f) ||
-            (isChasingPlayer && !IsOnSameGroundAsPlayer() && isOnEdge))
-        {
-            PauseMovement();
-        }
-        else if (pauseMovement && discoveredPlayer && !isChasingPlayer)
-        {
-            ResumeMovement();
-        }
-        /*else if (pauseMovement)
-        {
-            RotateAndResumeWalking();
-        }*/
-
-        if (discoveredPlayer && !IsFacingPlayer) Rotate();
-       
-        if (!pauseMovement) Move();
-    }
 
     private void Move()
     {
@@ -244,7 +225,7 @@ public class Enemy : MonoBehaviour
             ChasePlayer();
             //Debug.Log("chase");
         }
-        else /*if (!CanSeePlayer() && isChasingPlayer)*/
+        else if (isChasingPlayer && discoveredPlayer && )
         {
             if (!isOnEdge) Invoke(nameof(EndChase), Random.Range(minSearchTime, maxSearchTime));
             else
@@ -335,6 +316,12 @@ public class Enemy : MonoBehaviour
     {
         attackArea.enabled = false;
         isAttacking = false;
+
+        // find player
+        if (!IsFacingPlayer && IsOnSameGroundAsPlayer())
+        {
+            Rotate();
+        }
     }
 
     private void ApplyDamage(GameObject other)

@@ -1,30 +1,156 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
+[RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    public static List<Action> onPlayerRespawn = new List<Action>();
-
     [Header("Attack"), Space(5f)]
-    [SerializeField] private float interactRange = 1f;
-    [SerializeField] private float damage = 34f;
-    [SerializeField] private float attackRange = 2f;
+    public float interactRange = 1f;
+    public float damage = 34f;
+    public float attackRange = 2f;
 
     [Space(10f)]
-    
+
     [Header("Movement Values"), Space(5f)]
-    [SerializeField] private float runSpeed = 10f;
-    [SerializeField] private float moveForce = 15f;
-    [SerializeField] private float accelerationDrag = 1f;
-    [SerializeField] private float deccelerationDrag = 5f;
+    public float runSpeed = 10f;
+    public float moveForce = 15f;
+    public float accelerationDrag = 1f;
+    public float deccelerationDrag = 5f;
+
+    [Space(10f)]
+
+    [Header("Objects"), Space(5f)]
+    private Rigidbody2D rb;
+    private CircleCollider2D cc;
+    private HPComponent hpcomp;
+    public ParticleSystem particles;
+    private PlayerControls controls;
+
+
+    private Quaternion originalRot;
+    private Vector3 originalPos;
+    private Vector2 lastDirection;
+
+
+    public Vector2 RawDirection => controls.General.Move.ReadValue<Vector2>();
+    public Vector2 RotatedRawDirection => transform.up * RawDirection.y + transform.right * RawDirection.x;
+    public Vector2 MousePosition => Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    public Vector2 MouseDirection => (MousePosition - (Vector2)transform.position).normalized;
+    public bool IsMoving => RawDirection != Vector2.zero;
+
+
+    #region Unity Messages
+
+    private void OnEnable()
+    {
+        controls.General.Enable();
+        //controls.Menus.Disable();
+    }
+
+    private void OnDisable()
+    {
+        controls.General.Disable();
+        //controls.Menus.Enable();
+    }
+
+    
+    private void OnDestroy()
+    {
+        controls.Dispose();
+    }
+
+    private void Awake()
+    {
+        controls = new PlayerControls();
+        rb = GetComponent<Rigidbody2D>();
+        cc = gameObject.GetComponent<CircleCollider2D>();
+        hpcomp = gameObject.GetComponent<HPComponent>();
+
+        if (hpcomp)
+        { 
+            hpcomp.OnHPZero = OnDead;
+            hpcomp.OnHit.Add(OnHit);
+        }
+
+        SetupInputEvents();
+    }
+
+    void Start()
+    {
+        originalPos = transform.position;
+        originalRot = transform.rotation;
+        rb.freezeRotation = true;
+        rb.drag = accelerationDrag;
+    }
+
+    private void Update()
+    {
+
+        transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(MouseDirection, Vector3.up, Vector3.back));
+        Debug.DrawLine(transform.position, transform.position + (Vector3)MouseDirection * 1.5f, Color.red, Time.deltaTime);
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
+        SpeedController();
+    }
+
+
+    #endregion
+
+    private void Move()
+    {
+        rb.AddForce(RawDirection * moveForce, ForceMode2D.Force);
+    }
+
+    private void SpeedController()
+    {
+        bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > runSpeed;
+
+
+        if (isTooFast && IsMoving)
+        {
+            rb.velocity = RawDirection.normalized * runSpeed;
+        }
+    }
+
+    private void SetupInputEvents()
+    {
+        controls.General.Attack.started += ctx =>
+        {
+            //GameObject.Find("Enemy").transform.Rotate(0f, 180f, 0f);
+        };
+
+        controls.General.Move.started += ctx => rb.drag = accelerationDrag;
+
+        controls.General.Move.canceled += ctx => rb.drag = deccelerationDrag;
+    }
+
+    private void OnDead()
+    {
+        Debug.Log("you died");
+    }
+
+    private void OnHit()
+    {
+        // disable movement until grounded
+        Debug.Log("ouch");
+    }
+
+
+    /*public static List<Action> onPlayerRespawn = new List<Action>();
+
+
+    
     [SerializeField] private const float gravityScale = 10f;
     private float moveSpeed;
     private bool wasGrounded;
 
-    [Space(10f)]
 
     [Header("Jumping"), Space(5f)]
     [SerializeField] private float jumpForce = 5f;
@@ -46,13 +172,7 @@ public class Player : MonoBehaviour
     [Header("Masks"), Space(5f)]
     [SerializeField] private LayerMask whatIsGround;
 
-    [Space(10f)]
-    [Header("Objects"), Space(5f)]
-    private Rigidbody2D rb;
-    private CapsuleCollider2D cc;
-    private HPComponent hpcomp;
-    public ParticleSystem particles;
-    private PlayerControls controls;
+    
 
     public enum MovementState
     {
@@ -67,82 +187,17 @@ public class Player : MonoBehaviour
 
     private bool landeffect;
 
-    private Quaternion originalRot;
-    private Vector3 originalPos;
-    private Vector2 lastDirection;
 
 
     // HELPFUL ONE LINER FUNCTIONS
     private bool IsMoving => MoveDirection.x != 0;
-    public Vector2 MoveDirection => controls.General.Move.ReadValue<Vector2>();
     public bool IsCrouching => controls.General.Crouch.IsPressed();
     public bool IsJumping => controls.General.Jump.IsPressed() || MoveDirection.y > 0;
     private RaycastHit2D GetGround => Physics2D.Raycast(cc.bounds.min, Vector2.down, 0.2f, whatIsGround);
     private bool isGrounded;
 
 
-    #region Unity Messages
-
-    private void OnEnable()
-    {
-        controls.General.Enable();
-        //controls.Menus.Disable();
-    }
-
-    private void OnDisable()
-    {
-        controls.General.Disable();
-        //controls.Menus.Enable();
-    }
-
-    private void OnDestroy()
-    {
-        controls.Dispose();
-    }
-
-    private void Awake()
-    {
-        controls = new PlayerControls();
-        rb = gameObject.GetComponent<Rigidbody2D>();
-        cc = gameObject.GetComponent<CapsuleCollider2D>();
-        hpcomp = gameObject.GetComponent<HPComponent>();
-        hpcomp.OnHPZero = OnDead;
-        hpcomp.OnHit.Add(OnHit);
-
-        SetupInputEvents();
-    }
-
-    void Start()
-    {
-        originalPos = transform.position;
-        originalRot = transform.rotation;
-        normalYScale = transform.localScale.y;
-        canJump = true;
-        rb.freezeRotation = true;
-        rb.drag = accelerationDrag;
-        rb.gravityScale = gravityScale;
-    }
-
-    private void Update()
-    {
-        isGrounded = GetGround;
-
-        StateHandler();
-        RotatePlayer();
-        CheckJumping();
-        JumpHelper();
-        HandleLandEffect();
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
-        SpeedController();
-    }
-
     
-
-    #endregion
 
     #region Movement
 
@@ -167,35 +222,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Move()
-    {
-        if (isGrounded && !IsSignEqual(rb.velocity.x, MoveDirection.x) && IsJumping && rb.velocity.x != 0f)
-        {
-            Debug.Log("this");
-            rb.velocity = new Vector2(0f, 0f);
-        }
+   
 
-        // if input is horizontal
-        if (isGrounded)
-        {
-            rb.AddForce(Vector2.right * MoveDirection.x * moveForce * 10f, ForceMode2D.Force);
-        }
-        else
-        {
-            rb.AddForce(Vector2.right * MoveDirection.x * moveForce * 10f * airSpeedMultiplier, ForceMode2D.Force);
-        }
-    }
-
-    private void SpeedController()
-    {
-        bool isTooFast = Mathf.Abs(rb.velocity.x) > moveSpeed && IsSignEqual(MoveDirection.x, rb.velocity.x);
-
-        
-        if (isTooFast && IsMoving)
-        {
-            rb.velocity = new Vector2(MoveDirection.x * moveSpeed, rb.velocity.y);
-        }
-    }
+    
 
     private bool IsSignEqual(float first, float second) => (float.IsNegative(first) && float.IsNegative(second)) || (!float.IsNegative(first) && !float.IsNegative(second));
 
@@ -360,34 +389,6 @@ public class Player : MonoBehaviour
     #endregion
 
 
-    private void SetupInputEvents()
-    {
-        // JUMP
-        controls.General.Jump.started += ctx => TryJump();
-
-
-        // CROUCH
-        controls.General.Crouch.started += ctx => Crouch();
-
-
-        // UN-CROUCH
-        controls.General.Crouch.canceled += ctx => UnCrouch();
-
-        controls.General.Attack.started += ctx =>
-        {
-            //GameObject.Find("Enemy").transform.Rotate(0f, 180f, 0f);
-        };
-    }
-
-    private void OnDead()
-    {
-        Debug.Log("you died");
-    }
-
-    private void OnHit()
-    {
-        // disable movement until grounded
-        ChangeMovementState(MovementState.knockback);
-        Debug.Log("ouch");
-    }
+    
+    */
 }

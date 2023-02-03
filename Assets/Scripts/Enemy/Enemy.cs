@@ -28,8 +28,6 @@ public class Enemy : MonoBehaviour
     private float minDistanceBetweenPoses = 1f;
     private bool saveOneMorePos;
 
-    private bool inspect;
-
     [Space(10f)]
 
     [Header("Movement"), Space(5f)]
@@ -155,6 +153,13 @@ public class Enemy : MonoBehaviour
                     lerpStart = transform.position;
                     rotationTime = 0f;
                 }
+                
+                // when we arrive at the last pos
+                else
+                {
+                    StartCoroutine(nameof(InspectSurroundings));
+                }
+
             }
         }
     }
@@ -183,11 +188,14 @@ public class Enemy : MonoBehaviour
             // if we can't see the player anymore - called once
             else if (foundPlayer)
             {
+                // cancel any ongoing inspeciton
+                StopAllCoroutines();
+
                 // double the detection rate
                 NewDetectionRate(0.5f);
 
                 // set chase/search time
-                Invoke(nameof(OnEndChase), Random.Range(minSearchTime, maxSearchTime));
+                //Invoke(nameof(OnEndChase), Random.Range(minSearchTime, maxSearchTime));
 
                 //Debug.Log("lost player");
                 foundPlayer = false;
@@ -276,7 +284,9 @@ public class Enemy : MonoBehaviour
         frames++;
     }
 
-    private bool LookAt(Vector3 point) // lerped rotation for smoothness. Must be called from Update().
+
+    // lerped rotation for smoothness. Must be called from Update(). Returns true when completed
+    private bool LookAt(Vector3 point) 
     {
         rotationTime++;
         Vector3 thing = point - transform.position;
@@ -288,35 +298,35 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator InspectSurroundings()
     {
-        Vector3 right = transform.up;
-        Vector3 left = transform.position + right;
-        Vector3 forward = transform.right;
+        Debug.Log("Start inspect");
+        Vector3 right = transform.position - transform.up;
+        Vector3 left = transform.position + transform.up;
+        Vector3 forward = transform.position + transform.right;
 
         rotationTime = 0;
         while (!LookAt(right))
         {
-            Debug.Log("inspecting right");
+            //Debug.Log("inspecting right");
             yield return null;
         }
-        //rotationTime = 0;
-        //while (!LookAt(left))
-        //{
-        //    Debug.Log("inspecting left");
-        //    yield return null;
-        //}
-        //rotationTime = 0;
-        //while (!LookAt(forward))
-        //{
-        //    Debug.Log("inspecting forwards");
-        //    yield return null;
-        //}
+        rotationTime = 0;
+        while (!LookAt(left))
+        {
+            //Debug.Log("inspecting left");
+            yield return null;
+        }
+        rotationTime = 0;
+        while (!LookAt(forward))
+        {
+            //Debug.Log("inspecting forwards");
+            yield return null;
+        }
     }
 
 
     private void OnEndChase()
     {
-
-        StartCoroutine(nameof(InspectSurroundings));
+        if (foundPlayer || playerPoses.Count > 0) return;
 
         NewDetectionRate();
 

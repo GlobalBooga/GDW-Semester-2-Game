@@ -9,8 +9,6 @@ public class Enemy : MonoBehaviour
     public float reactionTime = 1f;
     public float viewDistance = 10f;
     public float fov = 60f;
-    public float minSearchTime;
-    public float maxSearchTime;
     private bool foundPlayer;
     private bool lockedOnPlayer;
     private float lookSpeed = 0.01f;
@@ -194,9 +192,6 @@ public class Enemy : MonoBehaviour
                 // double the detection rate
                 NewDetectionRate(0.5f);
 
-                // set chase/search time
-                //Invoke(nameof(OnEndChase), Random.Range(minSearchTime, maxSearchTime));
-
                 //Debug.Log("lost player");
                 foundPlayer = false;
                 lockedOnPlayer = false;
@@ -298,7 +293,10 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator InspectSurroundings()
     {
-        Debug.Log("Start inspect");
+        // speed up detection even more for this
+        NewDetectionRate(0.25f);
+
+        //Debug.Log("Start inspect");
         Vector3 right = transform.position - transform.up;
         Vector3 left = transform.position + transform.up;
         Vector3 forward = transform.position + transform.right;
@@ -321,18 +319,11 @@ public class Enemy : MonoBehaviour
             //Debug.Log("inspecting forwards");
             yield return null;
         }
-    }
 
-
-    private void OnEndChase()
-    {
-        if (foundPlayer || playerPoses.Count > 0) return;
-
+        // when finished chasing, reset detection
         NewDetectionRate();
-
-        // give up on chasing
-        playerPoses.Clear();
     }
+
 
     private void OnPlayerDiscovered()
     {

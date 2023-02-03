@@ -97,7 +97,6 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
-        SpeedController();
     }
 
 
@@ -105,18 +104,8 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        rb.AddForce(RawDirection * moveForce, ForceMode2D.Force);
-    }
-
-    private void SpeedController()
-    {
         bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > runSpeed;
-
-
-        if (isTooFast && IsMoving)
-        {
-            rb.velocity = RawDirection.normalized * runSpeed;
-        }
+        if (!isTooFast) rb.AddForce(RawDirection * moveForce, ForceMode2D.Force);
     }
 
     private void SetupInputEvents()

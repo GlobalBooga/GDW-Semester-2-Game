@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
-public class Enemy : MonoBehaviour
+public class Enemy_OLD : MonoBehaviour
 {
     [Header("Aggressive Behaviour"), Space(5f)]
     public float attackDamage;

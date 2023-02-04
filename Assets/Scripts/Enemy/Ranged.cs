@@ -15,6 +15,8 @@ public class Ranged : Enemy
     public GameObject bullet;
     public Transform bulletSpawn;
 
+    private const string ENEMY_PROJECTILE_LAYER = "EnemyProjectile";
+
     internal override void Awake()
     {
         base.Awake();
@@ -65,13 +67,12 @@ public class Ranged : Enemy
 
             // // //
 
-            //Debug.Log($"deg: {spreadAngle}, rad: {rads}");
-            Debug.DrawLine(transform.position, transform.position + bulletDir * 50f, Color.red, delayBetweenShots);
-            //Debug.Log("pew!");
+            if (showDebugStuff) Debug.DrawLine(transform.position, transform.position + bulletDir * 50f, Color.red, delayBetweenShots);
 
             if (bullet && bulletSpawn)
             {
                 Bullet b = Instantiate(bullet, bulletSpawn).GetComponent<Bullet>();
+                b.gameObject.layer = LayerMask.NameToLayer(ENEMY_PROJECTILE_LAYER);
                 b.Fly(bulletDir, bulletSpeed, damage);
 
                 //play muzzle effect

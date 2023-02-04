@@ -6,13 +6,21 @@ using UnityEngine;
 [RequireComponent(typeof(HPComponent))]
 public class Enemy : MonoBehaviour
 {
+    [Header("Debug"), Space(5f)]
+    public bool showDebugStuff;
+    public bool showForwards = true;
+
+    [Space(10f)]
+
     [Header("Detection"), Space(5f)]
     public float reactionTime = 0.5f;
     public float viewDistance = 40f;
     public float instantDetectDist = 3f;
-    public float fov = 60f;
+    public float normalFOV = 60f;
+    public float searchFOV = 120f;
+    private float fov;
     private bool foundPlayer;
-    private bool lockedOnPlayer;
+    internal bool lockedOnPlayer;
     private float lookSpeed = 0.01f;
     public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
@@ -30,6 +38,7 @@ public class Enemy : MonoBehaviour
 
     private int frames;
     private int detectionRate = 50; // the average
+    public float searchDetectionRateMult = 2f;
     Vector3 sightMax;
     Vector3 sightMin;
     private float rotationTime;
@@ -39,6 +48,7 @@ public class Enemy : MonoBehaviour
     [Header("Movement"), Space(5f)]
     public float walkSpeed = 3f;
     public float runSpeed = 8f;
+    public float attackMovementSpeed = 3f;
     public float retreatSpeed = 3f;
     private float moveSpeed;
     public float moveForce = 15f;
@@ -54,7 +64,7 @@ public class Enemy : MonoBehaviour
     public float comfortableAttackDist;
     internal bool canAttack = false; // are we in the right position to attack
     internal bool attackReady = true; // cooldowns?
-    private bool isAttacking;
+    internal bool isAttacking;
 
 
     [Space(10f)]
@@ -73,11 +83,11 @@ public class Enemy : MonoBehaviour
     internal Transform playerLoc;
 
     
-    Vector3 PlayerDirection => (playerLoc.position - transform.position);
-    public virtual float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
+    public Vector3 PlayerDirection => playerLoc.position - transform.position;
+    public float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
 
     
-    internal virtual void QueuePlayerPos()
+    private void QueuePlayerPos()
     {
         // If the player is too close from the last logged position
         if (playerPoses.Count > 0)
@@ -88,7 +98,7 @@ public class Enemy : MonoBehaviour
         saveOneMorePos = false;
 
         if (playerPoses.Count > maxStoredPoses) playerPoses.Dequeue();
-        DrawDebugCross(playerLoc.position, secondsBetweenPoses * maxStoredPoses);
+        if (showDebugStuff) DrawDebugCross(playerLoc.position, secondsBetweenPoses * maxStoredPoses);
         playerPoses.Enqueue(playerLoc.position);
     }
 
@@ -99,11 +109,11 @@ public class Enemy : MonoBehaviour
             Debug.LogWarning("Comfortable attack distance can't be smaller than 0!");
             comfortableAttackDist = 0f;
         }
-        if (comfortableAttackDist > minAttackDistance)
-        {
-            Debug.LogWarning("Comfortable attack distance can't be greater than Min Attack Distance!");
-            comfortableAttackDist = minAttackDistance;
-        }
+        //if (comfortableAttackDist > minAttackDistance)
+        //{
+        //    Debug.LogWarning("Comfortable attack distance can't be greater than Min Attack Distance!");
+        //    comfortableAttackDist = minAttackDistance;
+        //}
 
         if (maxAttackDistance < minAttackDistance)
         {
@@ -124,11 +134,14 @@ public class Enemy : MonoBehaviour
         NewAttackDistance();
         moveSpeed = walkSpeed;
         rb.drag = deccelerationDrag;
+        fov = normalFOV;
     }
 
     internal virtual void Update()
     {
-        CalculateEnemyView();
+        if (showDebugStuff) CalculateEnemyView();
+        if (showForwards) Debug.DrawLine(transform.position,transform.position + transform.right, Color.red, Time.deltaTime);
+
         HandleSight();
 
         // Player position recorder
@@ -155,10 +168,9 @@ public class Enemy : MonoBehaviour
         // Standard chase player
         if (lockedOnPlayer && PlayerDistance > attackDistance)
         {
-            moveSpeed = runSpeed;
+            moveSpeed = isAttacking ? attackMovementSpeed : runSpeed;
             bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > moveSpeed;
-            if (!isTooFast && !isAttacking) Move();
-
+            if (!isTooFast) Move();
 
             // dont attack if chasing - calls once at a time
             if (canAttack)
@@ -213,8 +225,6 @@ public class Enemy : MonoBehaviour
                     StartCoroutine(nameof(InspectSurroundings));
                 }
             }
-
-            
         }
     }
 
@@ -240,12 +250,15 @@ public class Enemy : MonoBehaviour
                 if (!foundPlayer)
                 {
                     // Immediately store the player's position
+                    playerPoses.Clear();
                     QueuePlayerPos();
                     
                     foundPlayer = true;
                     rotationTime = 0f;
+                    //fov = normalFOV;
+
                     Invoke(nameof(OnPlayerDiscovered), reactionTime);
-                    //Debug.Log("found player");
+                    Debug.Log("found player");
                 }
             }
             // if we can't see the player anymore - called once
@@ -254,8 +267,8 @@ public class Enemy : MonoBehaviour
                 // cancel any ongoing inspeciton
                 StopAllCoroutines();
 
-                // double the detection rate
-                NewDetectionRate(0.5f);
+                // increase the detection rate
+                NewDetectionRate(1/searchDetectionRateMult);
 
                 // for children to add their functionalities
                 OnLostSightOfPlayer();
@@ -265,7 +278,7 @@ public class Enemy : MonoBehaviour
                 lockedOnPlayer = false;
                 rotationTime = 0f;
                 moveSpeed = walkSpeed;
-
+                fov = searchFOV;
                 
                 if (playerPoses.Count > 0)
                 {
@@ -279,7 +292,7 @@ public class Enemy : MonoBehaviour
                     {
                         bool clear = false;
                         RaycastHit2D hit = Physics2D.Raycast(transform.position, (pos - transform.position).normalized, viewDistance, whatIsWall);
-                        Debug.DrawLine(transform.position, pos, Color.blue, 2f);                                                                        // <--- debug.drawline
+                        if (showDebugStuff) Debug.DrawLine(transform.position, pos, Color.blue, 2f);                                                                        // <--- debug.drawline
                         if (hit)
                         {
                             float hitDist = Vector2.Distance(hit.point, (Vector2)transform.position);
@@ -306,7 +319,7 @@ public class Enemy : MonoBehaviour
                     if (shortcut != Vector3.zero)
                     {
                         tempQ.Enqueue(shortcut);
-                        Debug.DrawLine(transform.position, shortcut, Color.yellow, 5f);                                                                     // <--- debug.drawline
+                        if (showDebugStuff) Debug.DrawLine(transform.position, shortcut, Color.yellow, 5f);                                                                     // <--- debug.drawline
 
                         int len = tempStk.Count;
                         for (int i = 0; i < len; i++)
@@ -329,9 +342,13 @@ public class Enemy : MonoBehaviour
                     lerpStart = transform.position;
                     rotationTime = 0f;
 
-                    foreach (Vector3 item in playerPoses)
+                    // for debugging
+                    if (showDebugStuff)
                     {
-                        DrawDebugCross(item);
+                        foreach (Vector3 item in playerPoses)
+                        {
+                            DrawDebugCross(item);
+                        }
                     }
                 }
             }
@@ -359,8 +376,8 @@ public class Enemy : MonoBehaviour
 
     internal virtual IEnumerator InspectSurroundings()
     {
-        // speed up detection even more for this
-        NewDetectionRate(0.25f);
+        // speed up detection rate even more
+        NewDetectionRate(1 / (searchDetectionRateMult * 1.5f));
 
         //Debug.Log("Start inspect");
         Vector3 right = transform.position - transform.up;
@@ -388,6 +405,7 @@ public class Enemy : MonoBehaviour
 
         // when finished chasing, reset detection
         NewDetectionRate();
+        fov = normalFOV;
     }
 
     internal virtual void OnPlayerDiscovered()

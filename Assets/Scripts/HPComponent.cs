@@ -3,15 +3,14 @@ using UnityEngine;
 using System;
 using TMPro;
 using UnityEngine.UI;
-using System.Runtime.CompilerServices;
 
 public class HPComponent : MonoBehaviour
 {
     public Image hpBar;
     public TextMeshProUGUI hpText;
-    public Color fullHpColor;
-    public Color midHpColor;
-    public Color lowHpColor;
+    public Color fullHpColor = new Color(0.208916f, 0.6792453f, 0.1762193f, 1f);
+    public Color midHpColor = new Color(0.735849f, 0.7018685f, 0.1423104f, 1f);
+    public Color lowHpColor = new Color(0.5943396f, 0.1654058f, 0.1654058f, 1f);
 
     public bool isInvincible;
 

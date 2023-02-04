@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(HPComponent))]
 public class Enemy : MonoBehaviour
 {
     [Header("Detection"), Space(5f)]
-    public float reactionTime = 1f;
-    public float viewDistance = 10f;
+    public float reactionTime = 0.5f;
+    public float viewDistance = 40f;
+    public float instantDetectDist = 3f;
     public float fov = 60f;
     private bool foundPlayer;
     private bool lockedOnPlayer;
     private float lookSpeed = 0.01f;
-    public AnimationCurve curve;
+    public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     private Queue<Vector3> playerPoses = new();
     private const int maxStoredPoses = 4;
-    private const float secondsBetweenPoses = 0.5f;
+    private const float secondsBetweenPoses = 1f;
     private float timeSinceLastPos = 0;
 
     private float totalTravelDist;
@@ -26,11 +28,18 @@ public class Enemy : MonoBehaviour
     private float minDistanceBetweenPoses = 1f;
     private bool saveOneMorePos;
 
+    private int frames;
+    private int detectionRate = 50; // the average
+    Vector3 sightMax;
+    Vector3 sightMin;
+    private float rotationTime;
+
     [Space(10f)]
 
     [Header("Movement"), Space(5f)]
     public float walkSpeed = 3f;
     public float runSpeed = 8f;
+    public float retreatSpeed = 3f;
     private float moveSpeed;
     public float moveForce = 15f;
     public float accelerationDrag = 1f;
@@ -40,8 +49,13 @@ public class Enemy : MonoBehaviour
 
     [Header("Aggressive Behaviour"), Space(5f)]
     public float maxAttackDistance = 10f;
-    public float minAttackDistance = 4f;
+    public float minAttackDistance = 6f;
     private float attackDistance;
+    public float comfortableAttackDist;
+    internal bool canAttack = false; // are we in the right position to attack
+    internal bool attackReady = true; // cooldowns?
+    private bool isAttacking;
+
 
     [Space(10f)]
 
@@ -49,25 +63,21 @@ public class Enemy : MonoBehaviour
     public LayerMask whatIsPlayer;
     public LayerMask whatIsWall;
     public LayerMask whatBlocksSight;
+    public LayerMask whatTakesDamage;
     [Space(10f)]
 
     // OBJECTS
     private SpriteRenderer sr;
     private Rigidbody2D rb;
     private CircleCollider2D cc;
-    private Transform playerLoc;
-
-    private int frames;
-    private int detectionRate = 50; // the average
-    Vector3 sightMax;
-    Vector3 sightMin;
-    private float rotationTime;
-
-    Vector3 PlayerDirection => (playerLoc.position - transform.position);
-    private float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
+    internal Transform playerLoc;
 
     
-    private void QueuePlayerPos()
+    Vector3 PlayerDirection => (playerLoc.position - transform.position);
+    public virtual float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
+
+    
+    internal virtual void QueuePlayerPos()
     {
         // If the player is too close from the last logged position
         if (playerPoses.Count > 0)
@@ -82,17 +92,33 @@ public class Enemy : MonoBehaviour
         playerPoses.Enqueue(playerLoc.position);
     }
 
+    internal virtual void OnValidate()
+    {
+        if (comfortableAttackDist < 0f)
+        {
+            Debug.LogWarning("Comfortable attack distance can't be smaller than 0!");
+            comfortableAttackDist = 0f;
+        }
+        if (comfortableAttackDist > minAttackDistance)
+        {
+            Debug.LogWarning("Comfortable attack distance can't be greater than Min Attack Distance!");
+            comfortableAttackDist = minAttackDistance;
+        }
 
+        if (maxAttackDistance < minAttackDistance)
+        {
+            minAttackDistance = maxAttackDistance - 1;
+        }
+    }
 
-    void Awake()
+    internal virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<CircleCollider2D>();
         playerLoc = GameObject.Find("Player").transform;
-
     }
 
-    private void Start()
+    internal virtual void Start()
     {
         NewDetectionRate();
         NewAttackDistance();
@@ -100,7 +126,7 @@ public class Enemy : MonoBehaviour
         rb.drag = deccelerationDrag;
     }
 
-    void Update()
+    internal virtual void Update()
     {
         CalculateEnemyView();
         HandleSight();
@@ -114,27 +140,56 @@ public class Enemy : MonoBehaviour
 
         // If we are chasing the player, look at the next point
         if (!foundPlayer && playerPoses.Count > 0f) LookAt(nextPos);
+
+
+        // base attack logic
+        if (canAttack && attackReady)
+        {
+            attackReady = false;
+            Attack();
+        }
     }
 
-    private void FixedUpdate()
+    internal virtual void FixedUpdate()
     {
         // Standard chase player
         if (lockedOnPlayer && PlayerDistance > attackDistance)
         {
+            moveSpeed = runSpeed;
             bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > moveSpeed;
+            if (!isTooFast && !isAttacking) Move();
+
+
+            // dont attack if chasing - calls once at a time
+            if (canAttack)
+            {
+                canAttack = false;
+                NewAttackDistance();
+            }
+        }
+        // if player is getting too close
+        else if (lockedOnPlayer && PlayerDistance < comfortableAttackDist)
+        {
+            moveSpeed = -retreatSpeed;
+            bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > Mathf.Abs(moveSpeed);
             if (!isTooFast) Move();
         }
+        // if we are in the comfortable attack zone
+        // or if we just havent discovered the player yet
         else
         {
             rb.drag = deccelerationDrag;
+
+            if (lockedOnPlayer && !canAttack)
+            {
+                canAttack = true;
+            }
         }
 
 
-
-        // if we lost the player
+        // if we lost the player and is following their tacks
         if (!foundPlayer && playerPoses.Count > 0f)
         {
-            
             float distCovered = (Time.time - lerpStartTime) * runSpeed;
             transform.position = Vector3.Lerp(lerpStart, nextPos, distCovered / totalTravelDist);
 
@@ -157,17 +212,27 @@ public class Enemy : MonoBehaviour
                 {
                     StartCoroutine(nameof(InspectSurroundings));
                 }
-
             }
+
+            
         }
     }
 
-    private void HandleSight()
+    internal virtual void HandleSight()
     {
         // Perform detection in intervals for performance
         if (frames >= detectionRate)
         {
             frames = 0;
+
+            // if the player is too close and we havent see them yet - called once
+            if (PlayerDistance <= instantDetectDist && !lockedOnPlayer)
+            {
+                lockedOnPlayer = true;
+                rotationTime = 0f;
+                //Debug.Log("too close");
+            }
+
             // basic can see player check
             if (CanSeePlayer())
             {
@@ -191,6 +256,9 @@ public class Enemy : MonoBehaviour
 
                 // double the detection rate
                 NewDetectionRate(0.5f);
+
+                // for children to add their functionalities
+                OnLostSightOfPlayer();
 
                 //Debug.Log("lost player");
                 foundPlayer = false;
@@ -279,19 +347,17 @@ public class Enemy : MonoBehaviour
         frames++;
     }
 
-
     // lerped rotation for smoothness. Must be called from Update(). Returns true when completed
-    private bool LookAt(Vector3 point) 
+    internal virtual bool LookAt(Vector3 point) 
     {
         rotationTime++;
         Vector3 thing = point - transform.position;
         Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(thing, Vector3.right, Vector3.back));
-        transform.rotation = Quaternion.Lerp(transform.rotation, newQuat, curve.Evaluate(rotationTime * lookSpeed));
+        transform.rotation = Quaternion.Lerp(transform.rotation, newQuat, rotationCurve.Evaluate(rotationTime * lookSpeed));
         return rotationTime * lookSpeed > 1f;
     }
 
-
-    private IEnumerator InspectSurroundings()
+    internal virtual IEnumerator InspectSurroundings()
     {
         // speed up detection even more for this
         NewDetectionRate(0.25f);
@@ -324,8 +390,7 @@ public class Enemy : MonoBehaviour
         NewDetectionRate();
     }
 
-
-    private void OnPlayerDiscovered()
+    internal virtual void OnPlayerDiscovered()
     {
         if (!foundPlayer) return;
 
@@ -335,17 +400,22 @@ public class Enemy : MonoBehaviour
         NewAttackDistance();
     }
 
-    private void NewDetectionRate(float multiplier = 1f)
+    internal virtual void OnLostSightOfPlayer()
+    {
+        canAttack = false;
+    }
+
+    internal virtual void NewDetectionRate(float multiplier = 1f)
     {
         detectionRate = Mathf.RoundToInt(Random.Range(detectionRate + 10, detectionRate - 10) * multiplier);
     }
 
-    private void NewAttackDistance()
+    internal virtual void NewAttackDistance()
     {
         attackDistance = Random.Range(minAttackDistance, maxAttackDistance);
     }
 
-    private void CalculateEnemyView()
+    internal virtual void CalculateEnemyView()
     {
         // "cone" angle debug lines
         float rads = Mathf.Deg2Rad * fov * 0.5f;
@@ -362,7 +432,7 @@ public class Enemy : MonoBehaviour
         Debug.DrawLine(transform.position, transform.position + sightMin * viewDistance, Color.red, Time.deltaTime);
     }
 
-    private bool CanSeePlayer()
+    public bool CanSeePlayer()
     {
         if (PlayerDistance <= viewDistance)
         {
@@ -382,17 +452,29 @@ public class Enemy : MonoBehaviour
         return false;
     }
 
-    private void Move()
+    internal virtual void Move()
     {
         rb.drag = accelerationDrag;
-        rb.AddForce(transform.right * moveForce, ForceMode2D.Force);
+        if (moveSpeed > 0) rb.AddForce(transform.right * moveForce, ForceMode2D.Force);
+        else rb.AddForce(transform.right * -moveForce, ForceMode2D.Force);
     }
 
-    private void DrawDebugCross(Vector3 pos, float duration = 1f, float segmentLength = 0.3f)
+    internal virtual void DrawDebugCross(Vector3 pos, float duration = 1f, float segmentLength = 0.3f)
     {
         Debug.DrawLine(pos, pos + Vector3.up * segmentLength, Color.green, duration);
         Debug.DrawLine(pos, pos + Vector3.down * segmentLength, Color.green, duration);
         Debug.DrawLine(pos, pos + Vector3.left * segmentLength, Color.green, duration);
         Debug.DrawLine(pos, pos + Vector3.right * segmentLength, Color.green, duration);
+    }
+
+    internal virtual void Attack()
+    {
+        isAttacking = true;
+    }
+
+    internal virtual void ResetAttack()
+    {
+        attackReady = true;
+        isAttacking = false;
     }
 }

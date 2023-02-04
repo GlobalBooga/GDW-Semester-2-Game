@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     [Space(10f)]
 
     [Header("Detection"), Space(5f)]
-    public float reactionTime = 0.5f;
+    public float reactionTime = 0f;
     public float viewDistance = 40f;
     public float instantDetectDist = 3f;
     public float normalFOV = 60f;
@@ -80,9 +80,12 @@ public class Enemy : MonoBehaviour
     private SpriteRenderer sr;
     private Rigidbody2D rb;
     private CircleCollider2D cc;
-    internal Transform playerLoc;
+    internal Transform playerLoc;   
 
-    
+    // OTHER
+    public const string ENEMY_PROJECTILE_LAYER = "EnemyProjectile";
+
+
     public Vector3 PlayerDirection => playerLoc.position - transform.position;
     public float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
 

@@ -7,15 +7,13 @@ public class Ranged : Enemy
     [Header("Ranged"), Space(5f)]
     public float damage;
     public float delayBetweenShots = 0.5f;
-    public float shootStartDelay = 1f;
-    public float bulletSpeed = 5f;
-    public float bulletSpread = 1f;
+    public float shootStartDelay = 0.3f;
+    public float bulletSpeed = 15f;
+    public float bulletSpread = 10f;
     public bool bouncyBullets = false;
     public int bounces = 3;
     public GameObject bullet;
     public Transform bulletSpawn;
-
-    private const string ENEMY_PROJECTILE_LAYER = "EnemyProjectile";
 
     internal override void Awake()
     {
@@ -89,21 +87,3 @@ public class Ranged : Enemy
         base.ResetAttack();
     }
 }
-
-        /*//Invoke(nameof(ResetAttack), attackCooldown);
-
-            Realistic shooting approach - FOR SNIPER
-
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, 100f, whatTakesDamage);
-        if (hit)
-        {
-            // calculate the time it will take to reach 'hit'
-
-
-            HPComponent hp;
-            if (hit.transform.gameObject.TryGetComponent(out hp))
-            {
-                hp.Reduce(damage);
-            }
-        }*/

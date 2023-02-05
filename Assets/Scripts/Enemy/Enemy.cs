@@ -266,7 +266,7 @@ public class Enemy : MonoBehaviour
                     //fov = normalFOV;
 
                     Invoke(nameof(OnPlayerDiscovered), reactionTime);
-                    Debug.Log("found player");
+                    //Debug.Log("found player");
                 }
             }
             // if we can't see the player anymore - called once

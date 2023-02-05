@@ -39,7 +39,7 @@ public class Melee : Enemy
     internal override void Attack()
     {
         base.Attack();
-        Debug.Log("slash!");
+        //Debug.Log("slash!");
 
         // play animation
 

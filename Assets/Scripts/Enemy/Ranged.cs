@@ -43,7 +43,7 @@ public class Ranged : Enemy
     internal override void Attack()
     {
         base.Attack();
-        Debug.Log("attacck");
+        //Debug.Log("attacck");
         StartCoroutine(nameof(Shoot));
 
     }

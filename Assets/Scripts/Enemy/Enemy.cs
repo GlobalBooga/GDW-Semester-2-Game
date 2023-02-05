@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
 
     private int frames;
     private int detectionRate = 50; // the average
-    public float searchDetectionRateMult = 2f;
+    public float searchDetectionRateMult = 1f;
     Vector3 sightMax;
     Vector3 sightMin;
     private float rotationTime;
@@ -76,11 +76,16 @@ public class Enemy : MonoBehaviour
     public LayerMask whatTakesDamage;
     [Space(10f)]
 
-    // OBJECTS
+
+    [Header("Objects"), Space(5f)]
     private SpriteRenderer sr;
     private Rigidbody2D rb;
-    private CircleCollider2D cc;
-    internal Transform playerLoc;   
+    //private CircleCollider2D cc;
+    internal Transform playerLoc;
+    public Transform body;
+
+    [Space(10f)]
+
 
     // OTHER
     public const string ENEMY_PROJECTILE_LAYER = "EnemyProjectile";
@@ -127,7 +132,7 @@ public class Enemy : MonoBehaviour
     internal virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        cc = GetComponent<CircleCollider2D>();
+        //cc = GetComponent<CircleCollider2D>();
         playerLoc = GameObject.Find("Player").transform;
     }
 
@@ -143,7 +148,7 @@ public class Enemy : MonoBehaviour
     internal virtual void Update()
     {
         if (showDebugStuff) CalculateEnemyView();
-        if (showForwards) Debug.DrawLine(transform.position,transform.position + transform.right, Color.red, Time.deltaTime);
+        if (showForwards) Debug.DrawLine(transform.position,transform.position + body.right, Color.red, Time.deltaTime);
 
         HandleSight();
 
@@ -373,7 +378,7 @@ public class Enemy : MonoBehaviour
         rotationTime++;
         Vector3 thing = point - transform.position;
         Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(thing, Vector3.right, Vector3.back));
-        transform.rotation = Quaternion.Lerp(transform.rotation, newQuat, rotationCurve.Evaluate(rotationTime * lookSpeed));
+        body.rotation = Quaternion.Lerp(body.rotation, newQuat, rotationCurve.Evaluate(rotationTime * lookSpeed));
         return rotationTime * lookSpeed > 1f;
     }
 
@@ -385,7 +390,7 @@ public class Enemy : MonoBehaviour
         //Debug.Log("Start inspect");
         Vector3 right = transform.position - transform.up;
         Vector3 left = transform.position + transform.up;
-        Vector3 forward = transform.position + transform.right;
+        Vector3 forward = transform.position + body.right;
 
         rotationTime = 0;
         while (!LookAt(right))
@@ -441,14 +446,14 @@ public class Enemy : MonoBehaviour
         // "cone" angle debug lines
         float rads = Mathf.Deg2Rad * fov * 0.5f;
         float rads2 = Mathf.Deg2Rad * (360f - fov*0.5f);
-        float x = transform.right.x, y = transform.right.y;
+        float x = body.right.x, y = body.right.y;
 
         sightMax = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
         sightMin = new Vector2((Mathf.Cos(rads2) * x) - (Mathf.Sin(rads2) * y), (Mathf.Sin(rads2) * x) + (Mathf.Cos(rads2) * y));
 
         Debug.DrawLine(transform.position, transform.position + sightMax * viewDistance, Color.red, Time.deltaTime);
 
-        Debug.DrawLine(transform.position, transform.position + transform.right, Color.red, Time.deltaTime);
+        Debug.DrawLine(transform.position, transform.position + body.right, Color.red, Time.deltaTime);
         
         Debug.DrawLine(transform.position, transform.position + sightMin * viewDistance, Color.red, Time.deltaTime);
     }
@@ -457,7 +462,7 @@ public class Enemy : MonoBehaviour
     {
         if (PlayerDistance <= viewDistance)
         {
-            if (Vector3.Angle(transform.right, playerLoc.position - transform.position) <= fov * 0.5f)
+            if (Vector3.Angle(body.right, playerLoc.position - transform.position) <= fov * 0.5f)
             {
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, (playerLoc.position - transform.position).normalized, viewDistance, whatBlocksSight);
                 if (hit)
@@ -476,8 +481,8 @@ public class Enemy : MonoBehaviour
     internal virtual void Move()
     {
         rb.drag = accelerationDrag;
-        if (moveSpeed > 0) rb.AddForce(transform.right * moveForce, ForceMode2D.Force);
-        else rb.AddForce(transform.right * -moveForce, ForceMode2D.Force);
+        if (moveSpeed > 0) rb.AddForce(body.right * moveForce, ForceMode2D.Force);
+        else rb.AddForce(body.right * -moveForce, ForceMode2D.Force);
     }
 
     internal virtual void DrawDebugCross(Vector3 pos, float duration = 1f, float segmentLength = 0.3f)

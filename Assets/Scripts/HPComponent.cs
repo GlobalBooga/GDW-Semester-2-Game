@@ -6,19 +6,26 @@ using UnityEngine.UI;
 
 public class HPComponent : MonoBehaviour
 {
-    public Image hpBar;
+    public List<Image> hpBars;
     public TextMeshProUGUI hpText;
+    public float hpColorThreshold = 0.5f;
     public Color fullHpColor = new Color(0.208916f, 0.6792453f, 0.1762193f, 1f);
     public Color midHpColor = new Color(0.735849f, 0.7018685f, 0.1423104f, 1f);
     public Color lowHpColor = new Color(0.5943396f, 0.1654058f, 0.1654058f, 1f);
 
     public bool isInvincible;
 
-    public float maxHealth;
+    public float maxHealth = 100f;
     float health;
 
     public List<Action> OnHit = new List<Action>();
     public Action OnHPZero;
+
+    private void Start()
+    {
+        health = maxHealth;
+        UpdateBars();
+    }
 
     public void Reduce(float amount)
     {
@@ -30,8 +37,6 @@ public class HPComponent : MonoBehaviour
             OnHPZero.Invoke();
 
         }
-        UpdateHud();
-
 
         // CALLING ONHIT
         if (OnHit.Count > 0f)
@@ -42,54 +47,37 @@ public class HPComponent : MonoBehaviour
             }
         }
 
+        // UPDATING THE HPBAR(S)
+        UpdateBars();
+
     }
 
     public void Add(float amount)
     {
         Mathf.Clamp(health += amount, 0, maxHealth);
-        UpdateHud();
+        UpdateBars();
     }
 
-    /*private void OnEnable()
+    public void UpdateBars()
     {
-        health = maxHealth;
-        UpdateHud();
-        if (hud)
+        if (hpBars.Count > 0)
         {
-            hud.ResetHud();
+            float hpPercentage = health / maxHealth;
+            foreach (Image bar in hpBars)
+            {
+                bar.fillAmount = hpPercentage;
+
+                if (hpPercentage <= hpColorThreshold && hpPercentage > hpColorThreshold / 2)
+                {
+                    Debug.Log("first half");
+                    bar.color = Color.Lerp(midHpColor, fullHpColor, (bar.fillAmount - hpColorThreshold / 2) / (hpColorThreshold / 2));
+                }
+                else if (hpPercentage <= hpColorThreshold / 2)
+                {
+                    bar.color = Color.Lerp(lowHpColor, midHpColor, bar.fillAmount / (hpColorThreshold / 2));
+                }
+            }
         }
-    }*/
-
-    void UpdateHud()
-    {
-        /*if (hud)
-        {
-            hud.SetHP(health / maxHealth);
-            hud.SetText(health.ToString());
-        }*/
-    }
-
-
-    public void SetHPBar(float hpPercentage)
-    {
-        hpBar.fillAmount = hpPercentage;
-
-        // Dead
-        if (hpPercentage <= 0f && OnHPZero != null)
-        {
-        }
-
-        /*// healthy hp color
-        else if (hpPercentage <= hpColorThreshold && hpPercentage > hpColorThreshold / 2)
-        {
-            hpBar.color = Color.Lerp(midHpColor, fullHpColor, (hpBar.fillAmount - hpColorThreshold / 2) / (hpColorThreshold / 2));
-        }
-
-        // low hp color
-        else if (hpPercentage <= hpColorThreshold / 2)
-        {
-            hpBar.color = Color.Lerp(lowHpColor, midHpColor, hpBar.fillAmount / (hpColorThreshold / 2));
-        }*/
     }
 
     public void SetText(string text)

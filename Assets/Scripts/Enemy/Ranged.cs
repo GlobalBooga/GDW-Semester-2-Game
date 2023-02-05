@@ -57,7 +57,7 @@ public class Ranged : Enemy
             // calculate spread
             float spreadAngle = Random.Range(-bulletSpread, bulletSpread);
             float rads = Mathf.Deg2Rad * ((spreadAngle > 0) ? spreadAngle : (360f + spreadAngle));
-            float x = transform.right.x, y = transform.right.y;
+            float x = body.right.x, y = body.right.y;
 
             Vector3 bulletDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
@@ -65,7 +65,7 @@ public class Ranged : Enemy
 
             // // //
 
-            if (showDebugStuff) Debug.DrawLine(transform.position, transform.position + bulletDir * 50f, Color.red, delayBetweenShots);
+            if (showDebugStuff) Debug.DrawLine(body.position, body.position + bulletDir * 50f, Color.red, delayBetweenShots);
 
             if (bullet && bulletSpawn)
             {

@@ -5,10 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class Bullet : MonoBehaviour
 {
-    Rigidbody2D rb;
-    private float damage;
+    internal Rigidbody2D rb;
+    internal float damage;
 
-    private void Awake()
+    internal virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
         transform.parent = null;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    internal virtual void OnCollisionEnter2D(Collision2D collision)
     {
         // play hit effect
 

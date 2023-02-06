@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 657843592361160897}
   - component: {fileID: 605455847426442914}
   m_Layer: 10
-  m_Name: GreenBullet
+  m_Name: BouncyBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

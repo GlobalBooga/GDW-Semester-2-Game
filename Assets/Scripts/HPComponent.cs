@@ -11,7 +11,8 @@ public class HPComponent : MonoBehaviour
     public float hpColorThreshold = 0.5f;
     public Color fullHpColor = new Color(0.208916f, 0.6792453f, 0.1762193f, 1f);
     public Color midHpColor = new Color(0.735849f, 0.7018685f, 0.1423104f, 1f);
-    public Color lowHpColor = new Color(0.5943396f, 0.1654058f, 0.1654058f, 1f);
+    public Color lowHpColor = new Color(1f, 0f, 0f, 1f);
+    //public Color lowHpColor = new Color(0.5943396f, 0.1654058f, 0.1654058f, 1f); // old
 
     public bool isInvincible;
 
@@ -34,7 +35,7 @@ public class HPComponent : MonoBehaviour
         // DEAD
         if ((health -= amount) <= 0f)
         {
-            OnHPZero.Invoke();
+            if (OnHPZero != null) OnHPZero.Invoke();
 
         }
 
@@ -69,7 +70,7 @@ public class HPComponent : MonoBehaviour
 
                 if (hpPercentage <= hpColorThreshold && hpPercentage > hpColorThreshold / 2)
                 {
-                    Debug.Log("first half");
+                    //Debug.Log("first half");
                     bar.color = Color.Lerp(midHpColor, fullHpColor, (bar.fillAmount - hpColorThreshold / 2) / (hpColorThreshold / 2));
                 }
                 else if (hpPercentage <= hpColorThreshold / 2)

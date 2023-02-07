@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 [RequireComponent(typeof(HPComponent))]
@@ -143,6 +144,10 @@ public class Enemy : MonoBehaviour
         moveSpeed = walkSpeed;
         rb.drag = deccelerationDrag;
         fov = normalFOV;
+
+        // set the ondied func
+        HPComponent hp;
+        if (TryGetComponent(out hp)) hp.OnHPZero = OnDied;
     }
 
     internal virtual void Update()
@@ -502,5 +507,10 @@ public class Enemy : MonoBehaviour
     {
         attackReady = true;
         isAttacking = false;
+    }
+
+    public void OnDied()
+    {
+        gameObject.SetActive(false);
     }
 }

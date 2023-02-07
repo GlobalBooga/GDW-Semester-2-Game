@@ -7,9 +7,16 @@ public class BouncyBullet : Bullet
     const int maxBounces = 3;
     int bounces;
 
+    Vector2 lastVelocity;
+
     internal override void Awake()
     {
         base.Awake();
+    }
+
+    private void Update()
+    {
+        lastVelocity = rb.velocity;
     }
 
     internal override void OnCollisionEnter2D(Collision2D collision)
@@ -20,11 +27,23 @@ public class BouncyBullet : Bullet
         if (collision.transform.gameObject.TryGetComponent(out hp))
         {
             hp.Reduce(damage);
+            Destroy(gameObject);
         }
 
         if (bounces < maxBounces)
         {
-            rb.velocity = new Vector2(-rb.velocity.y, rb.velocity.x);
+            Vector2 d = lastVelocity.normalized;
+            Vector2 n = collision.GetContact(0).normal;
+            Vector2 r = d - 2 * Vector2.Dot(d, n) * n;
+            rb.velocity = Vector2.zero;
+            rb.AddForce(r*lastVelocity.magnitude,ForceMode2D.Impulse);
+
+            transform.Rotate(0f, 0f, Vector2.SignedAngle(d, r));
+
+            //Debug.DrawLine(collision.GetContact(0).point, collision.GetContact(0).point+ n, Color.green, 5f); // normal
+            //Debug.DrawLine(transform.position, (Vector2)transform.position + d, Color.yellow, 5f); // direction
+            //Debug.DrawLine(collision.GetContact(0).point, collision.GetContact(0).point+r, Color.red, 5f); // reflection
+            //Debug.Log("bouce");
             bounces++;
         }
         else

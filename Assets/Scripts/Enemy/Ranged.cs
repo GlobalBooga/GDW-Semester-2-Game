@@ -70,6 +70,7 @@ public class Ranged : Enemy
             if (bullet && bulletSpawn)
             {
                 Bullet b = Instantiate(bullet, bulletSpawn).GetComponent<Bullet>();
+                b.transform.Rotate(0f,0f, Vector2.SignedAngle(body.right, bulletDir));
                 b.gameObject.layer = LayerMask.NameToLayer(ENEMY_PROJECTILE_LAYER);
                 b.Fly(bulletDir, bulletSpeed, damage);
 

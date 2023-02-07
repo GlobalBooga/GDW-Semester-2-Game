@@ -49,10 +49,10 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.696
   m_Color: {r: 0.016711067, g: 0.7169812, b: 0.0027055359, a: 1}
-  m_Intensity: 37.72
+  m_Intensity: 20
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 8f66c27b00000000
   m_LightCookieSprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 6545307244740321828}
   - component: {fileID: 1896939090538511046}
   - component: {fileID: 657843592361160897}
-  - component: {fileID: 605455847426442914}
+  - component: {fileID: 812163562406270702}
   m_Layer: 10
   m_Name: BouncyBullet
   m_TagString: Untagged
@@ -167,8 +167,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 2076337807
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
   m_Color: {r: 0.11093615, g: 0.8980392, b: 0.098039225, a: 1}
@@ -228,7 +228,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &605455847426442914
+--- !u!114 &812163562406270702
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,6 +237,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6545307244740321829}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 710a49151aad26a4fad9ddb9f6c88c60, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a095674f27f1f14aaf36f5d5c668b66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

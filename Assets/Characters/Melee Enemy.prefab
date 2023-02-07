@@ -350,7 +350,7 @@ MonoBehaviour:
   - {fileID: 3170367885698113231}
   - {fileID: 5632301645590994351}
   hpText: {fileID: 0}
-  hpColorThreshold: 0.5
+  hpColorThreshold: 0.8
   fullHpColor: {r: 0.208916, g: 0.6792453, b: 0.1762193, a: 1}
   midHpColor: {r: 0.735849, g: 0.7018685, b: 0.1423104, a: 1}
   lowHpColor: {r: 0.5943396, g: 0.1654058, b: 0.1654058, a: 1}

@@ -10,8 +10,6 @@ public class Ranged : Enemy
     public float shootStartDelay = 0.3f;
     public float bulletSpeed = 15f;
     public float bulletSpread = 10f;
-    public bool bouncyBullets = false;
-    public int bounces = 3;
     public GameObject bullet;
     public Transform bulletSpawn;
 

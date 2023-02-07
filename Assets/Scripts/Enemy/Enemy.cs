@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
     private float fov;
     private bool foundPlayer;
     internal bool lockedOnPlayer;
-    private float lookSpeed = 0.01f;
+    internal float lookSpeed = 0.01f;
     public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     private Queue<Vector3> playerPoses = new();

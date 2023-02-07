@@ -899,7 +899,8 @@ MonoBehaviour:
   accelerationDrag: 1
   deccelerationDrag: 15
   dodgeCooldown: 0.5
-  dodgeForce: 5
+  dodgeDuration: 0.3
+  dodgeForce: 50
   particles: {fileID: 0}
   weapon: {fileID: 1128801857}
 --- !u!58 &180029039

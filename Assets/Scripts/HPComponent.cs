@@ -17,7 +17,10 @@ public class HPComponent : MonoBehaviour
     public bool isInvincible;
 
     public float maxHealth = 100f;
-    float health;
+    private float health;
+
+    public float GetHealth() => health;
+
 
     public List<Action> OnHit = new List<Action>();
     public Action OnHPZero;

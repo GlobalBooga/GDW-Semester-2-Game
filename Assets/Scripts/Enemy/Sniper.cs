@@ -21,7 +21,7 @@ public class Sniper : Enemy
     public Transform laserStart;
     public LineRenderer lineRenderer;
     public Animator animator;
-    public float animationLenght;
+    public float animationLenght = 0.1f;
     bool isOn;
 
 
@@ -107,11 +107,7 @@ public class Sniper : Enemy
         RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.right, 100f, whatTakesDamage);
         if (hit)
         {
-            HPComponent hp;
-            if (hit.transform.gameObject.TryGetComponent(out hp))
-            {
-                hp.Reduce(damage);
-            }
+            StaticHelpers.ApplyDamage(hit.transform.gameObject, damage);
         }
 
         if (animator) animator.Play(LASER_SHOT_ANIM);

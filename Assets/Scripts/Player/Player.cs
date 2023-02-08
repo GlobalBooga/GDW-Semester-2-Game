@@ -136,13 +136,12 @@ public class Player : MonoBehaviour
     {
         //bool movingInSameDir;
         bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > runSpeed;
-        rb.AddForce(RawDirection * moveForce, ForceMode2D.Force); //if (!isTooFast) 
+        rb.AddForce(RawDirection * moveForce * rb.mass, ForceMode2D.Force); //if (!isTooFast) 
 
         if (isTooFast)
         {
             rb.velocity = rb.velocity.normalized * runSpeed;
         }
-
 
         if (RawDirection == Vector2.zero) rb.drag = deccelerationDrag;
     }
@@ -184,12 +183,12 @@ public class Player : MonoBehaviour
             if (RawDirection == Vector2.zero)
             {
                 // dash backwards
-                rb.AddForce((dir - (Vector2)transform.up).normalized * dodgeForce, ForceMode2D.Impulse);
+                rb.AddForce((dir - (Vector2)transform.up).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
             }
             else
             {
                 // dash in direction
-                rb.AddForce((dir + RawDirection).normalized * dodgeForce, ForceMode2D.Impulse);
+                rb.AddForce((dir + RawDirection).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
             }
             rb.drag = 10f;
             Invoke(nameof(EndDodge), dodgeDuration);

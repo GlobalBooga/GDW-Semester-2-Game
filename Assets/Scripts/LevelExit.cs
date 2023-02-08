@@ -10,7 +10,7 @@ public class LevelExit : MonoBehaviour
     {
         if (collision.gameObject.name == "Player")
         {
-            GameManager.SwitchLevel(nextLevel, nextSpawn.transform);
+            //GameManager.SwitchLevel(nextLevel, nextSpawn.transform);
         }
     }
 }

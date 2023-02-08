@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class Andaroz : Enemy
@@ -18,6 +20,8 @@ public class Andaroz : Enemy
     public float swipeCooldown = 1f;
     public float swipeApplyDmgDelay = 0.5f;
     public float swipeReach;
+    public float delayBeforeNextAttack_swipe = 3f;
+    public float maxAttackTime_swipe = 10f;
 
     [Space(10f)]
     [Header("Melee Attack 2 - AOE Ground Slam"), Space(5f)]
@@ -25,6 +29,8 @@ public class Andaroz : Enemy
     public float slamCooldown = 1f;
     public float slamApplyDmgDelay = 0.5f;
     public float slamReach;
+    public float delayBeforeNextAttack_slam = 3f;
+    public float maxAttackTime_slam = 10f;
 
     [Space(10f)]
 
@@ -32,6 +38,7 @@ public class Andaroz : Enemy
     public float gunDamage;
     public float delayBetweenShots_gun = 0.5f;
     public float shootStartDelay_gun = 0.3f;
+    public float delayBeforeNextAttack_gun = 3f;
     public float bulletSpeed = 15f;
     public float bulletSpread = 10f;
     public int shots_bullets = 50;
@@ -44,17 +51,24 @@ public class Andaroz : Enemy
     public float missileDamage;
     public float delayBetweenShots_missiles = 0.5f;
     public float shootStartDelay_missiles = 0.3f;
+    public float delayBeforeNextAttack_missiles = 6f;
     public float missileSpeed = 7f;
+    public float missileRotForce = 10f;
+    public float missileMaxSpeed = 7f;
     public float missileSpread = 10f;
     public int shots_missiles = 10;
     public GameObject missile;
     public List<Transform> missileSpawns;
+    public bool fireSequentially = true;
+    private int prev; // the previous index for sequential firing
+    public Crosshair crosshairController;
 
     [Space(10f)]
 
     [Header("Ranged Attack 3 - Twin Laser"), Space(5f)]
     public float laserDamage;
     public float attackDuration;
+    public float delayBeforeNextAttack_laser = 3f;
     public float rotationSpeed;
     public float maxDist = 100f;
     public List<Transform> laserStart;
@@ -64,6 +78,16 @@ public class Andaroz : Enemy
 
     [Header("Attack Pattern"), Space(5f)]
     public List<string> orderedAttacks;
+
+    [Space(10f)]
+
+    [Header("Balancing And Debugging"), Space(5f)]
+    public bool enableSwipe = true;
+    public bool enableSlam = true;
+    public bool enableMachineGun = true;
+    public bool enableMissiles = true;
+    public bool enableLaser = true;
+
 
     private List<string> allAttacks = new() { nameof(PerformGunAttack), nameof(PerformLaserAttack), nameof(PerformMissileAttack), nameof(PerformSlamAttack), nameof(PerformSwipeAttack)};
     private Queue<string> attackPattern = new();
@@ -77,7 +101,6 @@ public class Andaroz : Enemy
     internal override void Start()
     {
         base.Start();
-        NewAttackOrder();
     }
 
     internal override void Update()
@@ -99,31 +122,84 @@ public class Andaroz : Enemy
     {
         base.Attack();
         NextAttack();
-
     }
 
     private IEnumerator PerformSwipeAttack()
     {
-        Debug.Log("swipe");
-        yield return new WaitForSeconds(3);
-        NextAttack();
+        bool attacked = false;   
+        maxAttackDistance = 5f;
+        minAttackDistance = 4f;
+        comfortableAttackDist = 0f;
+        attackMovementSpeed = runSpeed = 8f;
+        chasePlayer = true;
+        NewAttackDistance();
+
+        float time = 0f;
+
+        while (!attacked)
+        {
+            time += Time.deltaTime;
+            if (time >= maxAttackTime_swipe) break;
+
+            // else if we are in attack distance
+            if (PlayerDistance <= maxAttackDistance)
+            {
+                Debug.Log("swipe");
+                // play swipe animation
+                attacked = true;
+                yield return new WaitForSeconds(swipeApplyDmgDelay);
+
+                // if were still within range of swipe
+                if (PlayerDistance <= maxAttackDistance)
+                    StaticHelpers.ApplyDamage(playerLoc.gameObject, swipeDamage);
+            }
+
+            yield return null;
+        }
+        
+        yield return new WaitForSeconds(delayBeforeNextAttack_swipe);
+        ResetAttack();
+        //NextAttack();
     }
+
     private IEnumerator PerformSlamAttack()
     {
         Debug.Log("slam");
-        yield return new WaitForSeconds(3);
-        NextAttack();
+        maxAttackDistance = 10f;
+        minAttackDistance = 8f;
+        comfortableAttackDist = 0f;
+        runSpeed = 8f;
+        chasePlayer = true;
+
+
+        yield return new WaitForSeconds(delayBeforeNextAttack_slam);
+        ResetAttack();
+        //NextAttack();
     }
 
     private IEnumerator PerformMissileAttack()
     {
         // homing missile attack
-
         Debug.Log("missile");
-        yield return new WaitForSeconds(3);
+
+
+        // set to stationary - with all seeing eye
+        maxAttackDistance = 40f;
+        minAttackDistance = 30f;
+        comfortableAttackDist = 0f;
+        chasePlayer = false;
+        NewAttackDistance();
+
+        // play lock on animation
+        if (crosshairController)
+        {
+            crosshairController.AimAt(playerLoc);
+            shootStartDelay_missiles = crosshairController.animationTime;
+        }
 
         yield return new WaitForSeconds(shootStartDelay_missiles);
         int shots = 0;
+        prev = 0;
         while (shots++ < shots_missiles)
         {
             // calculate spread
@@ -141,16 +217,32 @@ public class Andaroz : Enemy
 
             if (missile && missileSpawns.Count > 0)
             {
-                Bullet b = Instantiate(bullet, missileSpawns[Random.Range(0, missileSpawns.Count - 1)]).GetComponent<Bullet>();
+                HomingMissile b;
+                if (missileSpawns.Count == 1)
+                {
+                    b = Instantiate(missile, missileSpawns[0]).GetComponent<HomingMissile>();
+                }
+                else if (!fireSequentially)
+                {
+                    b = Instantiate(missile, missileSpawns[Random.Range(0, missileSpawns.Count)]).GetComponent<HomingMissile>();
+                }
+                else
+                {
+                    if (prev >= missileSpawns.Count) prev = 0;
+                    b = Instantiate(missile, missileSpawns[prev++]).GetComponent<HomingMissile>();
+                }
+
                 b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.right, missileDir));
-                b.gameObject.layer = StaticHelpers.EnemyProjectileLayer;
-                b.Fly(missileDir, missileSpeed, missileDamage);
+                b.gameObject.layer = StaticHelpers.EnemyMissile;
+                b.Fly(playerLoc, missileDir, missileSpeed, missileRotForce, missileMaxSpeed, missileDamage);
 
                 //play muzzle effect
             }
             yield return new WaitForSeconds(delayBetweenShots_missiles);
         }
-        NextAttack();
+        yield return new WaitForSeconds(delayBeforeNextAttack_missiles);
+        ResetAttack();
+        //NextAttack();
     }
 
     private IEnumerator PerformGunAttack()
@@ -158,8 +250,16 @@ public class Andaroz : Enemy
         // GUN ATTACK
         // in this attack, Andaroz chases the player at walking speed.
         // he is always facing the player
-
         Debug.Log("gun");
+
+        maxAttackDistance = 25f;
+        minAttackDistance = 20f;
+        comfortableAttackDist = 10f;
+        runSpeed = attackMovementSpeed = 3f;
+        chasePlayer = true;
+        NewAttackDistance();
+
+
         yield return new WaitForSeconds(shootStartDelay_gun);
         int shots = 0;
         while (shots++ < shots_bullets)
@@ -189,34 +289,55 @@ public class Andaroz : Enemy
             yield return new WaitForSeconds(delayBetweenShots_gun);
         }
 
-        NextAttack();
+        yield return new WaitForSeconds(delayBeforeNextAttack_gun);
+        //NextAttack();
+        ResetAttack();
     }
     
     private IEnumerator PerformLaserAttack()
     {
         Debug.Log("laser");
-        yield return new WaitForSeconds(3);
-        NextAttack();
+        yield return new WaitForSeconds(delayBeforeNextAttack_laser);
+        ResetAttack();
+        //NextAttack();
     }
 
     private void NextAttack()
     {
+        if (!enableLaser && !enableMachineGun && !enableMissiles && !enableSlam && !enableSwipe) return;
+
         // if can see player -> next attack
+        if (attackPattern.Count == 0) NewAttackOrder();
+
+        // skip disabled attacks
+        if (attackPattern.Peek() == nameof(PerformSwipeAttack) && !enableSwipe) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformSlamAttack) && !enableSlam) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformGunAttack) && !enableMachineGun) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformMissileAttack) && !enableMissiles) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformLaserAttack) && !enableLaser) { attackPattern.Dequeue(); NextAttack(); return; }
+
         StartCoroutine(attackPattern.Dequeue());
-        //StartCoroutine(nameof(PerformGunAttack));
     }
 
     private void NewAttackOrder()
-    {                                                                                       // <- INFINITE LOOP
+    {                                                                                     
         for (int i = 0; i < allAttacks.Count; i++)
         {
-            string newAttack = allAttacks[Random.Range(0, allAttacks.Count - 1)];
+            string newAttack = allAttacks[Random.Range(0, allAttacks.Count)]; // using the int version - max is exclusive
+
             while (attackPattern.Contains(newAttack))
             {
-                 newAttack = allAttacks[Random.Range(0, allAttacks.Count - 1)];
+                 newAttack = allAttacks[Random.Range(0, allAttacks.Count)];
             }
+
             attackPattern.Enqueue(newAttack);
-            Debug.Log($"added {newAttack}");
         }
+
+    }
+
+    internal override void ResetAttack()
+    {
+        base.ResetAttack();
+
     }
 }

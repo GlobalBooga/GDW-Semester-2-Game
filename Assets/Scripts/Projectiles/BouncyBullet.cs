@@ -23,12 +23,7 @@ public class BouncyBullet : Bullet
     {
         // play hit effect
 
-        HPComponent hp;
-        if (collision.transform.gameObject.TryGetComponent(out hp))
-        {
-            hp.Reduce(damage);
-            Destroy(gameObject);
-        }
+        StaticHelpers.ApplyDamage(collision.gameObject, damage);
 
         if (bounces < maxBounces)
         {

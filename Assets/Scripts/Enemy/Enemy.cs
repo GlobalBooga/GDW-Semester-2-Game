@@ -43,6 +43,8 @@ public class Enemy : MonoBehaviour
     Vector3 sightMax;
     Vector3 sightMin;
     internal float rotationTime;
+    public bool canSeeThroughWalls;
+    private bool isInspecting;
 
     [Space(10f)]
 
@@ -86,6 +88,7 @@ public class Enemy : MonoBehaviour
     //private CircleCollider2D cc;
     internal Transform playerLoc;
     public Transform body;
+    internal HPComponent hp;
 
 
     public Vector3 PlayerDirection => playerLoc.position - transform.position;
@@ -131,6 +134,8 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         //cc = GetComponent<CircleCollider2D>();
         playerLoc = GameObject.Find("Player").transform;
+        // set the ondied func
+        if (TryGetComponent(out hp)) hp.OnHPZero = OnDied;
     }
 
     internal virtual void Start()
@@ -141,9 +146,6 @@ public class Enemy : MonoBehaviour
         rb.drag = deccelerationDrag;
         fov = normalFOV;
 
-        // set the ondied func
-        HPComponent hp;
-        if (TryGetComponent(out hp)) hp.OnHPZero = OnDied;
     }
 
     internal virtual void Update()
@@ -164,7 +166,7 @@ public class Enemy : MonoBehaviour
             }
 
             // If we are chasing the player, look at the next point
-            if (!foundPlayer && playerPoses.Count > 0f) LookAt(nextPos);
+            if (!canSeeThroughWalls && !foundPlayer && playerPoses.Count > 0f) LookAt(nextPos);
         }
 
         // base attack logic
@@ -280,7 +282,7 @@ public class Enemy : MonoBehaviour
             else if (foundPlayer)
             {
                 // cancel any ongoing inspeciton
-                StopAllCoroutines();
+                if (isInspecting) StopAllCoroutines();
 
                 // increase the detection rate
                 if (chasePlayer) NewDetectionRate(1/searchDetectionRateMult);
@@ -291,7 +293,7 @@ public class Enemy : MonoBehaviour
                 //Debug.Log("lost player");
                 // Change some detection related properties
                 foundPlayer = false;
-                lockedOnPlayer = false;
+                if (!canSeeThroughWalls) lockedOnPlayer = false;
                 rotationTime = 0f;
                 moveSpeed = walkSpeed;
                 if (chasePlayer) fov = searchFOV;
@@ -395,6 +397,8 @@ public class Enemy : MonoBehaviour
 
     internal virtual IEnumerator InspectSurroundings()
     {
+        isInspecting = true;
+
         // speed up detection rate even more
         NewDetectionRate(1 / (searchDetectionRateMult * 1.5f));
 
@@ -425,6 +429,7 @@ public class Enemy : MonoBehaviour
         // when finished chasing, reset detection
         NewDetectionRate();
         fov = normalFOV;
+        isInspecting = false;
     }
 
     internal virtual void OnPlayerDiscovered()
@@ -492,7 +497,7 @@ public class Enemy : MonoBehaviour
     internal virtual void Move()
     {
         rb.drag = accelerationDrag;
-        if (moveSpeed > 0) rb.AddForce(body.right * moveForce, ForceMode2D.Force);
+        if (moveSpeed > 0) rb.AddForce(body.right * moveForce * rb.mass, ForceMode2D.Force);
         else rb.AddForce(body.right * -moveForce, ForceMode2D.Force);
     }
 

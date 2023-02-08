@@ -10,8 +10,6 @@ public class Ranged : Enemy
     public float shootStartDelay = 0.3f;
     public float bulletSpeed = 15f;
     public float bulletSpread = 10f;
-    public bool bouncyBullets = false;
-    public int bounces = 3;
     public GameObject bullet;
     public Transform bulletSpawn;
 
@@ -71,7 +69,7 @@ public class Ranged : Enemy
             {
                 Bullet b = Instantiate(bullet, bulletSpawn).GetComponent<Bullet>();
                 b.transform.Rotate(0f,0f, Vector2.SignedAngle(body.right, bulletDir));
-                b.gameObject.layer = LayerMask.NameToLayer(ENEMY_PROJECTILE_LAYER);
+                b.gameObject.layer = StaticHelpers.EnemyProjectileLayer;
                 b.Fly(bulletDir, bulletSpeed, damage);
 
                 //play muzzle effect

@@ -1,5 +1,7 @@
+using Newtonsoft.Json.Bson;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.LowLevel;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
@@ -19,6 +21,7 @@ public class Player : MonoBehaviour
 
     [Header("Movement Ability"), Space(5f)]
     public float dodgeCooldown = 1f;
+    public float dodgeDuration = 0.3f;
     public float dodgeForce = 5f;
     private bool isUsingMoveAbility;
     private bool canUseMoveAbility = true;
@@ -32,12 +35,6 @@ public class Player : MonoBehaviour
     public ParticleSystem particles;
     private PlayerControls controls;
     public Weapon weapon;
-
-
-    // other
-    public const int PLAYER_PROJECTILE_LAYER = 11;
-    public const int PICKUP_LAYER = 12;
-
     private GameObject pickupable;
 
 
@@ -119,7 +116,9 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == PICKUP_LAYER)
+        //Debug.Log(collision.gameObject.layer);
+        //Debug.Log(LayerMask.LayerToName(StaticHelpers.PickupLayer));
+        if (collision.gameObject.layer == StaticHelpers.PickupLayer)
         {
             pickupable = collision.gameObject;
         }
@@ -135,8 +134,17 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
+        //bool movingInSameDir;
         bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > runSpeed;
-        if (!isTooFast) rb.AddForce(RawDirection * moveForce, ForceMode2D.Force);
+        rb.AddForce(RawDirection * moveForce, ForceMode2D.Force); //if (!isTooFast) 
+
+        if (isTooFast)
+        {
+            rb.velocity = rb.velocity.normalized * runSpeed;
+        }
+
+
+        if (RawDirection == Vector2.zero) rb.drag = deccelerationDrag;
     }
 
     private void SetupInputEvents()
@@ -147,7 +155,6 @@ public class Player : MonoBehaviour
 
         controls.General.Pickup.started += ctx => 
         {
-            Debug.Log(pickupable);
             if (pickupable)
             {
                 Weapon newWeapon = (Weapon)pickupable.GetComponent(typeof(Weapon));
@@ -172,25 +179,32 @@ public class Player : MonoBehaviour
             canUseMoveAbility = false;
             isUsingMoveAbility = true;
 
+            Vector2 dir = rb.velocity;
             rb.velocity = Vector2.zero;
-            
             if (RawDirection == Vector2.zero)
             {
                 // dash backwards
-                rb.AddForce(-transform.up * dodgeForce, ForceMode2D.Impulse);
+                rb.AddForce((dir - (Vector2)transform.up).normalized * dodgeForce, ForceMode2D.Impulse);
             }
             else
             {
-                rb.AddForce(RawDirection * dodgeForce, ForceMode2D.Impulse);
                 // dash in direction
+                rb.AddForce((dir + RawDirection).normalized * dodgeForce, ForceMode2D.Impulse);
             }
-
+            rb.drag = 10f;
+            Invoke(nameof(EndDodge), dodgeDuration);
             Invoke(nameof(ResetMoveAbility), dodgeCooldown);
         };
         
         controls.General.Ultimate.started += ctx => { };
         
         controls.General.WeaponAbility.started += ctx => { };
+    }
+
+    private void EndDodge()
+    {
+        rb.drag = accelerationDrag;
+        isUsingMoveAbility = false;
     }
 
     private void ResetMoveAbility()

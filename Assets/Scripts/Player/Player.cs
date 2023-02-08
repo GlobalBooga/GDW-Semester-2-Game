@@ -178,7 +178,10 @@ public class Player : MonoBehaviour
             canUseMoveAbility = false;
             isUsingMoveAbility = true;
 
-            Vector2 dir = rb.velocity;
+            if (hpcomp) hpcomp.isInvincible = true;
+            cc.enabled = false;
+
+            Vector2 dir = rb.velocity.normalized;
             rb.velocity = Vector2.zero;
             if (RawDirection == Vector2.zero)
             {
@@ -188,7 +191,7 @@ public class Player : MonoBehaviour
             else
             {
                 // dash in direction
-                rb.AddForce((dir + RawDirection).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
+                rb.AddForce((dir + RawDirection * 2).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
             }
             rb.drag = 10f;
             Invoke(nameof(EndDodge), dodgeDuration);
@@ -204,6 +207,8 @@ public class Player : MonoBehaviour
     {
         rb.drag = accelerationDrag;
         isUsingMoveAbility = false;
+        if (hpcomp) hpcomp.isInvincible = false;
+        cc.enabled = true;
     }
 
     private void ResetMoveAbility()

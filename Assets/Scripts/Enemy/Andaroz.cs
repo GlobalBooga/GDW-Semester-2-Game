@@ -22,6 +22,7 @@ public class Andaroz : Enemy
     public float swipeReach;
     public float delayBeforeNextAttack_swipe = 3f;
     public float maxAttackTime_swipe = 10f;
+    [Range(0f, 1f)] public float maxHpForUse_swipe = 1f;
 
     [Space(10f)]
     [Header("Melee Attack 2 - AOE Ground Slam"), Space(5f)]
@@ -31,6 +32,7 @@ public class Andaroz : Enemy
     public float slamReach;
     public float delayBeforeNextAttack_slam = 3f;
     public float maxAttackTime_slam = 10f;
+    [Range(0f, 1f)] public float maxHpForUse_slam = 1f;
 
     [Space(10f)]
 
@@ -44,6 +46,7 @@ public class Andaroz : Enemy
     public int shots_bullets = 50;
     public GameObject bullet;
     public Transform bulletSpawn;
+    [Range(0f, 1f)] public float maxHpForUse_gun = 1f;
 
     [Space(10f)]
 
@@ -62,6 +65,7 @@ public class Andaroz : Enemy
     public bool fireSequentially = true;
     private int prev; // the previous index for sequential firing
     public Crosshair crosshairController;
+    [Range(0f, 1f)] public float maxHpForUse_missiles = 0.9f;
 
     [Space(10f)]
 
@@ -73,11 +77,13 @@ public class Andaroz : Enemy
     public float maxDist = 100f;
     public List<Transform> laserStart;
     public List<LineRenderer> lineRenderer;
+    [Range(0f, 1f)] public float maxHpForUse_laser = 0.6f;
 
     [Space(10f)]
 
     [Header("Attack Pattern"), Space(5f)]
     public List<string> orderedAttacks;
+    [Range(0f, 1f)] public float HpForStage2 = 0.5f;
 
     [Space(10f)]
 
@@ -126,6 +132,14 @@ public class Andaroz : Enemy
 
     private IEnumerator PerformSwipeAttack()
     {
+        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_swipe)
+        {
+            NextAttack();
+            yield break;
+        }
+
+
+        Debug.Log("swipe");
         bool attacked = false;   
         maxAttackDistance = 5f;
         minAttackDistance = 4f;
@@ -144,7 +158,8 @@ public class Andaroz : Enemy
             // else if we are in attack distance
             if (PlayerDistance <= maxAttackDistance)
             {
-                Debug.Log("swipe");
+                attackMovementSpeed = 0f;
+                Debug.Log("swiping");
                 // play swipe animation
                 attacked = true;
                 yield return new WaitForSeconds(swipeApplyDmgDelay);
@@ -152,25 +167,65 @@ public class Andaroz : Enemy
                 // if were still within range of swipe
                 if (PlayerDistance <= maxAttackDistance)
                     StaticHelpers.ApplyDamage(playerLoc.gameObject, swipeDamage);
+
+                attackMovementSpeed = runSpeed;
             }
+
+
 
             yield return null;
         }
         
         yield return new WaitForSeconds(delayBeforeNextAttack_swipe);
         ResetAttack();
-        //NextAttack();
     }
 
     private IEnumerator PerformSlamAttack()
     {
-        Debug.Log("slam");
-        maxAttackDistance = 10f;
-        minAttackDistance = 8f;
-        comfortableAttackDist = 0f;
-        runSpeed = 8f;
-        chasePlayer = true;
+        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_slam)
+        {
+            NextAttack();
+            yield break;
+        }
 
+        Debug.Log("slam");
+        bool attacked = false;
+        maxAttackDistance = 5f;
+        minAttackDistance = 4f;
+        comfortableAttackDist = 0f;
+        attackMovementSpeed = runSpeed = 8f;
+        chasePlayer = true;
+        NewAttackDistance();
+
+        float time = 0f;
+
+        while (!attacked)
+        {
+            time += Time.deltaTime;
+            if (time >= maxAttackTime_slam) break;
+
+            // else if we are in attack distance
+            if (PlayerDistance <= maxAttackDistance)
+            {
+                attackMovementSpeed = 0f;
+
+                // play swipe animation
+                Debug.Log("slamming");
+                attacked = true;
+                yield return new WaitForSeconds(slamApplyDmgDelay);
+
+                // if were still within range of swipe
+
+                // calculate aoe
+
+                if (PlayerDistance <= maxAttackDistance)
+                    StaticHelpers.ApplyDamage(playerLoc.gameObject, slamDamage);
+
+                attackMovementSpeed = runSpeed;
+            }
+
+            yield return null;
+        }
 
         yield return new WaitForSeconds(delayBeforeNextAttack_slam);
         ResetAttack();
@@ -179,6 +234,12 @@ public class Andaroz : Enemy
 
     private IEnumerator PerformMissileAttack()
     {
+        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_missiles)
+        {
+            NextAttack();
+            yield break;
+        }
+
         // homing missile attack
         Debug.Log("missile");
 
@@ -247,6 +308,12 @@ public class Andaroz : Enemy
 
     private IEnumerator PerformGunAttack()
     {
+        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_gun)
+        {
+            NextAttack();
+            yield break;
+        }
+
         // GUN ATTACK
         // in this attack, Andaroz chases the player at walking speed.
         // he is always facing the player
@@ -254,8 +321,8 @@ public class Andaroz : Enemy
 
         maxAttackDistance = 25f;
         minAttackDistance = 20f;
-        comfortableAttackDist = 10f;
-        runSpeed = attackMovementSpeed = 3f;
+        comfortableAttackDist = 15f;
+        runSpeed = retreatSpeed = attackMovementSpeed = 3f;
         chasePlayer = true;
         NewAttackDistance();
 
@@ -296,7 +363,22 @@ public class Andaroz : Enemy
     
     private IEnumerator PerformLaserAttack()
     {
+        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_laser)
+        {
+            NextAttack();
+            yield break;
+        }
+
         Debug.Log("laser");
+        maxAttackDistance = 40f;
+        minAttackDistance = 30f;
+        comfortableAttackDist = 0f;
+        chasePlayer = false;
+        NewAttackDistance();
+
+        // animation - arms out
+
+
         yield return new WaitForSeconds(delayBeforeNextAttack_laser);
         ResetAttack();
         //NextAttack();

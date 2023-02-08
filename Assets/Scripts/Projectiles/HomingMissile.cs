@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
-using UnityEngine.Networking.Types;
-using UnityEngine.Rendering;
 
 public class HomingMissile : Bullet
 {
@@ -12,7 +7,8 @@ public class HomingMissile : Bullet
     private float maxSpeed;
     private BoxCollider2D bc;
     private HPComponent hp;
-
+    public Transform body;
+    public GameObject HPBars;
 
     internal override void Awake()
     {
@@ -21,8 +17,15 @@ public class HomingMissile : Bullet
         if (TryGetComponent(out hp)) hp.OnHPZero = Explode;
     }
 
+    /*private void Update()
+    {
+        if (hp && showHP && HPBars) HPBars.SetActive(true);
+        else if(hp && !showHP && HPBars) HPBars.SetActive(false);
+    }*/
+
     public void Fly(Transform target, Vector2 initialDir, float initForce, float rotationForce, float maxSpeed, float damage = 0)
     {
+        transform.rotation = Quaternion.identity;
         Fly(initialDir, initForce, damage);
         this.target = target;
         force = rotationForce;
@@ -31,9 +34,9 @@ public class HomingMissile : Bullet
 
     private void Update()
     {
-        Vector3 dir = target.position - transform.position;
+        Vector3 dir = target.position - body.position;
         Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(dir, Vector3.right, Vector3.back) - 90f);
-        transform.rotation = newQuat;
+        body.rotation = newQuat;
     }
 
     void FixedUpdate()

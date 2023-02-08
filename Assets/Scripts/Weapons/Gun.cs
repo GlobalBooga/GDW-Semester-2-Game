@@ -50,7 +50,7 @@ public class Gun : Weapon
         {
             Bullet b = Instantiate(bullet, bulletSpawn).GetComponent<Bullet>();
             b.transform.Rotate(0f, 0f, Vector2.SignedAngle(transform.up, bulletDir));
-            b.gameObject.layer = Player.PLAYER_PROJECTILE_LAYER;
+            b.gameObject.layer = StaticHelpers.PlayerProjectileLayer;
             b.Fly(bulletDir, bulletSpeed, damage);
         }
 

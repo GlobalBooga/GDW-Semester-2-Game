@@ -35,12 +35,6 @@ public class Player : MonoBehaviour
     public ParticleSystem particles;
     private PlayerControls controls;
     public Weapon weapon;
-
-
-    // other
-    public const int PLAYER_PROJECTILE_LAYER = 11;
-    public const int PICKUP_LAYER = 12;
-
     private GameObject pickupable;
 
 
@@ -122,7 +116,9 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == PICKUP_LAYER)
+        //Debug.Log(collision.gameObject.layer);
+        //Debug.Log(LayerMask.LayerToName(StaticHelpers.PickupLayer));
+        if (collision.gameObject.layer == StaticHelpers.PickupLayer)
         {
             pickupable = collision.gameObject;
         }
@@ -196,7 +192,7 @@ public class Player : MonoBehaviour
                 rb.AddForce((dir + RawDirection).normalized * dodgeForce, ForceMode2D.Impulse);
             }
             rb.drag = 10f;
-            Invoke(nameof(EndDode), dodgeDuration);
+            Invoke(nameof(EndDodge), dodgeDuration);
             Invoke(nameof(ResetMoveAbility), dodgeCooldown);
         };
         
@@ -205,7 +201,7 @@ public class Player : MonoBehaviour
         controls.General.WeaponAbility.started += ctx => { };
     }
 
-    private void EndDode()
+    private void EndDodge()
     {
         rb.drag = accelerationDrag;
         isUsingMoveAbility = false;

@@ -69,7 +69,7 @@ public class Ranged : Enemy
             {
                 Bullet b = Instantiate(bullet, bulletSpawn).GetComponent<Bullet>();
                 b.transform.Rotate(0f,0f, Vector2.SignedAngle(body.right, bulletDir));
-                b.gameObject.layer = LayerMask.NameToLayer(ENEMY_PROJECTILE_LAYER);
+                b.gameObject.layer = StaticHelpers.EnemyProjectileLayer;
                 b.Fly(bulletDir, bulletSpeed, damage);
 
                 //play muzzle effect

@@ -87,12 +87,6 @@ public class Enemy : MonoBehaviour
     internal Transform playerLoc;
     public Transform body;
 
-    [Space(10f)]
-
-
-    // OTHER
-    public const string ENEMY_PROJECTILE_LAYER = "EnemyProjectile";
-
 
     public Vector3 PlayerDirection => playerLoc.position - transform.position;
     public float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);

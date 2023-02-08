@@ -15598,6 +15598,7 @@ GameObject:
   m_Component:
   - component: {fileID: 431217467}
   - component: {fileID: 431217466}
+  - component: {fileID: 431217468}
   m_Layer: 9
   m_Name: Laser
   m_TagString: Untagged
@@ -15697,7 +15698,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 0
+    numCapVertices: 1
     alignment: 0
     textureMode: 0
     shadowBias: 0.5
@@ -15719,6 +15720,26 @@ Transform:
   m_Father: {fileID: 111538745445743877}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &431217468
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431217465}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ff116c52e255f1045a1715ea3bd4afa2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &451914771
 GameObject:
   m_ObjectHideFlags: 0
@@ -20625,9 +20646,9 @@ MonoBehaviour:
   showDebugStuff: 1
   showForwards: 1
   reactionTime: 0
-  viewDistance: 40
+  viewDistance: 50
   instantDetectDist: 3
-  normalFOV: 60
+  normalFOV: 120
   searchFOV: 120
   rotationCurve:
     serializedVersion: 2
@@ -20661,7 +20682,7 @@ MonoBehaviour:
   moveForce: 15
   accelerationDrag: 1
   deccelerationDrag: 5
-  maxAttackDistance: 25
+  maxAttackDistance: 50
   minAttackDistance: 20
   comfortableAttackDist: 10
   chasePlayer: 0
@@ -20688,6 +20709,8 @@ MonoBehaviour:
   maxDist: 100
   laserStart: {fileID: 14133412}
   lineRenderer: {fileID: 431217466}
+  animator: {fileID: 431217468}
+  animationLenght: 0.1
 --- !u!114 &111538745517148553
 MonoBehaviour:
   m_ObjectHideFlags: 0

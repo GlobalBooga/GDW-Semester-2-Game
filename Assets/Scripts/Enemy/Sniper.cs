@@ -20,7 +20,13 @@ public class Sniper : Enemy
     public float maxDist = 100f;
     public Transform laserStart;
     public LineRenderer lineRenderer;
+    public Animator animator;
+    public float animationLenght;
     bool isOn;
+
+
+    const string LASER_SHOT_ANIM = "SniperLaserShot";
+    const string EMPTY = "Empty";
 
 
     internal override void Awake()
@@ -31,14 +37,13 @@ public class Sniper : Enemy
     internal override void Start()
     {
         base.Start();
-        //lineRenderer.enabled = false;
+        lineRenderer.enabled = false;
     }
 
     internal override void Update()
     {
         base.Update();
-        if (isOn) ;
-        ShootLaser();
+        if (isOn) ShootLaser();
         //if (!isAttacking && isOn) TurnOff();
     }
 
@@ -55,7 +60,7 @@ public class Sniper : Enemy
     internal override void Attack()
     {
         base.Attack();
-        //StartCoroutine(nameof(Aim));
+        StartCoroutine(nameof(Aim));
     }
 
     private IEnumerator Aim()
@@ -95,7 +100,7 @@ public class Sniper : Enemy
                 yield return new WaitForSeconds(laserFlashOnTime);
             }
         }
-        //if (!isOn) TurnOn(); // turn on laser
+        if (!isOn) TurnOn(); // turn on laser
 
         // shoot
 
@@ -109,10 +114,14 @@ public class Sniper : Enemy
             }
         }
 
+        if (animator) animator.Play(LASER_SHOT_ANIM);
+        yield return new WaitForSeconds(animationLenght);
+
         TurnOff();
 
         lockRotation = false;
         yield return new WaitForSeconds(delayBetweenShots);
+        if (animator) animator.Play(EMPTY);
         ResetAttack();
     }
 

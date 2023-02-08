@@ -146,13 +146,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 14133411}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.8, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.8000002, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 111538745445743877}
-  m_RootOrder: 3
+  m_Father: {fileID: 111538744044784088}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &18990301
 GameObject:
@@ -15648,7 +15648,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 1, z: 0}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.1
@@ -15669,11 +15669,11 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0, g: 1, b: 0.08161616, a: 1}
+      key1: {r: 0, g: 1, b: 0.08161616, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
-      key3: {r: 0, g: 0, b: 0, a: 0}
-      key4: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 1}
+      key4: {r: 0, g: 0, b: 0, a: 1}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
@@ -15686,10 +15686,10 @@ LineRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 0
-      atime3: 0
-      atime4: 0
+      atime1: 32575
+      atime2: 42791
+      atime3: 65535
+      atime4: 65535
       atime5: 0
       atime6: 0
       atime7: 0
@@ -18221,7 +18221,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20292,7 +20292,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2076337807
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0.2666125, g: 0.15281239, b: 0.3207547, a: 1}
   m_FlipX: 0
@@ -20334,6 +20334,7 @@ Transform:
   m_Children:
   - {fileID: 111538745517148554}
   - {fileID: 111538744720085952}
+  - {fileID: 14133412}
   m_Father: {fileID: 111538745445743877}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20544,7 +20545,6 @@ Transform:
   - {fileID: 111538744044784088}
   - {fileID: 4304342098627269697}
   - {fileID: 431217467}
-  - {fileID: 14133412}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20664,6 +20664,7 @@ MonoBehaviour:
   maxAttackDistance: 25
   minAttackDistance: 20
   comfortableAttackDist: 10
+  chasePlayer: 0
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 256
@@ -20678,12 +20679,12 @@ MonoBehaviour:
     m_Bits: 256
   body: {fileID: 111538744044784088}
   damage: 0
-  delayBetweenShots: 0.5
-  aimStartDelay: 1
-  aimTime: 5
+  delayBetweenShots: 3
+  aimStartDelay: 0.5
+  aimTime: 3
   warningFlashes: 3
-  laserFlashOnTime: 1
-  laserFlashOffTime: 1
+  laserFlashOnTime: 0.1
+  laserFlashOffTime: 0.1
   maxDist: 100
   laserStart: {fileID: 14133412}
   lineRenderer: {fileID: 431217466}
@@ -20976,6 +20977,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1556462160719211932, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312601736570066266, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5972767953269003667, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}

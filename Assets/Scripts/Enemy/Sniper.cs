@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst.Intrinsics;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class Sniper : Enemy
@@ -39,6 +39,7 @@ public class Sniper : Enemy
         base.Update();
         if (isOn) ;
         ShootLaser();
+        //if (!isAttacking && isOn) TurnOff();
     }
 
     internal override void OnValidate()
@@ -59,62 +60,60 @@ public class Sniper : Enemy
 
     private IEnumerator Aim()
     {
-        while (CanSeePlayer())
+        Debug.Log("aim");
+        // aim delay
+        yield return new WaitForSeconds(aimStartDelay);
+
+        // turn on laser
+        TurnOn();
+
+        //keep aiming
+        yield return new WaitForSeconds(aimTime);
+
+        // warning flashes
+        int flashes = 0;
+        while (flashes < warningFlashes)
         {
-            // aim delay
-            Debug.Log("aim delay");
-            yield return new WaitForSeconds(aimStartDelay);
-
-            // turn on laser
-            Debug.Log("turn on laser");
-            TurnOn();
-
-            // slow down rotation time
-            lookSpeed = 0.001f;
-
-            //keep aiming
-            yield return new WaitForSeconds(aimTime);
-
-            // warning flashes
-            bool laseron = true;
-            int flashes = 0;
-            while (flashes++ < warningFlashes)
+            //on the last flash, freeze look
+            if (flashes == warningFlashes - 1) 
             {
-                if (laseron)
-                {
-                    Debug.Log("flash");
-                    // turn off laser
-                    TurnOff();
-                    yield return new WaitForSeconds(laserFlashOffTime);
-                }
-                else
-                {
-                    // turn on laser
-                    TurnOn();
-                    yield return new WaitForSeconds(laserFlashOnTime);
-                }
-            }
-            if (!laseron) TurnOn(); // turn on laser
-
-            // shoot
-
-            Debug.Log("shoot");
-            RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.right, 100f, whatTakesDamage);
-            if (hit)
-            {
-                HPComponent hp;
-                if (hit.transform.gameObject.TryGetComponent(out hp))
-                {
-                    hp.Reduce(damage);
-                }
+                lockRotation = true;
+                rotationTime = 0;
             }
 
-            //Debug.Log("shoot");
-            TurnOff();
-            // reset look speed
-            lookSpeed = 0.01f;
-            yield return new WaitForSeconds(delayBetweenShots);
+            if (isOn)
+            {
+                // turn off laser
+                TurnOff();
+                yield return new WaitForSeconds(laserFlashOffTime);
+            }
+            else
+            {
+                // turn on laser
+                TurnOn();
+                flashes++;
+                yield return new WaitForSeconds(laserFlashOnTime);
+            }
         }
+        //if (!isOn) TurnOn(); // turn on laser
+
+        // shoot
+
+        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.right, 100f, whatTakesDamage);
+        if (hit)
+        {
+            HPComponent hp;
+            if (hit.transform.gameObject.TryGetComponent(out hp))
+            {
+                hp.Reduce(damage);
+            }
+        }
+
+        TurnOff();
+
+        lockRotation = false;
+        yield return new WaitForSeconds(delayBetweenShots);
+        ResetAttack();
     }
 
 
@@ -123,20 +122,20 @@ public class Sniper : Enemy
     // call in update
     void ShootLaser()
     {
-        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.right, maxDist);
+        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.right, maxDist, whatBlocksSight);
         if (hit)
         {
-            DrawLaser(laserStart.position, hit.point);
+            DrawLaser(laserStart.position - transform.position, hit.point - (Vector2)transform.position);
         }
         else
         {
-            DrawLaser(laserStart.position, laserStart.position + (body.right * maxDist));
+            DrawLaser(laserStart.position - transform.position, laserStart.position - transform.position + (body.right * maxDist));
         }
     }
 
     void DrawLaser(Vector2 startPos, Vector2 endPos)
     {
-        //lineRenderer.SetPosition(0, startPos);
+        lineRenderer.SetPosition(0, startPos);
         lineRenderer.SetPosition(1, endPos);
     }
 
@@ -156,5 +155,11 @@ public class Sniper : Enemy
             isOn = false;
             lineRenderer.enabled = false;
         }
+    }
+
+    internal override void OnLostSightOfPlayer()
+    {
+        base.OnLostSightOfPlayer();
+        base.ResetAttack();
     }
 }

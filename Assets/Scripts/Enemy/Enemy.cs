@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour
     public float searchDetectionRateMult = 1f;
     Vector3 sightMax;
     Vector3 sightMin;
-    private float rotationTime;
+    internal float rotationTime;
 
     [Space(10f)]
 
@@ -66,6 +66,8 @@ public class Enemy : MonoBehaviour
     internal bool canAttack = false; // are we in the right position to attack
     internal bool attackReady = true; // cooldowns?
     internal bool isAttacking;
+    internal bool lockRotation;
+    public bool chasePlayer = true;
 
 
     [Space(10f)]
@@ -157,16 +159,19 @@ public class Enemy : MonoBehaviour
 
         HandleSight();
 
-        // Player position recorder
-        if ((timeSinceLastPos >= secondsBetweenPoses) || saveOneMorePos)
+
+        if (chasePlayer)
         {
-            timeSinceLastPos = 0f;
-            QueuePlayerPos();
+            // Player position recorder
+            if ((timeSinceLastPos >= secondsBetweenPoses) || saveOneMorePos)
+            {
+                timeSinceLastPos = 0f;
+                QueuePlayerPos();
+            }
+
+            // If we are chasing the player, look at the next point
+            if (!foundPlayer && playerPoses.Count > 0f) LookAt(nextPos);
         }
-
-        // If we are chasing the player, look at the next point
-        if (!foundPlayer && playerPoses.Count > 0f) LookAt(nextPos);
-
 
         // base attack logic
         if (canAttack && attackReady)
@@ -179,7 +184,7 @@ public class Enemy : MonoBehaviour
     internal virtual void FixedUpdate()
     {
         // Standard chase player
-        if (lockedOnPlayer && PlayerDistance > attackDistance)
+        if (chasePlayer && lockedOnPlayer && PlayerDistance > attackDistance)
         {
             moveSpeed = isAttacking ? attackMovementSpeed : runSpeed;
             bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > moveSpeed;
@@ -213,7 +218,7 @@ public class Enemy : MonoBehaviour
 
 
         // if we lost the player and is following their tacks
-        if (!foundPlayer && playerPoses.Count > 0f)
+        if (chasePlayer && !foundPlayer && playerPoses.Count > 0f)
         {
             float distCovered = (Time.time - lerpStartTime) * runSpeed;
             transform.position = Vector3.Lerp(lerpStart, nextPos, distCovered / totalTravelDist);
@@ -263,8 +268,11 @@ public class Enemy : MonoBehaviour
                 if (!foundPlayer)
                 {
                     // Immediately store the player's position
-                    playerPoses.Clear();
-                    QueuePlayerPos();
+                    if (chasePlayer)
+                    {
+                        playerPoses.Clear();
+                        QueuePlayerPos();
+                    }
                     
                     foundPlayer = true;
                     rotationTime = 0f;
@@ -281,19 +289,20 @@ public class Enemy : MonoBehaviour
                 StopAllCoroutines();
 
                 // increase the detection rate
-                NewDetectionRate(1/searchDetectionRateMult);
+                if (chasePlayer) NewDetectionRate(1/searchDetectionRateMult);
 
                 // for children to add their functionalities
                 OnLostSightOfPlayer();
 
                 //Debug.Log("lost player");
+                // Change some detection related properties
                 foundPlayer = false;
                 lockedOnPlayer = false;
                 rotationTime = 0f;
                 moveSpeed = walkSpeed;
-                fov = searchFOV;
+                if (chasePlayer) fov = searchFOV;
                 
-                if (playerPoses.Count > 0)
+                if (playerPoses.Count > 0 && chasePlayer)
                 {
                     // finding the quickest route
                     Queue<Vector3> tempQ = new();
@@ -370,6 +379,7 @@ public class Enemy : MonoBehaviour
         // if we are already looking at player - called every frame
         if (lockedOnPlayer)
         {
+            //if (LookAt(playerLoc.position)) rotationTime = 0f;
             LookAt(playerLoc.position);
 
             timeSinceLastPos += Time.deltaTime;
@@ -380,6 +390,8 @@ public class Enemy : MonoBehaviour
     // lerped rotation for smoothness. Must be called from Update(). Returns true when completed
     internal virtual bool LookAt(Vector3 point) 
     {
+        if (lockRotation) return true;
+
         rotationTime++;
         Vector3 thing = point - transform.position;
         Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(thing, Vector3.right, Vector3.back));

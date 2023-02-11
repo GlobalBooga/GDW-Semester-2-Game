@@ -8543,7 +8543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e33cb5db4c28a6849bc0475cbe714ca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 50
+  damage: 70
   cooldown: 0.8
   range: 0
   readyToUse: 1
@@ -11957,10 +11957,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1531159432}
     m_Modifications:
-    - target: {fileID: 4770469877047556184, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
-      propertyPath: damage
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 4770469877047556185, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
       propertyPath: m_RootOrder
       value: 1

@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(HPComponent))]
@@ -121,6 +119,8 @@ public class Enemy : MonoBehaviour
         ResetAttack();
         fov = normalFOV;
         playerPoses.Clear();
+        //Debug.Log("resetting");
+
     }
 
     internal virtual void OnValidate()
@@ -149,6 +149,8 @@ public class Enemy : MonoBehaviour
         playerLoc = GameObject.Find("Player").transform;
         // set the ondied func
         if (TryGetComponent(out hp)) hp.OnHPZero = OnDied;
+        originalPos = transform.position;
+        originalRot = body.rotation;
     }
 
     internal virtual void Start()
@@ -158,9 +160,6 @@ public class Enemy : MonoBehaviour
         moveSpeed = walkSpeed;
         rb.drag = deccelerationDrag;
         fov = normalFOV;
-        originalPos = transform.position;
-        originalRot = body.rotation;
-
     }
 
     internal virtual void Update()
@@ -539,6 +538,7 @@ public class Enemy : MonoBehaviour
     {
         LevelManager.EnemyDied();
         gameObject.SetActive(false);
+        //Debug.Log("doed");
     }
 
     public void Alert(Vector3 lookAt)

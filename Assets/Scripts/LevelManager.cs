@@ -93,4 +93,9 @@ public class LevelManager : MonoBehaviour
     {
         scenes[currentSceneIndex].ProgressFindTheKey();
     }
+
+    public static void ShowHint()
+    {
+        scenes[currentSceneIndex].ShowHint();
+    }
 }

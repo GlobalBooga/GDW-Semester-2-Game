@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class SceneSettings : MonoBehaviour
@@ -20,7 +21,10 @@ public class SceneSettings : MonoBehaviour
     public GameObject gameplayObjectsContainer;
     public SceneObjective sceneObjective;
     private int enemyCount;
-
+    public TextMeshProUGUI hintText;
+    public float hintTime = 5f;
+    private bool showingHint;
+    public AnimationCurve messageFade;
 
     public void SetScene()
     {
@@ -58,6 +62,23 @@ public class SceneSettings : MonoBehaviour
                 enemy.gameObject.SetActive(true);
             }
         }
+
+
+        // setting the hint message
+        switch (sceneObjective)
+        {
+            case SceneObjective.None:
+                hintText.text = "";
+                break;
+            case SceneObjective.KillAllEnemies:
+                hintText.text = $"Kill All Enemies. {enemyCount} Still Remain!";
+                break;
+            case SceneObjective.FindTheKey:
+                hintText.text = "Find the Key.";
+                break;
+            default:
+                break;
+        }
     }
 
     public void ProgressKillAllEnemies()
@@ -66,9 +87,11 @@ public class SceneSettings : MonoBehaviour
 
         if (--enemyCount <= 0)
         {
-            Debug.Log("scene complete");
+            //Debug.Log("scene complete");
             if (sceneExit) sceneExit.Unblock();
         }
+
+        hintText.text = $"Kill All Enemies. {enemyCount} Still Remain!";
     }
 
     public void ProgressFindTheKey()
@@ -86,5 +109,31 @@ public class SceneSettings : MonoBehaviour
     {
         if (EnemyContainer) EnemyContainer.SetActive(true);
         if (gameplayObjectsContainer) gameplayObjectsContainer.SetActive(true);
+    }
+
+    public void ShowHint()
+    {
+        hintText.enabled = true;
+        hintText.color = new Color(1, 1, 1, 1);
+        
+        if (showingHint) StopCoroutine(nameof(HideHint));
+
+        StartCoroutine(nameof(HideHint));
+    }
+
+    private IEnumerator HideHint()
+    {
+        showingHint = true;
+        yield return new WaitForSeconds(hintTime);
+
+        // make the hint fade away
+        float time = 0;
+        while (messageFade.Evaluate(time) < 1)
+        {
+            time += Time.deltaTime;
+            hintText.color = Color.Lerp(Color.white,Color.clear, messageFade.Evaluate(time));
+            yield return null;
+        }
+        hintText.enabled = false;
     }
 }

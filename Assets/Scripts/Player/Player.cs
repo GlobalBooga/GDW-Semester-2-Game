@@ -1,7 +1,4 @@
-using Newtonsoft.Json.Bson;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.LowLevel;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
@@ -32,12 +29,17 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private CircleCollider2D cc;
     private HPComponent hpcomp;
-    public ParticleSystem particles;
+    //public ParticleSystem particles;
     private PlayerControls controls;
     public Weapon weapon;
     private GameObject pickupable;
+    public Animator screenOverlayAnimator;
+
+    // for animations
+    public const string PLAYER_HIT_INDICATOR = "PlayerDamageTaken";
 
 
+    // other
     private Quaternion originalRot;
     private Vector3 originalPos;
     private Vector2 lastDirection;
@@ -136,13 +138,12 @@ public class Player : MonoBehaviour
     {
         //bool movingInSameDir;
         bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > runSpeed;
-        rb.AddForce(RawDirection * moveForce, ForceMode2D.Force); //if (!isTooFast) 
+        rb.AddForce(RawDirection * moveForce * rb.mass, ForceMode2D.Force); //if (!isTooFast) 
 
         if (isTooFast)
         {
             rb.velocity = rb.velocity.normalized * runSpeed;
         }
-
 
         if (RawDirection == Vector2.zero) rb.drag = deccelerationDrag;
     }
@@ -179,17 +180,20 @@ public class Player : MonoBehaviour
             canUseMoveAbility = false;
             isUsingMoveAbility = true;
 
-            Vector2 dir = rb.velocity;
+            if (hpcomp) hpcomp.isInvincible = true;
+            gameObject.layer = StaticHelpers.PlayerInvincibleLayer;
+
+            Vector2 dir = rb.velocity.normalized;
             rb.velocity = Vector2.zero;
             if (RawDirection == Vector2.zero)
             {
                 // dash backwards
-                rb.AddForce((dir - (Vector2)transform.up).normalized * dodgeForce, ForceMode2D.Impulse);
+                rb.AddForce((dir - (Vector2)transform.up).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
             }
             else
             {
                 // dash in direction
-                rb.AddForce((dir + RawDirection).normalized * dodgeForce, ForceMode2D.Impulse);
+                rb.AddForce((dir + RawDirection * 2).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
             }
             rb.drag = 10f;
             Invoke(nameof(EndDodge), dodgeDuration);
@@ -205,6 +209,8 @@ public class Player : MonoBehaviour
     {
         rb.drag = accelerationDrag;
         isUsingMoveAbility = false;
+        if (hpcomp) hpcomp.isInvincible = false;
+        gameObject.layer = StaticHelpers.PlayerLayer;
     }
 
     private void ResetMoveAbility()
@@ -222,5 +228,6 @@ public class Player : MonoBehaviour
     {
         // disable movement until grounded
         Debug.Log("ouch");
+        if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR);
     }
 }

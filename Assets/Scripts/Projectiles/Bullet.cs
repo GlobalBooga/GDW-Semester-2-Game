@@ -20,16 +20,14 @@ public class Bullet : MonoBehaviour
         transform.parent = null;
     }
 
+
     internal virtual void OnCollisionEnter2D(Collision2D collision)
     {
         // play hit effect
 
-        HPComponent hp;
-        if (collision.transform.gameObject.TryGetComponent(out hp))
-        {
-            hp.Reduce(damage);
-        }
+        StaticHelpers.ApplyDamage(collision.gameObject, damage);
 
         Destroy(gameObject);
     }
+    
 }

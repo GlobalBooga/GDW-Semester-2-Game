@@ -295,7 +295,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8003238728033211267
 Transform:
   m_ObjectHideFlags: 0
@@ -325,7 +325,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -353,7 +353,7 @@ MonoBehaviour:
   hpColorThreshold: 0.8
   fullHpColor: {r: 0.208916, g: 0.6792453, b: 0.1762193, a: 1}
   midHpColor: {r: 0.735849, g: 0.7018685, b: 0.1423104, a: 1}
-  lowHpColor: {r: 0.5943396, g: 0.1654058, b: 0.1654058, a: 1}
+  lowHpColor: {r: 1, g: 0, b: 0, a: 1}
   isInvincible: 0
   maxHealth: 100
 --- !u!114 &8003238728033211266
@@ -399,7 +399,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  maxStoredPoses: 4
+  secondsBetweenPoses: 1
+  minDistanceBetweenPoses: 1
   searchDetectionRateMult: 1
+  canSeeThroughWalls: 0
   walkSpeed: 3
   runSpeed: 8
   attackMovementSpeed: 0
@@ -410,6 +414,7 @@ MonoBehaviour:
   maxAttackDistance: 4
   minAttackDistance: 3
   comfortableAttackDist: 0
+  chasePlayer: 1
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 256

@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using UnityEditorInternal;
 
 public class HPComponent : MonoBehaviour
 {
@@ -28,7 +29,16 @@ public class HPComponent : MonoBehaviour
     private void Start()
     {
         health = maxHealth;
-        UpdateBars();
+        foreach (var bar in hpBars)
+        {
+            bar.color = fullHpColor;
+        }
+    }
+
+    private void OnDisable()
+    {
+        //reset
+        Start();
     }
 
     public void Reduce(float amount)

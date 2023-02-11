@@ -11,13 +11,16 @@ public class StaticHelpers
     public static LayerMask PlayerProjectileLayer => LayerMask.NameToLayer("PlayerProjectile");
     public static LayerMask PickupLayer => LayerMask.NameToLayer("Pickup");
     public static LayerMask EnemyMissile => LayerMask.NameToLayer("EnemyMissile");
+    public static LayerMask PlayerInvincibleLayer => LayerMask.NameToLayer("PlayerInvincible");
 
-    public static void ApplyDamage(GameObject other, float damage)
+    public static bool ApplyDamage(GameObject other, float damage)
     {
         HPComponent hp;
         if (other.TryGetComponent(out hp))
         {
             hp.Reduce(damage);
+            return true;
         }
+        return false;
     }
 }

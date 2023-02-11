@@ -102,6 +102,7 @@ public class Sniper : Enemy
         }
         if (!isOn) TurnOn(); // turn on laser
 
+
         // shoot
 
         RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.right, 100f, whatTakesDamage);
@@ -110,6 +111,10 @@ public class Sniper : Enemy
             StaticHelpers.ApplyDamage(hit.transform.gameObject, damage);
         }
 
+        // alert everyone
+        LevelManager.AlertAllEnemiesInCurrentScene(transform.position);
+
+        // Play animation
         if (animator) animator.Play(LASER_SHOT_ANIM);
         yield return new WaitForSeconds(animationLenght);
 

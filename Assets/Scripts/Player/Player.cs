@@ -1,7 +1,4 @@
-using Newtonsoft.Json.Bson;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.LowLevel;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
@@ -32,12 +29,17 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private CircleCollider2D cc;
     private HPComponent hpcomp;
-    public ParticleSystem particles;
+    //public ParticleSystem particles;
     private PlayerControls controls;
     public Weapon weapon;
     private GameObject pickupable;
+    public Animator screenOverlayAnimator;
+
+    // for animations
+    public const string PLAYER_HIT_INDICATOR = "PlayerDamageTaken";
 
 
+    // other
     private Quaternion originalRot;
     private Vector3 originalPos;
     private Vector2 lastDirection;
@@ -179,7 +181,7 @@ public class Player : MonoBehaviour
             isUsingMoveAbility = true;
 
             if (hpcomp) hpcomp.isInvincible = true;
-            cc.enabled = false;
+            gameObject.layer = StaticHelpers.PlayerInvincibleLayer;
 
             Vector2 dir = rb.velocity.normalized;
             rb.velocity = Vector2.zero;
@@ -208,7 +210,7 @@ public class Player : MonoBehaviour
         rb.drag = accelerationDrag;
         isUsingMoveAbility = false;
         if (hpcomp) hpcomp.isInvincible = false;
-        cc.enabled = true;
+        gameObject.layer = StaticHelpers.PlayerLayer;
     }
 
     private void ResetMoveAbility()
@@ -226,5 +228,6 @@ public class Player : MonoBehaviour
     {
         // disable movement until grounded
         Debug.Log("ouch");
+        if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR);
     }
 }

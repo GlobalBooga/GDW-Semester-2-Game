@@ -64,7 +64,7 @@ public class Sniper : Enemy
 
     private IEnumerator Aim()
     {
-        Debug.Log("aim");
+        //Debug.Log("aim");
         // aim delay
         yield return new WaitForSeconds(aimStartDelay);
 
@@ -104,7 +104,7 @@ public class Sniper : Enemy
 
         // shoot
 
-        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.right, 100f, whatTakesDamage);
+        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, 100f, whatTakesDamage);
         if (hit)
         {
             StaticHelpers.ApplyDamage(hit.transform.gameObject, damage);
@@ -131,14 +131,14 @@ public class Sniper : Enemy
     // call in update
     void ShootLaser()
     {
-        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.right, maxDist, whatBlocksSight);
+        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, maxDist, whatBlocksSight);
         if (hit)
         {
             DrawLaser(laserStart.position - transform.position, hit.point - (Vector2)transform.position);
         }
         else
         {
-            DrawLaser(laserStart.position - transform.position, laserStart.position - transform.position + (body.right * maxDist));
+            DrawLaser(laserStart.position - transform.position, laserStart.position - transform.position + (body.up * maxDist));
         }
     }
 

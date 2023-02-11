@@ -1,25 +1,46 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class OptionsMenu : MonoBehaviour
 {
-    public AudioMixer Master;
-    public AudioMixer SFX;
-    public AudioMixer Music;
+    [SerializeField]
+    private AudioMixer Master;
+    [SerializeField]
+    private AudioMixer SFX;
+    [SerializeField]
+    private AudioMixer Music;
+    [SerializeField]
+    private AudioSource AudioSource;
 
-    public void SetMasterVolume(float volume)
+    private void Start()
     {
-        Master.SetFloat("volume", volume);
+        Master.SetFloat("MasterVolume", Mathf.Log10(PlayerPrefs.GetFloat("MasterVolume", 1) * 20));
+        SFX.SetFloat("SFXVolume", Mathf.Log10(PlayerPrefs.GetFloat("SFXVolume", 1) * 20));
+        Music.SetFloat("MusicVolume", Mathf.Log10(PlayerPrefs.GetFloat("MusicVolume", 1) * 20));
     }
-    public void SetSFXVolume(float volume)
+    public void OnChangeSlider(float Value)
     {
-        SFX.SetFloat("volume", volume);
-    }
-    public void SetMusicVolume(float volume)
-    {
-        Music.SetFloat("volume", volume);
+        Master.SetFloat("MasterVolume", Mathf.Log10(Value) * 20);
+        SFX.SetFloat("SFXVolume", Mathf.Log10(Value) * 20);
+        Music.SetFloat("MusicVolume", Mathf.Log10(Value) * 20);
+
+        PlayerPrefs.SetFloat("MasterVolume", Value);
+        PlayerPrefs.Save();
+        PlayerPrefs.SetFloat("SFXVolume", Value);
+        PlayerPrefs.Save();
+        PlayerPrefs.SetFloat("MusicVolume", Value);
+        PlayerPrefs.Save();
     }
 }
+  
+
+   

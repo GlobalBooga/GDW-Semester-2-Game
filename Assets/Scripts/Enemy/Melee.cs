@@ -50,16 +50,10 @@ public class Melee : Enemy
         // if we hit
         if (PlayerDistance <= attackReach)
         {
-            Invoke(nameof(ApplyDamage), applyDmgDelay);
+            //Invoke(nameof(ApplyDamage), applyDmgDelay);
+            StaticHelpers.ApplyDamage(playerLoc.gameObject, damage);
         }
     }
 
-    private void ApplyDamage()
-    {
-        HPComponent hp;
-        if (playerLoc.gameObject.TryGetComponent(out hp))
-        {
-            hp.Reduce(damage);
-        }
-    }
+    
 }

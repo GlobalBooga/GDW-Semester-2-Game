@@ -12,6 +12,7 @@ public class BouncyBullet : Bullet
     internal override void Awake()
     {
         base.Awake();
+        Destroy(gameObject, 15f);
     }
 
     private void Update()
@@ -23,12 +24,12 @@ public class BouncyBullet : Bullet
     {
         // play hit effect
 
-        HPComponent hp;
-        if (collision.transform.gameObject.TryGetComponent(out hp))
+
+        if (StaticHelpers.ApplyDamage(collision.gameObject, damage))
         {
-            hp.Reduce(damage);
             Destroy(gameObject);
         }
+
 
         if (bounces < maxBounces)
         {

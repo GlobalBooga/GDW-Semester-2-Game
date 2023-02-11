@@ -43,15 +43,25 @@ public class Ranged : Enemy
         base.Attack();
         //Debug.Log("attacck");
         StartCoroutine(nameof(Shoot));
-
     }
 
     private IEnumerator Shoot()
     {
         yield return new WaitForSeconds(shootStartDelay);
 
+        // alert interval
+        float timeInterval = 1f;
+        float time = Time.time - timeInterval;
+
         while (CanSeePlayer())
         {
+            // alert everyone
+            if (Time.time - time >= timeInterval)
+            {
+                time = Time.time;
+                LevelManager.AlertAllEnemiesInCurrentScene(transform.position);
+            }
+
             // calculate spread
             float spreadAngle = Random.Range(-bulletSpread, bulletSpread);
             float rads = Mathf.Deg2Rad * ((spreadAngle > 0) ? spreadAngle : (360f + spreadAngle));

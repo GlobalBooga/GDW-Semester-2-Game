@@ -1,89 +1,56 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor;
+using Newtonsoft.Json.Bson;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.LowLevel;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
+[RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    public static List<Action> onPlayerRespawn = new List<Action>();
-
     [Header("Attack"), Space(5f)]
-    [SerializeField] private float interactRange = 1f;
-    [SerializeField] private float damage = 34f;
-    [SerializeField] private float attackRange = 2f;
+    public float interactRange = 1f;
 
     [Space(10f)]
-    
+
     [Header("Movement Values"), Space(5f)]
-    [SerializeField] private float runSpeed = 10f;
-    [SerializeField] private float accelerationDrag = 1f;
-    [SerializeField] private float deccelerationDrag = 5f;
-    [SerializeField] private const float gravityScale = 18f;
-    [SerializeField] private float jumpGracePeriod = 0.2f;
-    private float moveSpeed;
-    private bool wasGrounded;
+    public float runSpeed = 10f;
+    public float moveForce = 15f;
+    public float accelerationDrag = 1f;
+    public float deccelerationDrag = 5f;
 
     [Space(10f)]
 
-    [Header("Jumping"), Space(5f)]
-    [SerializeField] private float jumpForce = 5f;
-    [SerializeField] private float airSpeedMultiplier = 0.5f;
-    [SerializeField] private float jumpCooldown = 0.25f;
-    public bool canJump { get; private set; }
+    [Header("Movement Ability"), Space(5f)]
+    public float dodgeCooldown = 1f;
+    public float dodgeDuration = 0.3f;
+    public float dodgeForce = 5f;
+    private bool isUsingMoveAbility;
+    private bool canUseMoveAbility = true;
 
     [Space(10f)]
 
-    [Header("Crouching"), Space(5f)]
-    [SerializeField] private float crouchSpeed = 3f;
-    [SerializeField] private float crouchYScale = 0.5f;
-    private float normalYScale;
-
-    [Space(10f)]
-
-    [Header("Slope Movement"), Space(5f)]
-    [SerializeField] private float maxSlopeAngle = 40f;
-
-    [Space(10f)]
-
-    [Header("Masks"), Space(5f)]
-    [SerializeField] private LayerMask whatIsGround;
-
-    [Space(10f)]
     [Header("Objects"), Space(5f)]
     private Rigidbody2D rb;
-    private CapsuleCollider2D cc;
+    private CircleCollider2D cc;
     private HPComponent hpcomp;
     public ParticleSystem particles;
     private PlayerControls controls;
+    public Weapon weapon;
+    private GameObject pickupable;
 
 
-
-    public enum MovementState
-    {
-        running,
-        crouching,
-        falling,
-        idle
-    }
-
-    private MovementState currentState;
+    private Quaternion originalRot;
+    private Vector3 originalPos;
+    private Vector2 lastDirection;
 
 
-    private bool landeffect;
+    public Vector2 RawDirection => controls.General.Move.ReadValue<Vector2>();
+    public Vector2 RotatedRawDirection => transform.up * RawDirection.y + transform.right * RawDirection.x;
+    public Vector2 MousePosition => Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    public Vector2 MouseDirection => (MousePosition - (Vector2)transform.position).normalized;
+    public bool IsMoving => RawDirection != Vector2.zero;
 
 
-    internal Quaternion originalRot;
-    internal Vector3 originalPos;
-    internal Vector3 mousePos;
-
-
-    public RaycastHit2D IsGrounded => Physics2D.CircleCast(cc.bounds.min, 0.1f, Vector2.down, 0.2f, whatIsGround);
-    private float FloorAngle => Mathf.Abs(Vector2.Angle(IsGrounded.normal, Vector2.up));
-    public Vector2 MoveDirection => controls.General.Move.ReadValue<Vector2>();
-    public bool IsCrouching => controls.General.Crouch.IsPressed();
-    public bool IsJumping => controls.General.Jump.IsPressed();
-
+    #region Unity Messages
 
     private void OnEnable()
     {
@@ -97,6 +64,7 @@ public class Player : MonoBehaviour
         //controls.Menus.Enable();
     }
 
+
     private void OnDestroy()
     {
         controls.Dispose();
@@ -105,11 +73,15 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         controls = new PlayerControls();
-        rb = gameObject.GetComponent<Rigidbody2D>();
-        cc = gameObject.GetComponent<CapsuleCollider2D>();
+        rb = GetComponent<Rigidbody2D>();
+        cc = gameObject.GetComponent<CircleCollider2D>();
         hpcomp = gameObject.GetComponent<HPComponent>();
-        hpcomp.OnHPZero = OnDead;
-        hpcomp.OnHit.Add(OnHit);
+
+        if (hpcomp)
+        {
+            hpcomp.OnHPZero = OnDead;
+            hpcomp.OnHit.Add(OnHit);
+        }
 
         SetupInputEvents();
     }
@@ -118,274 +90,137 @@ public class Player : MonoBehaviour
     {
         originalPos = transform.position;
         originalRot = transform.rotation;
-        normalYScale = transform.localScale.y;
-        canJump = true;
         rb.freezeRotation = true;
         rb.drag = accelerationDrag;
-        rb.gravityScale = gravityScale;
+
+        if (weapon) weapon.SetHeld(); 
+    }
+
+    private void Update()
+    {
+        // If we are still holding down attack button, continue attacking
+        if (weapon)
+        {
+            if (weapon.readyToUse && weapon.isAutoUse && controls.General.Attack.IsPressed()) 
+                weapon.Use();
+        }
+
+        transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(MouseDirection, Vector3.up, Vector3.back));
+        Debug.DrawLine(transform.position, transform.position + (Vector3)MouseDirection * 1.5f, Color.red, Time.deltaTime);
+    }
+
+    private void FixedUpdate()
+    {
+        if (!isUsingMoveAbility) Move();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //Debug.Log(collision.gameObject.layer);
+        //Debug.Log(LayerMask.LayerToName(StaticHelpers.PickupLayer));
+        if (collision.gameObject.layer == StaticHelpers.PickupLayer)
+        {
+            pickupable = collision.gameObject;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        pickupable = null;
+    }
+
+
+    #endregion
+
+    private void Move()
+    {
+        //bool movingInSameDir;
+        bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > runSpeed;
+        rb.AddForce(RawDirection * moveForce, ForceMode2D.Force); //if (!isTooFast) 
+
+        if (isTooFast)
+        {
+            rb.velocity = rb.velocity.normalized * runSpeed;
+        }
+
+
+        if (RawDirection == Vector2.zero) rb.drag = deccelerationDrag;
     }
 
     private void SetupInputEvents()
     {
-        // JUMP
-        controls.General.Jump.started += ctx => TryJump();
+        controls.General.Move.started += ctx => rb.drag = accelerationDrag;
 
+        controls.General.Move.canceled += ctx => rb.drag = deccelerationDrag;
 
-        // CROUCH
-        controls.General.Crouch.started += ctx => Crouch();
-
-
-        // UN-CROUCH
-        controls.General.Crouch.canceled += ctx => UnCrouch();
-
-        controls.General.Attack.started += ctx =>
+        controls.General.Pickup.started += ctx => 
         {
-            //GameObject.Find("Enemy").transform.Rotate(0f, 180f, 0f);
+            if (pickupable)
+            {
+                Weapon newWeapon = (Weapon)pickupable.GetComponent(typeof(Weapon));
+
+                if (newWeapon)
+                {
+                    weapon.Drop(transform.up);
+                
+                    newWeapon.Pickup(transform, weapon);
+                    weapon = newWeapon;
+                }
+            }
         };
+
+        controls.General.Attack.started += ctx => { if (weapon) weapon.Use(); };
+
+        controls.General.Reload.started += ctx => { };
+
+        controls.General.MovementAbility.started += ctx =>
+        {
+            if (!canUseMoveAbility) return;
+            canUseMoveAbility = false;
+            isUsingMoveAbility = true;
+
+            Vector2 dir = rb.velocity;
+            rb.velocity = Vector2.zero;
+            if (RawDirection == Vector2.zero)
+            {
+                // dash backwards
+                rb.AddForce((dir - (Vector2)transform.up).normalized * dodgeForce, ForceMode2D.Impulse);
+            }
+            else
+            {
+                // dash in direction
+                rb.AddForce((dir + RawDirection).normalized * dodgeForce, ForceMode2D.Impulse);
+            }
+            rb.drag = 10f;
+            Invoke(nameof(EndDodge), dodgeDuration);
+            Invoke(nameof(ResetMoveAbility), dodgeCooldown);
+        };
+        
+        controls.General.Ultimate.started += ctx => { };
+        
+        controls.General.WeaponAbility.started += ctx => { };
     }
+
+    private void EndDodge()
+    {
+        rb.drag = accelerationDrag;
+        isUsingMoveAbility = false;
+    }
+
+    private void ResetMoveAbility()
+    {
+        canUseMoveAbility = true;
+    }
+
 
     private void OnDead()
     {
         Debug.Log("you died");
     }
 
-
-    private void Update()
-    {
-        StateHandler();
-        RotatePlayer();
-        CheckJumping();
-
-        Debug.DrawLine(transform.position, transform.position + Vector3.Cross(IsGrounded.normal, transform.forward), Color.green, Time.deltaTime);
-
-        if (!IsGrounded && particles && rb.velocity.y < -30f)
-        {
-            landeffect = true;
-        }
-
-        if (landeffect && IsGrounded)
-        {
-            LandEffect();
-        }
-
-        //if (IsGrounded) wasGrounded = true;
-        //if (rb.velocity.y < 0f) Invoke(nameof(EndJumpGracePeriod), jumpGracePeriod);
-    }
-
-
-    #region Movement
-
-    private void CheckJumping()
-    {
-        if (IsJumping)
-        {
-            TryJump();
-        }
-    }
-
-    private void LandEffect()
-    {
-        landeffect = false;
-        Transform obj = Instantiate(particles).transform;
-        obj.position = cc.bounds.min + Vector3.up * 0.1f;
-
-        ParticleSystem pf;
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
-    }
-
-    public void RotatePlayer()
-    {
-        if (MoveDirection.x == 1)
-        {
-            transform.rotation = Quaternion.identity;
-        }
-        else if (MoveDirection.x == -1)
-        {
-            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-        }
-    }
-
-    private void EndJumpGracePeriod()
-    { 
-        //wasGrounded = false;
-    }
-
-    private void Move()
-    {
-        bool isGrounded = IsGrounded;
-        //if (isGrounded) wasGrounded = true;
-        //if (rb.velocity.y < 0f) Invoke(nameof(EndJumpGracePeriod), jumpGracePeriod);
-
-        Vector2 rawDir = MoveDirection;
-        Vector2 forceDir = rawDir;
-
-        Debug.Log(FloorAngle);
-        if (FloorAngle > maxSlopeAngle)
-        {
-            return;
-        }
-
-
-        // if input is horizontal
-        if (rawDir.x != 0 && isGrounded)
-        {
-            forceDir = Vector3.Cross(IsGrounded.normal, transform.forward);
-
-            rb.AddForce((Vector2.right * forceDir.x * moveSpeed * 10f), ForceMode2D.Force);
-        }
-        else
-        {
-            rb.AddForce((Vector2.right * rawDir.x * moveSpeed * 10f), ForceMode2D.Force);
-        }
-
-        // if input is W
-        if (rawDir.y > 0)
-        {
-            TryJump();
-        }
-
-        // speed limiter while on ground
-        if (Mathf.Abs(rb.velocity.x) > moveSpeed && isGrounded)
-        {
-            rb.velocity = new Vector2(forceDir.x * moveSpeed, rb.velocity.y);
-        }
-        // speed limiter in air
-        else
-        {
-            rb.velocity = new Vector2(forceDir.x * runSpeed, rb.velocity.y);
-        }
-    }
-
-    public void Crouch()
-    {
-        transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-        if (IsGrounded) rb.AddForce(Vector2.down * 80f, ForceMode2D.Impulse);
-    }
-
-    public void UnCrouch()
-    {
-        transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
-    }
-
-    public void TryJump()
-    {
-        if ((IsGrounded || wasGrounded) && canJump) Jump();
-    }
-
-    private void Jump()
-    {
-        //wasGrounded = false;
-        canJump = false;
-        rb.velocity = new Vector2(rb.velocity.x, 0f);
-        rb.AddForce(Vector2.up * jumpForce * 10, ForceMode2D.Impulse);
-        Debug.Log("jump");
-        Invoke(nameof(ResetJump), jumpCooldown);
-    }
-
-    private void ResetJump()
-    {
-        canJump = true;
-    }
-
-    private void ChangeMovementState(MovementState state)
-    {
-        //if (state == currentState) return;
-
-        switch (state)
-        {
-            case MovementState.running:
-                RunningState();
-                break;
-            case MovementState.crouching:
-                CrouchingState();
-                break;
-            case MovementState.falling:
-                FallingState();
-                break;
-            case MovementState.idle:
-                IdleState();
-                break;
-            default:
-                break;
-        }
-
-        Debug.Log(state);
-    }
-
-    private void RunningState()
-    {
-        moveSpeed = runSpeed;
-        rb.drag = accelerationDrag;
-        rb.gravityScale = gravityScale;
-    }
-
-    private void CrouchingState()
-    {
-        if (IsGrounded)
-        {
-            moveSpeed = crouchSpeed;
-            rb.drag = accelerationDrag;
-            rb.gravityScale = gravityScale;
-        }
-    }
-
-    private void FallingState()
-    {
-        moveSpeed = runSpeed * airSpeedMultiplier;
-        rb.drag = 0f;
-        rb.gravityScale = gravityScale;
-    }
-
-    private void IdleState()
-    {
-        rb.drag = deccelerationDrag;
-
-        if (FloorAngle <= maxSlopeAngle)
-        {
-            rb.gravityScale = 0f;
-            rb.AddForce(IsGrounded.normal * -gravityScale, ForceMode2D.Force);
-        }
-    }
-
-    private void StateHandler()
-    {
-        MovementState nextState;
-
-        // Crouching
-        if (IsCrouching)
-        {
-            nextState = MovementState.crouching;
-        }
-
-        // Running
-        else if (IsGrounded && MoveDirection != Vector2.zero)
-        {
-            nextState = MovementState.running;
-        }
-
-        // Falling
-        else if (!IsGrounded)
-        {
-            nextState = MovementState.falling;
-        }
-
-        // Idle
-        else
-        {
-            nextState = MovementState.idle;
-        }
-
-        ChangeMovementState(nextState);
-    }
-
     private void OnHit()
     {
+        // disable movement until grounded
         Debug.Log("ouch");
     }
-
-    #endregion
 }

@@ -9220,6 +9220,9 @@ MonoBehaviour:
   doesLevelLoop: 1
   allowBacktracking: 0
   orderedScenes:
+  - {fileID: 1552509382}
+  - {fileID: 216215175}
+  - {fileID: 1186113656}
   - {fileID: 812624319}
 --- !u!1 &619394800
 GameObject:
@@ -10438,7 +10441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerEntrance: {fileID: 0}
-  sceneForward: {x: 0, y: 0}
+  sceneForward: {x: 21, y: 0}
   sceneExit: {fileID: 663039017}
   cameraSize: 25
   EnemyContainer: {fileID: 0}
@@ -14588,7 +14591,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1317929162}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7289686, w: 0.6845471}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14596,7 +14599,7 @@ Transform:
   - {fileID: 616918127578030467}
   m_Father: {fileID: 616918127888717150}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 93.6}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &1325938061
 GameObject:
   m_ObjectHideFlags: 0
@@ -21988,18 +21991,6 @@ PrefabInstance:
     - target: {fileID: 4770469877047556191, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
       propertyPath: m_Name
       value: Andaroz's Blaster
-      objectReference: {fileID: 0}
-    - target: {fileID: 4770469878461794893, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4770469878461794893, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4770469878461794893, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}

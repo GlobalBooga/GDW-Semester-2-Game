@@ -10,96 +10,52 @@ public class Enemy : MonoBehaviour
     public bool showDebugStuff;
     public bool showForwards = true;
 
-    [Space(10f)]
-
-    [Header("Detection"), Space(5f)]
-    public float reactionTime = 0f;
-    public float viewDistance = 40f;
-    public float instantDetectDist = 3f;
-    public float normalFOV = 60f;
-    public float searchFOV = 120f;
-    private float fov;
-    private bool foundPlayer;
     internal bool lockedOnPlayer;
     internal float lookSpeed = 0.01f;
-    public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-
+    internal float rotationTime;
+    private float fov;
+    private bool foundPlayer;
     private Queue<Vector3> playerPoses = new();
-    public int maxStoredPoses = 4;
-    public float secondsBetweenPoses = 1f;
     private float timeSinceLastPos = 0;
-
     private float totalTravelDist;
     private float lerpStartTime;
     private Vector3 lerpStart;
     private Vector3 nextPos;
-    public float minDistanceBetweenPoses = 1f;
     private bool saveOneMorePos;
-
     private int frames;
     private int detectionRate = 50; // the average
-    public float searchDetectionRateMult = 1f;
-    Vector3 sightMax;
-    Vector3 sightMin;
-    internal float rotationTime;
-    public bool canSeeThroughWalls;
     private bool isInspecting;
     private bool isAlerted;
+    private Vector3 sightMax;
+    private Vector3 sightMin;
 
-    [Space(10f)]
-
-    [Header("Movement"), Space(5f)]
-    public float walkSpeed = 3f;
-    public float runSpeed = 8f;
-    public float attackMovementSpeed = 3f;
-    public float retreatSpeed = 3f;
     private float moveSpeed;
-    public float moveForce = 15f;
-    public float accelerationDrag = 1f;
-    public float deccelerationDrag = 5f;
-    [Space(10f)]
-
-    [Header("Aggressive Behaviour"), Space(5f)]
-    public float maxAttackDistance = 10f;
-    public float minAttackDistance = 6f;
+   
     private float attackDistance;
-    public float comfortableAttackDist;
     internal bool canAttack = false; // are we in the right position to attack
     internal bool attackReady = true; // cooldowns?
     internal bool isAttacking;
     internal bool lockRotation;
-    public bool chasePlayer = true;
+
+    [Space(10f)]
+    [Header("Scriptable Object"), Space(5f)]
+    public EnemyScriptableObject eso;
 
 
     [Space(10f)]
-
-    [Header("Masks"), Space(5f)]
-    public LayerMask whatIsPlayer;
-    public LayerMask whatIsWall;
-    public LayerMask whatBlocksSight;
-    public LayerMask whatTakesDamage;
-    [Space(10f)]
-
-
     [Header("Objects"), Space(5f)]
+    public Transform body;
+
     private SpriteRenderer sr;
     private Rigidbody2D rb;
-    //private CircleCollider2D cc;
     internal Transform playerLoc;
-    public Transform body;
     internal HPComponent hp;
     private Vector3 originalPos;
     private Quaternion originalRot;
+
+
     public Vector3 PlayerDirection => playerLoc.position - transform.position;
     public float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
-
-
-
-
-
-    EnemyScriptableObject eso;
-
-
 
 
 
@@ -109,13 +65,13 @@ public class Enemy : MonoBehaviour
         // If the player is too close from the last logged position
         if (playerPoses.Count > 0)
         {
-            if (Vector3.Distance(playerLoc.position, playerPoses.Last()) < minDistanceBetweenPoses) return;
+            if (Vector3.Distance(playerLoc.position, playerPoses.Last()) < eso.minDistanceBetweenPoses) return;
         }
 
         saveOneMorePos = false;
 
-        if (playerPoses.Count > maxStoredPoses) playerPoses.Dequeue();
-        if (showDebugStuff) DrawDebugCross(playerLoc.position, secondsBetweenPoses * maxStoredPoses);
+        if (playerPoses.Count > eso.maxStoredPoses) playerPoses.Dequeue();
+        if (showDebugStuff) DrawDebugCross(playerLoc.position, eso.secondsBetweenPoses * eso.maxStoredPoses);
         playerPoses.Enqueue(playerLoc.position);
     }
 
@@ -127,30 +83,12 @@ public class Enemy : MonoBehaviour
         lockedOnPlayer = false;
         canAttack = false;
         ResetAttack();
-        fov = normalFOV;
+        fov = eso.normalFOV;
         playerPoses.Clear();
         //Debug.Log("resetting");
 
     }
 
-    internal virtual void OnValidate()
-    {
-        if (comfortableAttackDist < 0f)
-        {
-            Debug.LogWarning("Comfortable attack distance can't be smaller than 0!");
-            comfortableAttackDist = 0f;
-        }
-        //if (comfortableAttackDist > minAttackDistance)
-        //{
-        //    Debug.LogWarning("Comfortable attack distance can't be greater than Min Attack Distance!");
-        //    comfortableAttackDist = minAttackDistance;
-        //}
-
-        if (maxAttackDistance < minAttackDistance)
-        {
-            minAttackDistance = maxAttackDistance - 1;
-        }
-    }
 
     internal virtual void Awake()
     {
@@ -167,9 +105,9 @@ public class Enemy : MonoBehaviour
     {
         NewDetectionRate();
         NewAttackDistance();
-        moveSpeed = walkSpeed;
-        rb.drag = deccelerationDrag;
-        fov = normalFOV;
+        moveSpeed = eso.walkSpeed;
+        rb.drag = eso.deccelerationDrag;
+        fov = eso.normalFOV;
     }
 
     internal virtual void Update()
@@ -180,17 +118,17 @@ public class Enemy : MonoBehaviour
         HandleSight();
 
 
-        if (chasePlayer)
+        if (eso.chasePlayer)
         {
             // Player position recorder
-            if ((timeSinceLastPos >= secondsBetweenPoses) || saveOneMorePos)
+            if ((timeSinceLastPos >= eso.secondsBetweenPoses) || saveOneMorePos)
             {
                 timeSinceLastPos = 0f;
                 QueuePlayerPos();
             }
 
             // If we are chasing the player, look at the last known point
-            if (!canSeeThroughWalls && !foundPlayer && !isAlerted && playerPoses.Count > 0f) LookAt(playerPoses.Last());
+            if (!eso.canSeeThroughWalls && !foundPlayer && !isAlerted && playerPoses.Count > 0f) LookAt(playerPoses.Last());
         }
 
         // base attack logic
@@ -204,9 +142,9 @@ public class Enemy : MonoBehaviour
     internal virtual void FixedUpdate()
     {
         // Standard chase player
-        if (chasePlayer && lockedOnPlayer && PlayerDistance > attackDistance)
+        if (eso.chasePlayer && lockedOnPlayer && PlayerDistance > attackDistance)
         {
-            moveSpeed = isAttacking ? attackMovementSpeed : runSpeed;
+            moveSpeed = isAttacking ? eso.attackMovementSpeed : eso.runSpeed;
             bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > moveSpeed;
             if (!isTooFast) Move();
 
@@ -218,9 +156,9 @@ public class Enemy : MonoBehaviour
             }
         }
         // if player is getting too close
-        else if (lockedOnPlayer && PlayerDistance < comfortableAttackDist)
+        else if (lockedOnPlayer && PlayerDistance < eso.comfortableAttackDist)
         {
-            moveSpeed = -retreatSpeed;
+            moveSpeed = -eso.retreatSpeed;
             bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > Mathf.Abs(moveSpeed);
             if (!isTooFast) Move();
         }
@@ -228,7 +166,7 @@ public class Enemy : MonoBehaviour
         // or if we just havent discovered the player yet
         else
         {
-            rb.drag = deccelerationDrag;
+            rb.drag = eso.deccelerationDrag;
 
             if (lockedOnPlayer && !canAttack)
             {
@@ -238,9 +176,9 @@ public class Enemy : MonoBehaviour
 
 
         // if we lost the player and is following their tacks
-        if (chasePlayer && !foundPlayer && playerPoses.Count > 0f)
+        if (eso.chasePlayer && !foundPlayer && playerPoses.Count > 0f)
         {
-            float distCovered = (Time.time - lerpStartTime) * runSpeed;
+            float distCovered = (Time.time - lerpStartTime) * eso.runSpeed;
             transform.position = Vector3.Lerp(lerpStart, nextPos, distCovered / totalTravelDist);
 
             if (Vector3.Distance(transform.position, nextPos) < 0.05f)
@@ -274,7 +212,7 @@ public class Enemy : MonoBehaviour
             frames = 0;
 
             // if the player is too close and we havent see them yet - called once
-            if (PlayerDistance <= instantDetectDist && !lockedOnPlayer)
+            if (PlayerDistance <= eso.instantDetectDist && !lockedOnPlayer)
             {
                 lockedOnPlayer = true;
                 rotationTime = 0f;
@@ -288,7 +226,7 @@ public class Enemy : MonoBehaviour
                 if (!foundPlayer)
                 {
                     // Immediately store the player's position
-                    if (chasePlayer)
+                    if (eso.chasePlayer)
                     {
                         playerPoses.Clear();
                         QueuePlayerPos();
@@ -298,7 +236,7 @@ public class Enemy : MonoBehaviour
                     rotationTime = 0f;
                     //fov = normalFOV;
 
-                    Invoke(nameof(OnPlayerDiscovered), reactionTime);
+                    Invoke(nameof(OnPlayerDiscovered), eso.reactionTime);
                     //Debug.Log("found player");
                 }
             }
@@ -309,7 +247,7 @@ public class Enemy : MonoBehaviour
                 if (isInspecting) StopAllCoroutines();
 
                 // increase the detection rate
-                if (chasePlayer) NewDetectionRate(1/searchDetectionRateMult);
+                if (eso.chasePlayer) NewDetectionRate(1/eso.searchDetectionRateMult);
 
                 // for children to add their functionalities
                 OnLostSightOfPlayer();
@@ -317,12 +255,12 @@ public class Enemy : MonoBehaviour
                 //Debug.Log("lost player");
                 // Change some detection related properties
                 foundPlayer = false;
-                if (!canSeeThroughWalls) lockedOnPlayer = false;
+                if (!eso.canSeeThroughWalls) lockedOnPlayer = false;
                 rotationTime = 0f;
-                moveSpeed = walkSpeed;
-                if (chasePlayer) fov = searchFOV;
+                moveSpeed = eso.walkSpeed;
+                if (eso.chasePlayer) fov = eso.searchFOV;
                 
-                if (playerPoses.Count > 0 && chasePlayer)
+                if (playerPoses.Count > 0 && eso.chasePlayer)
                 {
                     // finding the quickest route
                     Queue<Vector3> tempQ = new();
@@ -333,7 +271,7 @@ public class Enemy : MonoBehaviour
                     foreach (Vector3 pos in playerPoses.Reverse())
                     {
                         bool clear = false;
-                        RaycastHit2D hit = Physics2D.Raycast(transform.position, (pos - transform.position).normalized, viewDistance, whatIsWall);
+                        RaycastHit2D hit = Physics2D.Raycast(transform.position, (pos - transform.position).normalized, eso.viewDistance, eso.whatIsWall);
                         if (showDebugStuff) Debug.DrawLine(transform.position, pos, Color.blue, 2f);                                                                        // <--- debug.drawline
                         if (hit)
                         {
@@ -415,7 +353,7 @@ public class Enemy : MonoBehaviour
         rotationTime++;
         Vector3 thing = point - transform.position;
         Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(thing, Vector3.up, Vector3.back));
-        body.rotation = Quaternion.Lerp(body.rotation, newQuat, rotationCurve.Evaluate(rotationTime * lookSpeed));
+        body.rotation = Quaternion.Lerp(body.rotation, newQuat, eso.rotationCurve.Evaluate(rotationTime * lookSpeed));
         return rotationTime * lookSpeed > 1f;
     }
 
@@ -424,7 +362,7 @@ public class Enemy : MonoBehaviour
         isInspecting = true;
 
         // speed up detection rate even more
-        NewDetectionRate(1 / (searchDetectionRateMult * 1.5f));
+        NewDetectionRate(1 / (eso.searchDetectionRateMult * 1.5f));
 
         //Debug.Log("Start inspect");
         Vector3 right = transform.position - transform.up;
@@ -452,7 +390,7 @@ public class Enemy : MonoBehaviour
 
         // when finished chasing, reset detection
         NewDetectionRate();
-        fov = normalFOV;
+        fov = eso.normalFOV;
         isInspecting = false;
     }
 
@@ -462,7 +400,7 @@ public class Enemy : MonoBehaviour
 
         // lock on to player
         lockedOnPlayer = true;
-        moveSpeed = runSpeed;
+        moveSpeed = eso.runSpeed;
         NewAttackDistance();
     }
 
@@ -478,7 +416,7 @@ public class Enemy : MonoBehaviour
 
     internal virtual void NewAttackDistance()
     {
-        attackDistance = Random.Range(minAttackDistance, maxAttackDistance);
+        attackDistance = Random.Range(eso.minAttackDistance, eso.maxAttackDistance);
     }
 
     internal virtual void CalculateEnemyView()
@@ -491,20 +429,20 @@ public class Enemy : MonoBehaviour
         sightMax = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
         sightMin = new Vector2((Mathf.Cos(rads2) * x) - (Mathf.Sin(rads2) * y), (Mathf.Sin(rads2) * x) + (Mathf.Cos(rads2) * y));
 
-        Debug.DrawLine(transform.position, transform.position + sightMax * viewDistance, Color.red, Time.deltaTime);
+        Debug.DrawLine(transform.position, transform.position + sightMax * eso.viewDistance, Color.red, Time.deltaTime);
 
         Debug.DrawLine(transform.position, transform.position + body.up, Color.red, Time.deltaTime);
         
-        Debug.DrawLine(transform.position, transform.position + sightMin * viewDistance, Color.red, Time.deltaTime);
+        Debug.DrawLine(transform.position, transform.position + sightMin * eso.viewDistance, Color.red, Time.deltaTime);
     }
 
     public bool CanSeePlayer()
     {
-        if (PlayerDistance <= viewDistance)
+        if (PlayerDistance <= eso.viewDistance)
         {
             if (Vector3.Angle(body.up, playerLoc.position - transform.position) <= fov * 0.5f)
             {
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, (playerLoc.position - transform.position).normalized, viewDistance, whatBlocksSight);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, (playerLoc.position - transform.position).normalized, eso.viewDistance, eso.whatBlocksSight);
                 if (hit)
                 {
                     if (hit.transform.gameObject.name == "Player")
@@ -520,9 +458,9 @@ public class Enemy : MonoBehaviour
 
     internal virtual void Move()
     {
-        rb.drag = accelerationDrag;
-        if (moveSpeed > 0) rb.AddForce(body.up * moveForce * rb.mass, ForceMode2D.Force);
-        else rb.AddForce(body.up * -moveForce, ForceMode2D.Force);
+        rb.drag = eso.accelerationDrag;
+        if (moveSpeed > 0) rb.AddForce(body.up * eso.moveForce * rb.mass, ForceMode2D.Force);
+        else rb.AddForce(body.up * -eso.moveForce, ForceMode2D.Force);
     }
 
     internal virtual void DrawDebugCross(Vector3 pos, float duration = 1f, float segmentLength = 0.3f)

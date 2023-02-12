@@ -5230,7 +5230,7 @@ MonoBehaviour:
   pickupIndicator: {fileID: 0}
   alertsEnemies: 0
   bulletSpread: 5
-  bulletSpeed: 20
+  bulletSpeed: 25
   muzzleFlash: {fileID: 6490480546101380242}
   bullet: {fileID: 6545307244740321829, guid: 353c88c72e32a064683018f1df741b60, type: 3}
   bulletSpawn: {fileID: 6490480546751749387}
@@ -5373,7 +5373,7 @@ MonoBehaviour:
   pickupIndicator: {fileID: 0}
   alertsEnemies: 1
   bulletSpread: 5
-  bulletSpeed: 20
+  bulletSpeed: 25
   muzzleFlash: {fileID: 6490480545985169599}
   bullet: {fileID: 6545307244740321829, guid: 353c88c72e32a064683018f1df741b60, type: 3}
   bulletSpawn: {fileID: 6490480546171227407}

@@ -30,6 +30,7 @@ public class SceneSettings : MonoBehaviour
     {
         EnableScene();
 
+        // if no objective
         if (sceneExit)
         {
             if (sceneObjective == SceneObjective.None)

@@ -44,4 +44,5 @@ public class EnemyScriptableObject : ScriptableObject
     public LayerMask whatIsWall;
     public LayerMask whatBlocksSight;
     public LayerMask whatTakesDamage;
+
 }

@@ -29,6 +29,7 @@ public class Crosshair : MonoBehaviour
         this.target = target;
         SetRandomRotation();
         if (animator) animator.Play(anim);
+        Destroy(gameObject, animationTime);
     }
     
 }

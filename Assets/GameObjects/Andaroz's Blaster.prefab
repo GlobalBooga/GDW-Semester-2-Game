@@ -159,7 +159,7 @@ MonoBehaviour:
   pickupIndicator: {fileID: 4770469877284947185}
   alertsEnemies: 1
   bulletSpread: 10
-  bulletSpeed: 20
+  bulletSpeed: 25
   muzzleFlash: {fileID: 4770469877876144312}
   bullet: {fileID: 6545307244740321829, guid: ba70ec78eb4420e49a6feeeb86e188ae, type: 3}
   bulletSpawn: {fileID: 4770469878461794893}

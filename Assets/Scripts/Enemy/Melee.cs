@@ -5,32 +5,24 @@ using UnityEngine;
 
 public class Melee : Enemy
 {
-    [Header("Melee"), Space(5f)]
-    public float damage;
-    public float attackCooldown = 1f;
-    public float applyDmgDelay = 0.5f;
-    private float attackReach;
-
+    
+    private MeleeScriptableObject mso;
 
     internal override void Awake()
     {
         base.Awake();
+        mso = (MeleeScriptableObject)eso;
     }
 
     internal override void Start()
     {
         base.Start();
-        attackReach = maxAttackDistance;
+        //attackReach = eso.maxAttackDistance;
     }
 
     internal override void Update() 
     {
         base.Update();
-    }
-
-    internal override void OnValidate()
-    {
-        base.OnValidate();
     }
 
     internal override void FixedUpdate()
@@ -49,17 +41,17 @@ public class Melee : Enemy
     {
         // play animation
 
-        yield return new WaitForSeconds(applyDmgDelay);
+        yield return new WaitForSeconds(mso.applyDmgDelay);
 
         // if we hit
-        if (PlayerDistance <= attackReach)
+        if (PlayerDistance <= eso.maxAttackDistance)
         {
             //Invoke(nameof(ApplyDamage), applyDmgDelay);
-            StaticHelpers.ApplyDamage(playerLoc.gameObject, damage);
+            StaticHelpers.ApplyDamage(playerLoc.gameObject, mso.damage);
         }
 
 
-        yield return new WaitForSeconds(attackCooldown);
+        yield return new WaitForSeconds(mso.attackCooldown);
         ResetAttack();
     }
 

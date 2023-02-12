@@ -16,7 +16,7 @@ public class SceneExit : MonoBehaviour
         if (sr) sr.enabled = false; 
         bc = sr.GetComponent<BoxCollider2D>();
 
-        Block();
+        //Block();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -150,7 +150,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 10
-  m_LinearDrag: 0
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -192,69 +192,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33d8912e44424a4eb6b92438f303c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebugStuff: 1
+  showDebugStuff: 0
   showForwards: 1
-  reactionTime: 0.5
-  viewDistance: 40
-  instantDetectDist: 3
-  normalFOV: 60
-  searchFOV: 120
-  rotationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  maxStoredPoses: 4
-  secondsBetweenPoses: 1
-  minDistanceBetweenPoses: 1
-  searchDetectionRateMult: 1
-  canSeeThroughWalls: 0
-  walkSpeed: 3
-  runSpeed: 8
-  attackMovementSpeed: 0
-  retreatSpeed: 3
-  moveForce: 15
-  accelerationDrag: 1
-  deccelerationDrag: 5
-  maxAttackDistance: 4
-  minAttackDistance: 3
-  comfortableAttackDist: 0
-  chasePlayer: 1
-  whatIsPlayer:
-    serializedVersion: 2
-    m_Bits: 256
-  whatIsWall:
-    serializedVersion: 2
-    m_Bits: 64
-  whatBlocksSight:
-    serializedVersion: 2
-    m_Bits: 320
-  whatTakesDamage:
-    serializedVersion: 2
-    m_Bits: 256
+  eso: {fileID: 11400000, guid: 7be67767ee55e7040afdb05151d34fe7, type: 2}
   body: {fileID: 7527923035042227798}
-  damage: 0
-  attackCooldown: 1
-  applyDmgDelay: 0.5
 --- !u!1001 &7527923036335671002
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -4,33 +4,21 @@ using UnityEngine;
 
 public class Sniper : Enemy
 {
-    [Header("Sniper"), Space(5f)]
-    public float damage;
-    public float delayBetweenShots = 1f;
-    public float aimStartDelay = 0.5f;
-    public float aimTime = 3f;
-    public int warningFlashes = 3;
-    public float laserFlashOnTime = 0.25f;
-    public float laserFlashOffTime = 0.25f;
 
-    [Space(10)]
-    
-    [Header("Laser"), Space(5f)]
-    public float maxDist = 100f;
     public Transform laserStart;
     public LineRenderer lineRenderer;
     public Animator animator;
-    public float animationLenght = 0.1f;
-    bool isOn;
 
-
-    const string LASER_SHOT_ANIM = "SniperLaserShot";
-    const string EMPTY = "Empty";
+    private bool isLaserOn;
+    private const string LASER_SHOT_ANIM = "SniperLaserShot";
+    private const string EMPTY = "Empty";
+    private SniperScriptableObject sso;
 
 
     internal override void Awake()
     {
         base.Awake();
+        sso = (SniperScriptableObject)eso;
     }
 
     internal override void Start()
@@ -42,13 +30,8 @@ public class Sniper : Enemy
     internal override void Update()
     {
         base.Update();
-        if (isOn) ShootLaser();
+        if (isLaserOn) ShootLaser();
         //if (!isAttacking && isOn) TurnOff();
-    }
-
-    internal override void OnValidate()
-    {
-        base.OnValidate();
     }
 
     internal override void FixedUpdate()
@@ -66,48 +49,48 @@ public class Sniper : Enemy
     {
         //Debug.Log("aim");
         // aim delay
-        yield return new WaitForSeconds(aimStartDelay);
+        yield return new WaitForSeconds(sso.aimStartDelay);
 
         // turn on laser
         TurnOn();
 
         //keep aiming
-        yield return new WaitForSeconds(aimTime);
+        yield return new WaitForSeconds(sso.aimTime);
 
         // warning flashes
         int flashes = 0;
-        while (flashes < warningFlashes)
+        while (flashes < sso.warningFlashes)
         {
             //on the last flash, freeze look
-            if (flashes == warningFlashes - 1) 
+            if (flashes == sso.warningFlashes - 1) 
             {
                 lockRotation = true;
                 rotationTime = 0;
             }
 
-            if (isOn)
+            if (isLaserOn)
             {
                 // turn off laser
                 TurnOff();
-                yield return new WaitForSeconds(laserFlashOffTime);
+                yield return new WaitForSeconds(sso.laserFlashOffTime);
             }
             else
             {
                 // turn on laser
                 TurnOn();
                 flashes++;
-                yield return new WaitForSeconds(laserFlashOnTime);
+                yield return new WaitForSeconds(sso.laserFlashOnTime);
             }
         }
-        if (!isOn) TurnOn(); // turn on laser
+        if (!isLaserOn) TurnOn(); // turn on laser
 
 
         // shoot
 
-        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, 100f, whatTakesDamage);
+        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, 100f, sso.whatTakesDamage);
         if (hit)
         {
-            StaticHelpers.ApplyDamage(hit.transform.gameObject, damage);
+            StaticHelpers.ApplyDamage(hit.transform.gameObject, sso.damage);
         }
 
         // alert everyone
@@ -115,12 +98,12 @@ public class Sniper : Enemy
 
         // Play animation
         if (animator) animator.Play(LASER_SHOT_ANIM);
-        yield return new WaitForSeconds(animationLenght);
+        yield return new WaitForSeconds(sso.animationLenght);
 
         TurnOff();
 
         lockRotation = false;
-        yield return new WaitForSeconds(delayBetweenShots);
+        yield return new WaitForSeconds(sso.delayBetweenShots);
         if (animator) animator.Play(EMPTY);
         ResetAttack();
     }
@@ -131,14 +114,14 @@ public class Sniper : Enemy
     // call in update
     void ShootLaser()
     {
-        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, maxDist, whatBlocksSight);
+        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, sso.maxDist, sso.whatBlocksSight);
         if (hit)
         {
             DrawLaser(laserStart.position - transform.position, hit.point - (Vector2)transform.position);
         }
         else
         {
-            DrawLaser(laserStart.position - transform.position, laserStart.position - transform.position + (body.up * maxDist));
+            DrawLaser(laserStart.position - transform.position, laserStart.position - transform.position + (body.up * sso.maxDist));
         }
     }
 
@@ -150,18 +133,18 @@ public class Sniper : Enemy
 
     public void TurnOn()
     {
-        if (!isOn)
+        if (!isLaserOn)
         {
-            isOn = true;
+            isLaserOn = true;
             lineRenderer.enabled = true;
         }
     }
     
     public void TurnOff()
     {
-        if (isOn)
+        if (isLaserOn)
         {
-            isOn = false;
+            isLaserOn = false;
             lineRenderer.enabled = false;
         }
     }

@@ -4,95 +4,91 @@ using UnityEngine;
 
 public class Andaroz : Enemy
 {
-    public enum AndarozAttacks
-    {
-        Melee_Swipe,
-        Melee_AOEGroundSlam,
-        Ranged_MachineGun,
-        Ranged_AOEMissileBarrage,
-        Ranged_UltTwinLaser
-    }
+    //[Header("Melee Attack 1 - Swipe"), Space(5f)]
+    //public float swipeDamage;
+    //public float swipeCooldown = 1f;
+    //public float swipeApplyDmgDelay = 0.5f;
+    //public float swipeReach;
+    //public float delayBeforeNextAttack_swipe = 3f;
+    //public float maxAttackTime_swipe = 10f;
+    //[Range(0f, 1f)] public float maxHpForUse_swipe = 1f;
 
-    [Header("Melee Attack 1 - Swipe"), Space(5f)]
-    public float swipeDamage;
-    public float swipeCooldown = 1f;
-    public float swipeApplyDmgDelay = 0.5f;
-    public float swipeReach;
-    public float delayBeforeNextAttack_swipe = 3f;
-    public float maxAttackTime_swipe = 10f;
-    [Range(0f, 1f)] public float maxHpForUse_swipe = 1f;
+    //[Space(10f)]
+    //[Header("Melee Attack 2 - AOE Ground Slam"), Space(5f)]
+    //public float slamDamage;
+    //public float slamCooldown = 1f;
+    //public float slamApplyDmgDelay = 0.5f;
+    //public float slamReach;
+    //public float delayBeforeNextAttack_slam = 3f;
+    //public float maxAttackTime_slam = 10f;
+    //[Range(0f, 1f)] public float maxHpForUse_slam = 1f;
 
-    [Space(10f)]
-    [Header("Melee Attack 2 - AOE Ground Slam"), Space(5f)]
-    public float slamDamage;
-    public float slamCooldown = 1f;
-    public float slamApplyDmgDelay = 0.5f;
-    public float slamReach;
-    public float delayBeforeNextAttack_slam = 3f;
-    public float maxAttackTime_slam = 10f;
-    [Range(0f, 1f)] public float maxHpForUse_slam = 1f;
+    //[Space(10f)]
 
-    [Space(10f)]
+    //[Header("Ranged Attack 1 - Machine Gun"), Space(5f)]
+    //public float gunDamage;
+    //public float delayBetweenShots_gun = 0.5f;
+    //public float shootStartDelay_gun = 0.3f;
+    //public float delayBeforeNextAttack_gun = 3f;
+    //public float bulletSpeed = 15f;
+    //public float bulletSpread = 10f;
+    //public int shots_bullets = 50;
+    //public GameObject bullet;
+    //public Transform bulletSpawn;
+    //[Range(0f, 1f)] public float maxHpForUse_gun = 1f;
 
-    [Header("Ranged Attack 1 - Machine Gun"), Space(5f)]
-    public float gunDamage;
-    public float delayBetweenShots_gun = 0.5f;
-    public float shootStartDelay_gun = 0.3f;
-    public float delayBeforeNextAttack_gun = 3f;
-    public float bulletSpeed = 15f;
-    public float bulletSpread = 10f;
-    public int shots_bullets = 50;
-    public GameObject bullet;
+    //[Space(10f)]
+
+    //[Header("Ranged Attack 2 - Missile Barrage"), Space(5f)]
+    //public float missileDamage;
+    //public float delayBetweenShots_missiles = 0.5f;
+    //public float shootStartDelay_missiles = 0.3f;
+    //public float delayBeforeNextAttack_missiles = 6f;
+    //public float missileSpeed = 7f;
+    //public float missileRotForce = 10f;
+    //public float missileMaxSpeed = 7f;
+    //public float missileSpread = 10f;
+    //public int shots_missiles = 10;
+    //public GameObject missile;
+    //public List<Transform> missileSpawns;
+    //public bool fireSequentially = true;
+    //public Crosshair crosshairController;
+    //[Range(0f, 1f)] public float maxHpForUse_missiles = 0.9f;
+
+    //[Space(10f)]
+
+    //[Header("Ranged Attack 3 - Twin Laser"), Space(5f)]
+    //public float laserDamage;
+    //public float attackDuration;
+    //public float delayBeforeNextAttack_laser = 3f;
+    //public float rotationSpeed;
+    //public float maxDist = 100f;
+    //public List<Transform> laserStart;
+    //public List<LineRenderer> lineRenderer;
+    //[Range(0f, 1f)] public float maxHpForUse_laser = 0.6f;
+
+    //[Space(10f)]
+
+    //[Header("Attack Pattern"), Space(5f)]
+    //public List<string> orderedAttacks;
+    //[Range(0f, 1f)] public float HpForStage2 = 0.5f;
+
+    //[Space(10f)]
+
+    //[Header("Balancing And Debugging"), Space(5f)]
+    //public bool enableSwipe = true;
+    //public bool enableSlam = true;
+    //public bool enableMachineGun = true;
+    //public bool enableMissiles = true;
+    //public bool enableLaser = true;
+
     public Transform bulletSpawn;
-    [Range(0f, 1f)] public float maxHpForUse_gun = 1f;
-
-    [Space(10f)]
-
-    [Header("Ranged Attack 2 - Missile Barrage"), Space(5f)]
-    public float missileDamage;
-    public float delayBetweenShots_missiles = 0.5f;
-    public float shootStartDelay_missiles = 0.3f;
-    public float delayBeforeNextAttack_missiles = 6f;
-    public float missileSpeed = 7f;
-    public float missileRotForce = 10f;
-    public float missileMaxSpeed = 7f;
-    public float missileSpread = 10f;
-    public int shots_missiles = 10;
-    public GameObject missile;
     public List<Transform> missileSpawns;
-    public bool fireSequentially = true;
-    private int prev; // the previous index for sequential firing
-    public Crosshair crosshairController;
-    [Range(0f, 1f)] public float maxHpForUse_missiles = 0.9f;
-
-    [Space(10f)]
-
-    [Header("Ranged Attack 3 - Twin Laser"), Space(5f)]
-    public float laserDamage;
-    public float attackDuration;
-    public float delayBeforeNextAttack_laser = 3f;
-    public float rotationSpeed;
-    public float maxDist = 100f;
     public List<Transform> laserStart;
     public List<LineRenderer> lineRenderer;
-    [Range(0f, 1f)] public float maxHpForUse_laser = 0.6f;
+    public AndarozScriptableObject aso;
 
-    [Space(10f)]
-
-    [Header("Attack Pattern"), Space(5f)]
-    public List<string> orderedAttacks;
-    [Range(0f, 1f)] public float HpForStage2 = 0.5f;
-
-    [Space(10f)]
-
-    [Header("Balancing And Debugging"), Space(5f)]
-    public bool enableSwipe = true;
-    public bool enableSlam = true;
-    public bool enableMachineGun = true;
-    public bool enableMissiles = true;
-    public bool enableLaser = true;
-
-
+    private int prev; // the previous index for sequential firing
     private List<string> allAttacks = new() { nameof(PerformGunAttack), nameof(PerformLaserAttack), nameof(PerformMissileAttack), nameof(PerformSlamAttack), nameof(PerformSwipeAttack)};
     private Queue<string> attackPattern = new();
 
@@ -130,7 +126,7 @@ public class Andaroz : Enemy
 
     private IEnumerator PerformSwipeAttack()
     {
-        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_swipe)
+        if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_swipe)
         {
             NextAttack();
             yield break;
@@ -139,11 +135,11 @@ public class Andaroz : Enemy
 
         Debug.Log("swipe");
         bool attacked = false;   
-        maxAttackDistance = 5f;
-        minAttackDistance = 4f;
-        comfortableAttackDist = 0f;
-        attackMovementSpeed = runSpeed = 8f;
-        chasePlayer = true;
+        eso.maxAttackDistance = 5f;
+        eso.minAttackDistance = 4f;
+        eso.comfortableAttackDist = 0f;
+        eso.attackMovementSpeed = eso.runSpeed = 8f;
+        eso.chasePlayer = true;
         NewAttackDistance();
 
         float time = 0f;
@@ -151,22 +147,22 @@ public class Andaroz : Enemy
         while (!attacked)
         {
             time += Time.deltaTime;
-            if (time >= maxAttackTime_swipe) break;
+            if (time >= aso.maxAttackTime_swipe) break;
 
             // else if we are in attack distance
-            if (PlayerDistance <= maxAttackDistance)
+            if (PlayerDistance <= eso.maxAttackDistance)
             {
-                attackMovementSpeed = 0f;
+                eso.attackMovementSpeed = 0f;
                 Debug.Log("swiping");
                 // play swipe animation
                 attacked = true;
-                yield return new WaitForSeconds(swipeApplyDmgDelay);
+                yield return new WaitForSeconds(aso.swipeApplyDmgDelay);
 
                 // if were still within range of swipe
-                if (PlayerDistance <= maxAttackDistance)
-                    StaticHelpers.ApplyDamage(playerLoc.gameObject, swipeDamage);
+                if (PlayerDistance <= eso.maxAttackDistance)
+                    StaticHelpers.ApplyDamage(playerLoc.gameObject, aso.swipeDamage);
 
-                attackMovementSpeed = runSpeed;
+                eso.attackMovementSpeed = eso.runSpeed;
             }
 
 
@@ -174,13 +170,13 @@ public class Andaroz : Enemy
             yield return null;
         }
         
-        yield return new WaitForSeconds(delayBeforeNextAttack_swipe);
+        yield return new WaitForSeconds(aso.delayBeforeNextAttack_swipe);
         ResetAttack();
     }
 
     private IEnumerator PerformSlamAttack()
     {
-        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_slam)
+        if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_slam)
         {
             NextAttack();
             yield break;
@@ -188,11 +184,11 @@ public class Andaroz : Enemy
 
         Debug.Log("slam");
         bool attacked = false;
-        maxAttackDistance = 5f;
-        minAttackDistance = 4f;
-        comfortableAttackDist = 0f;
-        attackMovementSpeed = runSpeed = 8f;
-        chasePlayer = true;
+        eso.maxAttackDistance = 5f;
+        eso.minAttackDistance = 4f;
+        eso.comfortableAttackDist = 0f;
+        eso.attackMovementSpeed = eso.runSpeed = 8f;
+        eso.chasePlayer = true;
         NewAttackDistance();
 
         float time = 0f;
@@ -200,39 +196,39 @@ public class Andaroz : Enemy
         while (!attacked)
         {
             time += Time.deltaTime;
-            if (time >= maxAttackTime_slam) break;
+            if (time >= aso.maxAttackTime_slam) break;
 
             // else if we are in attack distance
-            if (PlayerDistance <= maxAttackDistance)
+            if (PlayerDistance <= eso.maxAttackDistance)
             {
-                attackMovementSpeed = 0f;
+                eso.attackMovementSpeed = 0f;
 
                 // play swipe animation
                 Debug.Log("slamming");
                 attacked = true;
-                yield return new WaitForSeconds(slamApplyDmgDelay);
+                yield return new WaitForSeconds(aso.slamApplyDmgDelay);
 
                 // if were still within range of swipe
 
                 // calculate aoe
 
-                if (PlayerDistance <= maxAttackDistance)
-                    StaticHelpers.ApplyDamage(playerLoc.gameObject, slamDamage);
+                if (PlayerDistance <= eso.maxAttackDistance)
+                    StaticHelpers.ApplyDamage(playerLoc.gameObject, aso.slamDamage);
 
-                attackMovementSpeed = runSpeed;
+                eso.attackMovementSpeed = eso.runSpeed;
             }
 
             yield return null;
         }
 
-        yield return new WaitForSeconds(delayBeforeNextAttack_slam);
+        yield return new WaitForSeconds(aso.delayBeforeNextAttack_slam);
         ResetAttack();
         //NextAttack();
     }
 
     private IEnumerator PerformMissileAttack()
     {
-        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_missiles)
+        if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_missiles)
         {
             NextAttack();
             yield break;
@@ -243,26 +239,30 @@ public class Andaroz : Enemy
 
 
         // set to stationary - with all seeing eye
-        maxAttackDistance = 40f;
-        minAttackDistance = 30f;
-        comfortableAttackDist = 0f;
-        chasePlayer = false;
+        eso.maxAttackDistance = 40f;
+        eso.minAttackDistance = 30f;
+        eso.comfortableAttackDist = 0f;
+        eso.chasePlayer = false;
         NewAttackDistance();
 
         // play lock on animation
-        if (crosshairController)
+        if (aso.crosshairController)
         {
-            crosshairController.AimAt(playerLoc);
-            shootStartDelay_missiles = crosshairController.animationTime;
+            Crosshair crosshair = Instantiate(aso.crosshairController,transform).GetComponent<Crosshair>();
+            if (crosshair)
+            {
+                crosshair.AimAt(playerLoc);
+                aso.shootStartDelay_missiles = crosshair.animationTime;
+            }
         }
 
-        yield return new WaitForSeconds(shootStartDelay_missiles);
+        yield return new WaitForSeconds(aso.shootStartDelay_missiles);
         int shots = 0;
         prev = 0;
-        while (shots++ < shots_missiles)
+        while (shots++ < aso.shots_missiles)
         {
             // calculate spread
-            float spreadAngle = Random.Range(-missileSpread, missileSpread);
+            float spreadAngle = Random.Range(-aso.missileSpread, aso.missileSpread);
             float rads = Mathf.Deg2Rad * ((spreadAngle > 0) ? spreadAngle : (360f + spreadAngle));
             float x = body.right.x, y = body.right.y;
 
@@ -272,41 +272,41 @@ public class Andaroz : Enemy
 
             // // //
 
-            if (showDebugStuff) Debug.DrawLine(body.position, body.position + missileDir * 50f, Color.red, delayBetweenShots_missiles);
+            if (showDebugStuff) Debug.DrawLine(body.position, body.position + missileDir * 50f, Color.red, aso.delayBetweenShots_missiles);
 
-            if (missile && missileSpawns.Count > 0)
+            if (aso.missile && missileSpawns.Count > 0)
             {
                 HomingMissile b;
                 if (missileSpawns.Count == 1)
                 {
-                    b = Instantiate(missile, missileSpawns[0]).GetComponent<HomingMissile>();
+                    b = Instantiate(aso.missile, missileSpawns[0]).GetComponent<HomingMissile>();
                 }
-                else if (!fireSequentially)
+                else if (!aso.fireSequentially)
                 {
-                    b = Instantiate(missile, missileSpawns[Random.Range(0, missileSpawns.Count)]).GetComponent<HomingMissile>();
+                    b = Instantiate(aso.missile, missileSpawns[Random.Range(0, missileSpawns.Count)]).GetComponent<HomingMissile>();
                 }
                 else
                 {
                     if (prev >= missileSpawns.Count) prev = 0;
-                    b = Instantiate(missile, missileSpawns[prev++]).GetComponent<HomingMissile>();
+                    b = Instantiate(aso.missile, missileSpawns[prev++]).GetComponent<HomingMissile>();
                 }
 
                 b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.right, missileDir));
                 b.gameObject.layer = StaticHelpers.EnemyMissile;
-                b.Fly(playerLoc, missileDir, missileSpeed, missileRotForce, missileMaxSpeed, missileDamage);
+                b.Fly(playerLoc, missileDir, aso.missileSpeed, aso.missileRotForce, aso.missileMaxSpeed, aso.missileDamage);
 
                 //play muzzle effect
             }
-            yield return new WaitForSeconds(delayBetweenShots_missiles);
+            yield return new WaitForSeconds(aso.delayBetweenShots_missiles);
         }
-        yield return new WaitForSeconds(delayBeforeNextAttack_missiles);
+        yield return new WaitForSeconds(aso.delayBeforeNextAttack_missiles);
         ResetAttack();
         //NextAttack();
     }
 
     private IEnumerator PerformGunAttack()
     {
-        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_gun)
+        if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_gun)
         {
             NextAttack();
             yield break;
@@ -317,20 +317,20 @@ public class Andaroz : Enemy
         // he is always facing the player
         Debug.Log("gun");
 
-        maxAttackDistance = 25f;
-        minAttackDistance = 20f;
-        comfortableAttackDist = 15f;
-        runSpeed = retreatSpeed = attackMovementSpeed = 3f;
-        chasePlayer = true;
+        eso.maxAttackDistance = 25f;
+        eso.minAttackDistance = 20f;
+        eso.comfortableAttackDist = 15f;
+        eso.runSpeed = eso.retreatSpeed = eso.attackMovementSpeed = 3f;
+        eso.chasePlayer = true;
         NewAttackDistance();
 
 
-        yield return new WaitForSeconds(shootStartDelay_gun);
+        yield return new WaitForSeconds(aso.shootStartDelay_gun);
         int shots = 0;
-        while (shots++ < shots_bullets)
+        while (shots++ < aso.shots_bullets)
         {
             // calculate spread
-            float spreadAngle = Random.Range(-bulletSpread, bulletSpread);
+            float spreadAngle = Random.Range(-aso.bulletSpread, aso.bulletSpread);
             float rads = Mathf.Deg2Rad * ((spreadAngle > 0) ? spreadAngle : (360f + spreadAngle));
             float x = body.right.x, y = body.right.y;
 
@@ -340,61 +340,61 @@ public class Andaroz : Enemy
 
             // // //
 
-            if (showDebugStuff) Debug.DrawLine(body.position, body.position + bulletDir * 50f, Color.red, delayBetweenShots_gun);
+            if (showDebugStuff) Debug.DrawLine(body.position, body.position + bulletDir * 50f, Color.red, aso.delayBetweenShots_gun);
 
-            if (bullet && bulletSpawn)
+            if (aso.bullet && bulletSpawn)
             {
-                Bullet b = Instantiate(bullet, bulletSpawn).GetComponent<Bullet>();
+                Bullet b = Instantiate(aso.bullet, bulletSpawn).GetComponent<Bullet>();
                 b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.right, bulletDir));
                 b.gameObject.layer = StaticHelpers.EnemyProjectileLayer;
-                b.Fly(bulletDir, bulletSpeed, gunDamage);
+                b.Fly(bulletDir, aso.bulletSpeed, aso.gunDamage);
 
                 //play muzzle effect
             }
-            yield return new WaitForSeconds(delayBetweenShots_gun);
+            yield return new WaitForSeconds(aso.delayBetweenShots_gun);
         }
 
-        yield return new WaitForSeconds(delayBeforeNextAttack_gun);
+        yield return new WaitForSeconds(aso.delayBeforeNextAttack_gun);
         //NextAttack();
         ResetAttack();
     }
     
     private IEnumerator PerformLaserAttack()
     {
-        if (hp.GetHealth() > hp.maxHealth * maxHpForUse_laser)
+        if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_laser)
         {
             NextAttack();
             yield break;
         }
 
         Debug.Log("laser");
-        maxAttackDistance = 40f;
-        minAttackDistance = 30f;
-        comfortableAttackDist = 0f;
-        chasePlayer = false;
+        eso.maxAttackDistance = 40f;
+        eso.minAttackDistance = 30f;
+        eso.comfortableAttackDist = 0f;
+        eso.chasePlayer = false;
         NewAttackDistance();
 
         // animation - arms out
 
 
-        yield return new WaitForSeconds(delayBeforeNextAttack_laser);
+        yield return new WaitForSeconds(aso.delayBeforeNextAttack_laser);
         ResetAttack();
         //NextAttack();
     }
 
     private void NextAttack()
     {
-        if (!enableLaser && !enableMachineGun && !enableMissiles && !enableSlam && !enableSwipe) return;
+        if (!aso.enableLaser && !aso.enableMachineGun && !aso.enableMissiles && !aso.enableSlam && !aso.enableSwipe) return;
 
         // if can see player -> next attack
         if (attackPattern.Count == 0) NewAttackOrder();
 
         // skip disabled attacks
-        if (attackPattern.Peek() == nameof(PerformSwipeAttack) && !enableSwipe) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(PerformSlamAttack) && !enableSlam) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(PerformGunAttack) && !enableMachineGun) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(PerformMissileAttack) && !enableMissiles) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(PerformLaserAttack) && !enableLaser) { attackPattern.Dequeue(); NextAttack(); return; }
+        //if (attackPattern.Peek() == nameof(PerformSwipeAttack) && !aso.enableSwipe) { attackPattern.Dequeue(); NextAttack(); return; }
+        //if (attackPattern.Peek() == nameof(PerformSlamAttack) && !aso.enableSlam) { attackPattern.Dequeue(); NextAttack(); return; }
+        //if (attackPattern.Peek() == nameof(PerformGunAttack) && !aso.enableMachineGun) { attackPattern.Dequeue(); NextAttack(); return; }
+        //if (attackPattern.Peek() == nameof(PerformMissileAttack) && !aso.enableMissiles) { attackPattern.Dequeue(); NextAttack(); return; }
+        //if (attackPattern.Peek() == nameof(PerformLaserAttack) && !aso.enableLaser) { attackPattern.Dequeue(); NextAttack(); return; }
 
         StartCoroutine(attackPattern.Dequeue());
     }

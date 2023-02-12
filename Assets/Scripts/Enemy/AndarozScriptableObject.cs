@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AndarozScriptableObject : MonoBehaviour
+[CreateAssetMenu(fileName ="Base",menuName = "Enemy/Andaroz")]
+public class AndarozScriptableObject : EnemyScriptableObject
 {
     [Header("Melee Attack 1 - Swipe"), Space(5f)]
     public float swipeDamage;
@@ -11,6 +12,12 @@ public class AndarozScriptableObject : MonoBehaviour
     public float swipeReach;
     public float delayBeforeNextAttack_swipe = 3f;
     public float maxAttackTime_swipe = 10f;
+    public float maxAttackDistance_swipe = 5f;
+    public float minAttackDistance_swipe = 4f;
+    public float comfortableAttackDist_swipe = 0f;
+    public float attackMovementSpeed_swipe = 8f;
+    public float runSpeed_swipe = 8f;
+    public bool chasePlayer_swipe = true;
     [Range(0f, 1f)] public float maxHpForUse_swipe = 1f;
 
     [Space(10f)]
@@ -21,6 +28,12 @@ public class AndarozScriptableObject : MonoBehaviour
     public float slamReach;
     public float delayBeforeNextAttack_slam = 3f;
     public float maxAttackTime_slam = 10f;
+    public float maxAttackDistance_slam = 5f;
+    public float minAttackDistance_slam = 4f;
+    public float comfortableAttackDist_slam = 0f;
+    public float attackMovementSpeed_slam = 8f;
+    public float runSpeed_slam = 8f;
+    public bool chasePlayer_slam = true;
     [Range(0f, 1f)] public float maxHpForUse_slam = 1f;
 
     [Space(10f)]
@@ -34,7 +47,14 @@ public class AndarozScriptableObject : MonoBehaviour
     public float bulletSpread = 10f;
     public int shots_bullets = 50;
     public GameObject bullet;
+    public float minAttackDistance_gun = 10f;
+    public float maxAttackDist_gun = 15;
+    public float attackMovementSpeed_gun = 3f;
+    public float comfortableAttackDist_gun = 0f;
+    public bool chasePlayer_gun = true;
     [Range(0f, 1f)] public float maxHpForUse_gun = 1f;
+
+
 
     [Space(10f)]
 
@@ -51,7 +71,12 @@ public class AndarozScriptableObject : MonoBehaviour
     public GameObject crosshairController;
     public GameObject missile;
     public bool fireSequentially = true;
+    public float maxAttackDistance_missiles = 40f;
+    public float minAttackDistance_missiles = 30f;
+    public float comfortableAttackDist_missiles = 0f;
+    public bool chasePlayer_missiles = false;
     [Range(0f, 1f)] public float maxHpForUse_missiles = 0.9f;
+
 
     [Space(10f)]
 
@@ -61,8 +86,12 @@ public class AndarozScriptableObject : MonoBehaviour
     public float delayBeforeNextAttack_laser = 3f;
     public float rotationSpeed;
     public float maxDist = 100f;
-    
+    public float maxAttackDistance_laser = 40f;
+    public float minAttackDistance_laser = 30f;
+    public float comfortableAttackDist_laser = 0f;
+    public bool chasePlayer_laser = false;
     [Range(0f, 1f)] public float maxHpForUse_laser = 0.6f;
+
 
     [Space(10f)]
 

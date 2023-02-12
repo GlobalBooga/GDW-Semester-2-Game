@@ -1,0 +1,170 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bcc5b13863933d41820dd513ff7db91, type: 3}
+  m_Name: Andaroz
+  m_EditorClassIdentifier: 
+  reactionTime: 0
+  viewDistance: 40
+  instantDetectDist: 3
+  normalFOV: 60
+  searchFOV: 120
+  rotationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxStoredPoses: 8
+  loseSightOfPlayerDelay: 1
+  secondsBetweenPoses: 0.5
+  minDistanceBetweenPoses: 1
+  searchDetectionRateMult: 1
+  canSeeThroughWalls: 1
+  walkSpeed: 3
+  runSpeed: 4
+  attackMovementSpeed: 4
+  retreatSpeed: 4
+  moveForce: 15
+  accelerationDrag: 1
+  deccelerationDrag: 5
+  test:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxAttackDistance: 20
+  minAttackDistance: 15
+  comfortableAttackDist: 10
+  chasePlayer: 1
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 16640
+  whatIsWall:
+    serializedVersion: 2
+    m_Bits: 64
+  whatBlocksSight:
+    serializedVersion: 2
+    m_Bits: 16704
+  whatTakesDamage:
+    serializedVersion: 2
+    m_Bits: 256
+  swipeDamage: 0
+  swipeCooldown: 1
+  swipeApplyDmgDelay: 0.5
+  swipeReach: 0
+  delayBeforeNextAttack_swipe: 3
+  maxAttackTime_swipe: 10
+  maxAttackDistance_swipe: 5
+  minAttackDistance_swipe: 4
+  comfortableAttackDist_swipe: 0
+  attackMovementSpeed_swipe: 8
+  runSpeed_swipe: 8
+  chasePlayer_swipe: 1
+  maxHpForUse_swipe: 1
+  slamDamage: 0
+  slamCooldown: 1
+  slamApplyDmgDelay: 0.5
+  slamReach: 0
+  delayBeforeNextAttack_slam: 3
+  maxAttackTime_slam: 10
+  maxAttackDistance_slam: 5
+  minAttackDistance_slam: 4
+  comfortableAttackDist_slam: 0
+  attackMovementSpeed_slam: 8
+  runSpeed_slam: 8
+  chasePlayer_slam: 1
+  maxHpForUse_slam: 1
+  gunDamage: 0
+  delayBetweenShots_gun: 0.05
+  shootStartDelay_gun: 0.3
+  delayBeforeNextAttack_gun: 3
+  bulletSpeed: 30
+  bulletSpread: 10
+  shots_bullets: 100
+  bullet: {fileID: 6545307244740321829, guid: ba70ec78eb4420e49a6feeeb86e188ae, type: 3}
+  minAttackDistance_gun: 15
+  maxAttackDist_gun: 20
+  attackMovementSpeed_gun: 4
+  comfortableAttackDist_gun: 10
+  chasePlayer_gun: 1
+  maxHpForUse_gun: 1
+  missileDamage: 0
+  delayBetweenShots_missiles: 0.2
+  shootStartDelay_missiles: 1.65
+  delayBeforeNextAttack_missiles: 6
+  missileSpeed: 15
+  missileRotForce: 70
+  missileMaxSpeed: 15
+  missileSpread: 50
+  shots_missiles: 12
+  crosshairController: {fileID: 1336308465829088357, guid: b57007077a03ec94682ae7906b103ac5, type: 3}
+  missile: {fileID: 6545307244740321829, guid: 45f776f1fe02de74bad65ddb5ebb7239, type: 3}
+  fireSequentially: 1
+  maxAttackDistance_missiles: 40
+  minAttackDistance_missiles: 30
+  comfortableAttackDist_missiles: 0
+  chasePlayer_missiles: 0
+  maxHpForUse_missiles: 1
+  laserDamage: 0
+  attackDuration: 0
+  delayBeforeNextAttack_laser: 3
+  rotationSpeed: 0
+  maxDist: 100
+  maxAttackDistance_laser: 40
+  minAttackDistance_laser: 30
+  comfortableAttackDist_laser: 0
+  chasePlayer_laser: 0
+  maxHpForUse_laser: 0.6
+  orderedAttacks: []
+  HpForStage2: 0.5
+  enableSwipe: 0
+  enableSlam: 0
+  enableMachineGun: 1
+  enableMissiles: 1
+  enableLaser: 0

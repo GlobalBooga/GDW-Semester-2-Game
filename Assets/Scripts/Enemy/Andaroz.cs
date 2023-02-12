@@ -86,7 +86,7 @@ public class Andaroz : Enemy
     public List<Transform> missileSpawns;
     public List<Transform> laserStart;
     public List<LineRenderer> lineRenderer;
-    public AndarozScriptableObject aso;
+    private AndarozScriptableObject aso;
 
     private int prev; // the previous index for sequential firing
     private List<string> allAttacks = new() { nameof(PerformGunAttack), nameof(PerformLaserAttack), nameof(PerformMissileAttack), nameof(PerformSlamAttack), nameof(PerformSwipeAttack)};
@@ -96,6 +96,8 @@ public class Andaroz : Enemy
     internal override void Awake()
     {
         base.Awake();
+
+        aso = (AndarozScriptableObject)eso;
     }
 
     internal override void Start()
@@ -130,10 +132,10 @@ public class Andaroz : Enemy
 
         Debug.Log("swipe");
         bool attacked = false;   
-        eso.maxAttackDistance = 5f;
-        eso.minAttackDistance = 4f;
-        eso.comfortableAttackDist = 0f;
-        eso.attackMovementSpeed = eso.runSpeed = 8f;
+        eso.maxAttackDistance = aso.maxAttackDistance_swipe;
+        eso.minAttackDistance = aso.minAttackDistance_swipe;
+        eso.comfortableAttackDist = aso.comfortableAttackDist_swipe;
+        eso.attackMovementSpeed = eso.runSpeed = aso.attackMovementSpeed_swipe;
         eso.chasePlayer = true;
         NewAttackDistance();
 
@@ -179,11 +181,11 @@ public class Andaroz : Enemy
 
         Debug.Log("slam");
         bool attacked = false;
-        eso.maxAttackDistance = 5f;
-        eso.minAttackDistance = 4f;
-        eso.comfortableAttackDist = 0f;
-        eso.attackMovementSpeed = eso.runSpeed = 8f;
-        eso.chasePlayer = true;
+        eso.maxAttackDistance = aso.maxAttackDistance_slam;
+        eso.minAttackDistance = aso.minAttackDistance_slam;
+        eso.comfortableAttackDist = aso.comfortableAttackDist_slam;
+        eso.attackMovementSpeed = eso.runSpeed = aso.attackMovementSpeed_slam;
+        eso.chasePlayer = aso.chasePlayer_slam;
         NewAttackDistance();
 
         float time = 0f;
@@ -234,10 +236,10 @@ public class Andaroz : Enemy
 
 
         // set to stationary - with all seeing eye
-        eso.maxAttackDistance = 40f;
-        eso.minAttackDistance = 30f;
-        eso.comfortableAttackDist = 0f;
-        eso.chasePlayer = false;
+        eso.maxAttackDistance = aso.maxAttackDistance_missiles;
+        eso.minAttackDistance = aso.minAttackDistance_missiles;
+        eso.comfortableAttackDist = aso.comfortableAttackDist_missiles;
+        eso.chasePlayer = aso.chasePlayer_missiles;
         NewAttackDistance();
 
         // play lock on animation
@@ -259,7 +261,7 @@ public class Andaroz : Enemy
             // calculate spread
             float spreadAngle = Random.Range(-aso.missileSpread, aso.missileSpread);
             float rads = Mathf.Deg2Rad * ((spreadAngle > 0) ? spreadAngle : (360f + spreadAngle));
-            float x = body.right.x, y = body.right.y;
+            float x = body.up.x, y = body.up.y;
 
             Vector3 missileDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
@@ -286,7 +288,7 @@ public class Andaroz : Enemy
                     b = Instantiate(aso.missile, missileSpawns[prev++]).GetComponent<HomingMissile>();
                 }
 
-                b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.right, missileDir));
+                b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.up, missileDir));
                 b.gameObject.layer = StaticHelpers.EnemyMissile;
                 b.Fly(playerLoc, missileDir, aso.missileSpeed, aso.missileRotForce, aso.missileMaxSpeed, aso.missileDamage);
 
@@ -312,11 +314,11 @@ public class Andaroz : Enemy
         // he is always facing the player
         Debug.Log("gun");
 
-        eso.maxAttackDistance = 25f;
-        eso.minAttackDistance = 20f;
-        eso.comfortableAttackDist = 15f;
-        eso.runSpeed = eso.retreatSpeed = eso.attackMovementSpeed = 3f;
-        eso.chasePlayer = true;
+        eso.maxAttackDistance = aso.maxAttackDist_gun;
+        eso.minAttackDistance = aso.minAttackDistance_gun;
+        eso.comfortableAttackDist = aso.comfortableAttackDist_gun;
+        eso.runSpeed = eso.retreatSpeed = eso.attackMovementSpeed = aso.attackMovementSpeed_gun;
+        eso.chasePlayer = aso.chasePlayer_gun;
         NewAttackDistance();
 
 
@@ -327,7 +329,7 @@ public class Andaroz : Enemy
             // calculate spread
             float spreadAngle = Random.Range(-aso.bulletSpread, aso.bulletSpread);
             float rads = Mathf.Deg2Rad * ((spreadAngle > 0) ? spreadAngle : (360f + spreadAngle));
-            float x = body.right.x, y = body.right.y;
+            float x = body.up.x, y = body.up.y;
 
             Vector3 bulletDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
@@ -340,7 +342,7 @@ public class Andaroz : Enemy
             if (aso.bullet && bulletSpawn)
             {
                 Bullet b = Instantiate(aso.bullet, bulletSpawn).GetComponent<Bullet>();
-                b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.right, bulletDir));
+                b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.up, bulletDir));
                 b.gameObject.layer = StaticHelpers.EnemyProjectileLayer;
                 b.Fly(bulletDir, aso.bulletSpeed, aso.gunDamage);
 
@@ -363,10 +365,10 @@ public class Andaroz : Enemy
         }
 
         Debug.Log("laser");
-        eso.maxAttackDistance = 40f;
-        eso.minAttackDistance = 30f;
-        eso.comfortableAttackDist = 0f;
-        eso.chasePlayer = false;
+        eso.maxAttackDistance = aso.maxAttackDistance_laser;
+        eso.minAttackDistance = aso.minAttackDistance_laser;
+        eso.comfortableAttackDist = aso.comfortableAttackDist_laser;
+        eso.chasePlayer = aso.chasePlayer_laser;
         NewAttackDistance();
 
         // animation - arms out
@@ -385,11 +387,11 @@ public class Andaroz : Enemy
         if (attackPattern.Count == 0) NewAttackOrder();
 
         // skip disabled attacks
-        //if (attackPattern.Peek() == nameof(PerformSwipeAttack) && !aso.enableSwipe) { attackPattern.Dequeue(); NextAttack(); return; }
-        //if (attackPattern.Peek() == nameof(PerformSlamAttack) && !aso.enableSlam) { attackPattern.Dequeue(); NextAttack(); return; }
-        //if (attackPattern.Peek() == nameof(PerformGunAttack) && !aso.enableMachineGun) { attackPattern.Dequeue(); NextAttack(); return; }
-        //if (attackPattern.Peek() == nameof(PerformMissileAttack) && !aso.enableMissiles) { attackPattern.Dequeue(); NextAttack(); return; }
-        //if (attackPattern.Peek() == nameof(PerformLaserAttack) && !aso.enableLaser) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformSwipeAttack) && !aso.enableSwipe) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformSlamAttack) && !aso.enableSlam) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformGunAttack) && !aso.enableMachineGun) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformMissileAttack) && !aso.enableMissiles) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformLaserAttack) && !aso.enableLaser) { attackPattern.Dequeue(); NextAttack(); return; }
 
         StartCoroutine(attackPattern.Dequeue());
     }

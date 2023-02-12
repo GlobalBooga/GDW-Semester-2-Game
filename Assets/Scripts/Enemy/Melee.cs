@@ -11,6 +11,7 @@ public class Melee : Enemy
     public float applyDmgDelay = 0.5f;
     private float attackReach;
 
+
     internal override void Awake()
     {
         base.Awake();

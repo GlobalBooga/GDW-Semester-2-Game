@@ -93,7 +93,17 @@ public class Enemy : MonoBehaviour
     public Vector3 PlayerDirection => playerLoc.position - transform.position;
     public float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
 
-    
+
+
+
+
+    EnemyScriptableObject eso;
+
+
+
+
+
+
     private void QueuePlayerPos()
     {
         // If the player is too close from the last logged position

@@ -197,7 +197,7 @@ public class Player : MonoBehaviour
             }
             rb.drag = 10f;
             Invoke(nameof(EndDodge), dodgeDuration);
-            Invoke(nameof(ResetMoveAbility), dodgeCooldown);
+            
         };
         
         controls.General.Ultimate.started += ctx => { };
@@ -211,13 +211,15 @@ public class Player : MonoBehaviour
         isUsingMoveAbility = false;
         if (hpcomp) hpcomp.isInvincible = false;
         gameObject.layer = StaticHelpers.PlayerLayer;
+
+        if (dodgeCooldown - dodgeDuration > 0) Invoke(nameof(ResetMoveAbility), dodgeCooldown - dodgeDuration);
+        else ResetMoveAbility();
     }
 
     private void ResetMoveAbility()
     {
         canUseMoveAbility = true;
     }
-
 
     private void OnDead()
     {

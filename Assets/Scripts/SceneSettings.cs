@@ -103,12 +103,14 @@ public class SceneSettings : MonoBehaviour
     {
         if (EnemyContainer) EnemyContainer.SetActive(false);
         if (gameplayObjectsContainer) gameplayObjectsContainer.SetActive(false);
+        if (sceneExit) sceneExit.enabled = false;
     }
 
     public void EnableScene()
     {
         if (EnemyContainer) EnemyContainer.SetActive(true);
         if (gameplayObjectsContainer) gameplayObjectsContainer.SetActive(true);
+        if (sceneExit) sceneExit.enabled = true;
     }
 
     public void ShowHint()

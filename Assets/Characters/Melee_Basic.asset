@@ -43,7 +43,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   maxStoredPoses: 8
   loseSightOfPlayerDelay: 1
-  secondsBetweenPoses: 0.5
+  secondsBetweenPoses: 0.1
   minDistanceBetweenPoses: 0.5
   searchDetectionRateMult: 1
   canSeeThroughWalls: 1

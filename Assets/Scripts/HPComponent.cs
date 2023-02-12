@@ -3,7 +3,6 @@ using UnityEngine;
 using System;
 using TMPro;
 using UnityEngine.UI;
-using UnityEditorInternal;
 
 public class HPComponent : MonoBehaviour
 {

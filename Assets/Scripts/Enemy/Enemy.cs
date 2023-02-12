@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(HPComponent))]
@@ -121,6 +119,8 @@ public class Enemy : MonoBehaviour
         ResetAttack();
         fov = normalFOV;
         playerPoses.Clear();
+        //Debug.Log("resetting");
+
     }
 
     internal virtual void OnValidate()
@@ -149,6 +149,8 @@ public class Enemy : MonoBehaviour
         playerLoc = GameObject.Find("Player").transform;
         // set the ondied func
         if (TryGetComponent(out hp)) hp.OnHPZero = OnDied;
+        originalPos = transform.position;
+        originalRot = body.rotation;
     }
 
     internal virtual void Start()
@@ -158,15 +160,12 @@ public class Enemy : MonoBehaviour
         moveSpeed = walkSpeed;
         rb.drag = deccelerationDrag;
         fov = normalFOV;
-        originalPos = transform.position;
-        originalRot = body.rotation;
-
     }
 
     internal virtual void Update()
     {
         if (showDebugStuff) CalculateEnemyView();
-        if (showForwards) Debug.DrawLine(transform.position,transform.position + body.right, Color.red, Time.deltaTime);
+        if (showForwards) Debug.DrawLine(transform.position,transform.position + body.up, Color.red, Time.deltaTime);
 
         HandleSight();
 
@@ -405,7 +404,7 @@ public class Enemy : MonoBehaviour
 
         rotationTime++;
         Vector3 thing = point - transform.position;
-        Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(thing, Vector3.right, Vector3.back));
+        Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(thing, Vector3.up, Vector3.back));
         body.rotation = Quaternion.Lerp(body.rotation, newQuat, rotationCurve.Evaluate(rotationTime * lookSpeed));
         return rotationTime * lookSpeed > 1f;
     }
@@ -420,7 +419,7 @@ public class Enemy : MonoBehaviour
         //Debug.Log("Start inspect");
         Vector3 right = transform.position - transform.up;
         Vector3 left = transform.position + transform.up;
-        Vector3 forward = transform.position + body.right;
+        Vector3 forward = transform.position + body.up;
 
         rotationTime = 0;
         while (!LookAt(right))
@@ -477,14 +476,14 @@ public class Enemy : MonoBehaviour
         // "cone" angle debug lines
         float rads = Mathf.Deg2Rad * fov * 0.5f;
         float rads2 = Mathf.Deg2Rad * (360f - fov*0.5f);
-        float x = body.right.x, y = body.right.y;
+        float x = body.up.x, y = body.up.y;
 
         sightMax = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
         sightMin = new Vector2((Mathf.Cos(rads2) * x) - (Mathf.Sin(rads2) * y), (Mathf.Sin(rads2) * x) + (Mathf.Cos(rads2) * y));
 
         Debug.DrawLine(transform.position, transform.position + sightMax * viewDistance, Color.red, Time.deltaTime);
 
-        Debug.DrawLine(transform.position, transform.position + body.right, Color.red, Time.deltaTime);
+        Debug.DrawLine(transform.position, transform.position + body.up, Color.red, Time.deltaTime);
         
         Debug.DrawLine(transform.position, transform.position + sightMin * viewDistance, Color.red, Time.deltaTime);
     }
@@ -493,7 +492,7 @@ public class Enemy : MonoBehaviour
     {
         if (PlayerDistance <= viewDistance)
         {
-            if (Vector3.Angle(body.right, playerLoc.position - transform.position) <= fov * 0.5f)
+            if (Vector3.Angle(body.up, playerLoc.position - transform.position) <= fov * 0.5f)
             {
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, (playerLoc.position - transform.position).normalized, viewDistance, whatBlocksSight);
                 if (hit)
@@ -512,8 +511,8 @@ public class Enemy : MonoBehaviour
     internal virtual void Move()
     {
         rb.drag = accelerationDrag;
-        if (moveSpeed > 0) rb.AddForce(body.right * moveForce * rb.mass, ForceMode2D.Force);
-        else rb.AddForce(body.right * -moveForce, ForceMode2D.Force);
+        if (moveSpeed > 0) rb.AddForce(body.up * moveForce * rb.mass, ForceMode2D.Force);
+        else rb.AddForce(body.up * -moveForce, ForceMode2D.Force);
     }
 
     internal virtual void DrawDebugCross(Vector3 pos, float duration = 1f, float segmentLength = 0.3f)
@@ -539,6 +538,7 @@ public class Enemy : MonoBehaviour
     {
         LevelManager.EnemyDied();
         gameObject.SetActive(false);
+        //Debug.Log("doed");
     }
 
     public void Alert(Vector3 lookAt)

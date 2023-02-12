@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Melee : Enemy
@@ -39,20 +40,26 @@ public class Melee : Enemy
     internal override void Attack()
     {
         base.Attack();
-        //Debug.Log("slash!");
 
+        StartCoroutine(nameof(Slash));
+    }
+
+    private IEnumerator Slash()
+    {
         // play animation
 
-        // // //
+        yield return new WaitForSeconds(applyDmgDelay);
 
-        Invoke(nameof(ResetAttack), attackCooldown);
-        
         // if we hit
         if (PlayerDistance <= attackReach)
         {
             //Invoke(nameof(ApplyDamage), applyDmgDelay);
             StaticHelpers.ApplyDamage(playerLoc.gameObject, damage);
         }
+
+
+        yield return new WaitForSeconds(attackCooldown);
+        ResetAttack();
     }
 
     

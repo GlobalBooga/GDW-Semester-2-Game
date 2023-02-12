@@ -152,6 +152,13 @@ public class Sniper : Enemy
     internal override void OnLostSightOfPlayer()
     {
         base.OnLostSightOfPlayer();
+        if (isAttacking) StopCoroutine(nameof(Aim));
+        ResetAttack();
+    }
+
+    internal override void ResetAttack()
+    {
         base.ResetAttack();
+        if (isLaserOn) TurnOff();
     }
 }

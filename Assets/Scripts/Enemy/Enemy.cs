@@ -16,12 +16,13 @@ public class Enemy : MonoBehaviour
     private float fov;
     private bool foundPlayer;
     private Queue<Vector3> playerPoses = new();
+    private Queue<Vector3> playerPosesHidden = new();
     private float timeSinceLastPos = 0;
     private float totalTravelDist;
     private float lerpStartTime;
     private Vector3 lerpStart;
     private Vector3 nextPos;
-    private bool saveOneMorePos;
+    //private bool saveOneMorePos;
     private int frames;
     private int detectionRate = 50; // the average
     private bool isInspecting;
@@ -58,8 +59,6 @@ public class Enemy : MonoBehaviour
     public float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
 
 
-
-
     private void QueuePlayerPos()
     {
         // If the player is too close from the last logged position
@@ -68,7 +67,7 @@ public class Enemy : MonoBehaviour
             if (Vector3.Distance(playerLoc.position, playerPoses.Last()) < eso.minDistanceBetweenPoses) return;
         }
 
-        saveOneMorePos = false;
+        //saveOneMorePos = false;
 
         if (playerPoses.Count > eso.maxStoredPoses) playerPoses.Dequeue();
         if (showDebugStuff) DrawDebugCross(playerLoc.position, eso.secondsBetweenPoses * eso.maxStoredPoses);
@@ -88,7 +87,6 @@ public class Enemy : MonoBehaviour
         //Debug.Log("resetting");
 
     }
-
 
     internal virtual void Awake()
     {
@@ -121,7 +119,7 @@ public class Enemy : MonoBehaviour
         if (eso.chasePlayer)
         {
             // Player position recorder
-            if ((timeSinceLastPos >= eso.secondsBetweenPoses) || saveOneMorePos)
+            if (timeSinceLastPos >= eso.secondsBetweenPoses)
             {
                 timeSinceLastPos = 0f;
                 QueuePlayerPos();
@@ -179,10 +177,11 @@ public class Enemy : MonoBehaviour
         if (eso.chasePlayer && !foundPlayer && playerPoses.Count > 0f)
         {
             float distCovered = (Time.time - lerpStartTime) * eso.runSpeed;
-            transform.position = Vector3.Lerp(lerpStart, nextPos, distCovered / totalTravelDist);
+            transform.position = Vector3.Lerp(lerpStart, nextPos, eso.test.Evaluate(distCovered / totalTravelDist));
 
             if (Vector3.Distance(transform.position, nextPos) < 0.05f)
             {
+                eso.test = AnimationCurve.Linear(0,0,1,1);
                 // dispose of the last pos
                 playerPoses.Dequeue();
 
@@ -216,7 +215,7 @@ public class Enemy : MonoBehaviour
             {
                 lockedOnPlayer = true;
                 rotationTime = 0f;
-                //Debug.Log("too close");
+                Debug.Log("too close");
             }
 
             // basic can see player check
@@ -237,7 +236,7 @@ public class Enemy : MonoBehaviour
                     //fov = normalFOV;
 
                     Invoke(nameof(OnPlayerDiscovered), eso.reactionTime);
-                    //Debug.Log("found player");
+                    Debug.Log("found player");
                 }
             }
             // if we can't see the player anymore - called once
@@ -252,9 +251,12 @@ public class Enemy : MonoBehaviour
                 // for children to add their functionalities
                 OnLostSightOfPlayer();
 
-                //Debug.Log("lost player");
+                eso.test = AnimationCurve.EaseInOut(0,0,1,1);
+
+                Debug.Log("lost player");
                 // Change some detection related properties
                 foundPlayer = false;
+
                 if (!eso.canSeeThroughWalls) lockedOnPlayer = false;
                 rotationTime = 0f;
                 moveSpeed = eso.walkSpeed;
@@ -307,12 +309,9 @@ public class Enemy : MonoBehaviour
                             tempQ.Enqueue(tempStk.Pop());
                         }
                         if (tempQ.Count > 0) playerPoses = tempQ;
-                        //Debug.Log($"hold {tempStk.Count}");                                                                                                 // <- debug.logs
-                        //Debug.Log($"temp {tempQ.Count}");
-                        //Debug.Log($"playerposes {playerPoses.Count}");
                     }
 
-                    saveOneMorePos = true;
+                    //saveOneMorePos = true;
 
                     nextPos = playerPoses.Peek();
 
@@ -370,23 +369,13 @@ public class Enemy : MonoBehaviour
         Vector3 forward = transform.position + body.up;
 
         rotationTime = 0;
-        while (!LookAt(right))
-        {
-            //Debug.Log("inspecting right");
-            yield return null;
-        }
+        while (!LookAt(right)) yield return null;
+        
         rotationTime = 0;
-        while (!LookAt(left))
-        {
-            //Debug.Log("inspecting left");
-            yield return null;
-        }
+        while (!LookAt(left)) yield return null;
+        
         rotationTime = 0;
-        while (!LookAt(forward))
-        {
-            //Debug.Log("inspecting forwards");
-            yield return null;
-        }
+        while (!LookAt(forward)) yield return null;
 
         // when finished chasing, reset detection
         NewDetectionRate();
@@ -460,7 +449,7 @@ public class Enemy : MonoBehaviour
     {
         rb.drag = eso.accelerationDrag;
         if (moveSpeed > 0) rb.AddForce(body.up * eso.moveForce * rb.mass, ForceMode2D.Force);
-        else rb.AddForce(body.up * -eso.moveForce, ForceMode2D.Force);
+        else rb.AddForce(body.up * -eso.moveForce * rb.mass, ForceMode2D.Force);
     }
 
     internal virtual void DrawDebugCross(Vector3 pos, float duration = 1f, float segmentLength = 0.3f)

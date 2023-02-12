@@ -13,6 +13,7 @@ public class EnemyScriptableObject : ScriptableObject
     public float searchFOV = 120f;
     public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     public int maxStoredPoses = 4;
+    public int loseSightOfPlayerDelay = 1;
     public float secondsBetweenPoses = 1f;
     public float minDistanceBetweenPoses = 1f;
     public float searchDetectionRateMult = 1f;
@@ -28,6 +29,7 @@ public class EnemyScriptableObject : ScriptableObject
     public float moveForce = 15f;
     public float accelerationDrag = 1f;
     public float deccelerationDrag = 5f;
+    public AnimationCurve test;
     [Space(10f)]
 
     [Header("Aggressive Behaviour"), Space(5f)]

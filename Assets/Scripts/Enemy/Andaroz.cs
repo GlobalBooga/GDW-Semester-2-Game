@@ -108,11 +108,6 @@ public class Andaroz : Enemy
         base.Update();
     }
 
-    internal override void OnValidate()
-    {
-        base.OnValidate();
-    }
-
     internal override void FixedUpdate()
     {
         base.FixedUpdate();

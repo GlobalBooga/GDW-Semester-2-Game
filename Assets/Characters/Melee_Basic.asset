@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Melee_Basic
   m_EditorClassIdentifier: 
   reactionTime: 0
-  viewDistance: 40
+  viewDistance: 60
   instantDetectDist: 3
   normalFOV: 60
   searchFOV: 120
@@ -41,31 +41,56 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxStoredPoses: 10
-  secondsBetweenPoses: 0.25
-  minDistanceBetweenPoses: 0.25
+  maxStoredPoses: 8
+  loseSightOfPlayerDelay: 1
+  secondsBetweenPoses: 0.5
+  minDistanceBetweenPoses: 0.5
   searchDetectionRateMult: 1
-  canSeeThroughWalls: 0
+  canSeeThroughWalls: 1
   walkSpeed: 3
   runSpeed: 10
-  attackMovementSpeed: 0
+  attackMovementSpeed: 10
   retreatSpeed: 0
-  moveForce: 30
+  moveForce: 50
   accelerationDrag: 5
   deccelerationDrag: 15
+  test:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   maxAttackDistance: 3
   minAttackDistance: 2
   comfortableAttackDist: 0
   chasePlayer: 1
   whatIsPlayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 16640
   whatIsWall:
     serializedVersion: 2
     m_Bits: 64
   whatBlocksSight:
     serializedVersion: 2
-    m_Bits: 320
+    m_Bits: 16704
   whatTakesDamage:
     serializedVersion: 2
     m_Bits: 256

@@ -229,7 +229,7 @@ public class Player : MonoBehaviour
     private void OnHit()
     {
         // disable movement until grounded
-        Debug.Log("ouch");
+        //Debug.Log("ouch");
         if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR);
     }
 }

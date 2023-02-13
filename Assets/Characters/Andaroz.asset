@@ -61,7 +61,7 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: 0
-      outSlope: 0
+      outSlope: 1
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
+      inSlope: 1
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
@@ -94,7 +94,7 @@ MonoBehaviour:
   whatTakesDamage:
     serializedVersion: 2
     m_Bits: 256
-  swipeDamage: 0
+  swipeDamage: 20
   swipeCooldown: 1
   swipeApplyDmgDelay: 0.5
   swipeReach: 0
@@ -107,7 +107,7 @@ MonoBehaviour:
   runSpeed_swipe: 8
   chasePlayer_swipe: 1
   maxHpForUse_swipe: 1
-  slamDamage: 0
+  slamDamage: 50
   slamCooldown: 1
   slamApplyDmgDelay: 0.5
   slamReach: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
   runSpeed_slam: 8
   chasePlayer_slam: 1
   maxHpForUse_slam: 1
-  gunDamage: 0
+  gunDamage: 15
   delayBetweenShots_gun: 0.05
   shootStartDelay_gun: 0.3
   delayBeforeNextAttack_gun: 3
@@ -134,7 +134,7 @@ MonoBehaviour:
   comfortableAttackDist_gun: 10
   chasePlayer_gun: 1
   maxHpForUse_gun: 1
-  missileDamage: 0
+  missileDamage: 70
   delayBetweenShots_missiles: 0.2
   shootStartDelay_missiles: 1.65
   delayBeforeNextAttack_missiles: 6
@@ -150,8 +150,8 @@ MonoBehaviour:
   minAttackDistance_missiles: 30
   comfortableAttackDist_missiles: 0
   chasePlayer_missiles: 0
-  maxHpForUse_missiles: 1
-  laserDamage: 0
+  maxHpForUse_missiles: 0.9
+  laserDamage: 100
   attackDuration: 0
   delayBeforeNextAttack_laser: 3
   rotationSpeed: 0
@@ -163,8 +163,8 @@ MonoBehaviour:
   maxHpForUse_laser: 0.6
   orderedAttacks: []
   HpForStage2: 0.5
-  enableSwipe: 0
-  enableSlam: 0
+  enableSwipe: 1
+  enableSlam: 1
   enableMachineGun: 1
   enableMissiles: 1
   enableLaser: 0

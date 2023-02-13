@@ -48,12 +48,6 @@ TagManager:
   - name: Walls
     uniqueID: 2471996601
     locked: 0
-  - name: Decoration
+  - name: Ambient
     uniqueID: 2504628435
-    locked: 0
-  - name: Destructibles
-    uniqueID: 1725449733
-    locked: 0
-  - name: Enemies
-    uniqueID: 3988236023
     locked: 0

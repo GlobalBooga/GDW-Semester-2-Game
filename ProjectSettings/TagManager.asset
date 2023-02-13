@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -11,15 +12,15 @@ TagManager:
   - NPC
   - Water
   - UI
-  - Ground
+  - Wall
   - NPCPathTrigger
   - Player
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - EnemyProjectile
+  - PlayerProjectile
+  - Pickup
+  - EnemyMissile
+  - PlayerInvincible
   - 
   - 
   - 
@@ -40,4 +41,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2076337807
+    locked: 0
+  - name: Walls
+    uniqueID: 2471996601
+    locked: 0
+  - name: Ambient
+    uniqueID: 2504628435
     locked: 0

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class HPComponent : MonoBehaviour
 {
+    public Slider sliderHpBar;
     public List<Image> hpBars;
     public TextMeshProUGUI hpText;
     public float hpColorThreshold = 0.5f;
@@ -90,6 +91,11 @@ public class HPComponent : MonoBehaviour
                     bar.color = Color.Lerp(lowHpColor, midHpColor, bar.fillAmount / (hpColorThreshold / 2));
                 }
             }
+        }
+        else if (sliderHpBar)
+        {
+            float hpPercentage = health / maxHealth;
+            sliderHpBar.value = hpPercentage;
         }
     }
 

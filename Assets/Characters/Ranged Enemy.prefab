@@ -48,8 +48,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
+  m_Mass: 10
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -91,74 +91,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ce323b0a1eb0e746b84d875f6ff80d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebugStuff: 1
+  showDebugStuff: 0
   showForwards: 1
-  reactionTime: 0
-  viewDistance: 40
-  instantDetectDist: 3
-  normalFOV: 60
-  searchFOV: 120
-  rotationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  maxStoredPoses: 4
-  secondsBetweenPoses: 1
-  minDistanceBetweenPoses: 1
-  searchDetectionRateMult: 1
-  canSeeThroughWalls: 0
-  walkSpeed: 3
-  runSpeed: 8
-  attackMovementSpeed: 3
-  retreatSpeed: 3
-  moveForce: 15
-  accelerationDrag: 1
-  deccelerationDrag: 5
-  maxAttackDistance: 15
-  minAttackDistance: 12
-  comfortableAttackDist: 5
-  chasePlayer: 1
-  whatIsPlayer:
-    serializedVersion: 2
-    m_Bits: 256
-  whatIsWall:
-    serializedVersion: 2
-    m_Bits: 64
-  whatBlocksSight:
-    serializedVersion: 2
-    m_Bits: 320
-  whatTakesDamage:
-    serializedVersion: 2
-    m_Bits: 256
+  eso: {fileID: 11400000, guid: 6dbcccce7f753d24cbe1418bf43f56ee, type: 2}
   body: {fileID: 2781084931920902490}
-  damage: 0
-  delayBetweenShots: 0.5
-  shootStartDelay: 0.3
-  bulletSpeed: 15
-  bulletSpread: 10
-  bullet: {fileID: 6545307244740321829, guid: 0cc7b3e22e8da2c4aaa8a327dcc3d1ea, type: 3}
   bulletSpawn: {fileID: 2781084932886251274}
-  muzzleFlash: {fileID: 4745018865687402551}
 --- !u!1 &2781084931920902491
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,10 +418,5 @@ PrefabInstance:
 --- !u!4 &4745018865687402550 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8056495817756034892, guid: e5cca85d035b20343bbe9bc39b5fb577, type: 3}
-  m_PrefabInstance: {fileID: 3321367094596460410}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4745018865687402551 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8056495817756034893, guid: e5cca85d035b20343bbe9bc39b5fb577, type: 3}
   m_PrefabInstance: {fileID: 3321367094596460410}
   m_PrefabAsset: {fileID: 0}

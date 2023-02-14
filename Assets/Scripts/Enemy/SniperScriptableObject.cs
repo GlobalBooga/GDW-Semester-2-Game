@@ -18,8 +18,6 @@ public class SniperScriptableObject : EnemyScriptableObject
 
     [Header("Laser"), Space(5f)]
     public float maxDist = 100f;
-    public Transform laserStart;
-    public LineRenderer lineRenderer;
-    public Animator animator;
+    
     public float animationLenght = 0.1f;
 }

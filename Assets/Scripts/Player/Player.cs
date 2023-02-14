@@ -188,12 +188,12 @@ public class Player : MonoBehaviour
             if (RawDirection == Vector2.zero)
             {
                 // dash backwards
-                rb.AddForce((dir - (Vector2)transform.up).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
+                rb.AddForce((dir - (Vector2)transform.up * 2.5f).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
             }
             else
             {
                 // dash in direction
-                rb.AddForce((dir + RawDirection * 2).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
+                rb.AddForce((dir + RawDirection * 2.5f).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
             }
             rb.drag = 10f;
             Invoke(nameof(EndDodge), dodgeDuration);
@@ -229,7 +229,7 @@ public class Player : MonoBehaviour
     private void OnHit()
     {
         // disable movement until grounded
-        Debug.Log("ouch");
+        //Debug.Log("ouch");
         if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR);
     }
 }

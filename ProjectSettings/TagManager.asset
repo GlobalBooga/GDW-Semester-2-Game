@@ -48,3 +48,6 @@ TagManager:
   - name: Walls
     uniqueID: 2471996601
     locked: 0
+  - name: Outdoors
+    uniqueID: 501292755
+    locked: 0

@@ -1,4 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
@@ -16,12 +20,18 @@ public class Player : MonoBehaviour
 
     [Space(10f)]
 
-    [Header("Movement Ability"), Space(5f)]
+    [Header("Dodging"), Space(5f)]
     public float dodgeCooldown = 1f;
     public float dodgeDuration = 0.3f;
     public float dodgeForce = 5f;
     private bool isUsingMoveAbility;
     private bool canUseMoveAbility = true;
+    public float initialDodgeRechargeDelay = 3f;
+    public float secondDodgeRechargeDelay = 1.5f;
+    public float dodgeRechargeSpeed = 2f;
+    private int dodgesAvailable;
+    public bool mustDepleteAllDodgesBeforeRecharging = false;
+    private bool rechargingDodge;
 
     [Space(10f)]
 
@@ -34,6 +44,7 @@ public class Player : MonoBehaviour
     public Weapon weapon;
     private GameObject pickupable;
     public Animator screenOverlayAnimator;
+    public List<Slider> staminaBars;
 
     // for animations
     public const string PLAYER_HIT_INDICATOR = "PlayerDamageTaken";
@@ -177,8 +188,47 @@ public class Player : MonoBehaviour
         controls.General.MovementAbility.started += ctx =>
         {
             if (!canUseMoveAbility) return;
+            //if (rechargingDodge && mustDepleteAllDodgesBeforeRecharging) return;
+
+            if (staminaBars.Count > 0)
+            {
+                int strikes = 0;
+                for (int i = 0; i < staminaBars.Count; i++)
+                {
+                    if (i == staminaBars.Count - 1 && staminaBars[i].value < 1) return;
+                    
+                    // is this bar empty or charging
+                    if (staminaBars[i].value == 0)
+                    {
+                        strikes++;
+                        continue;
+                    }
+                    if (rechargingDodge && (i + 1) < staminaBars.Count)
+                    {
+                        staminaBars[i + 1].value = staminaBars[i].value;
+                        strikes++;
+                    }
+
+                    staminaBars[i].value = 0;
+                    break;
+                }
+
+                // 3 strikes mean no bars are full
+                // 2 strikes mean we just used the last bar
+                
+                if (strikes == 3) return;
+                //if (strikes == 2 && !rechargingDodge) StartCoroutine(nameof(RechargeDodge), false);
+                else if (!mustDepleteAllDodgesBeforeRecharging)
+                {
+                    StopCoroutine(nameof(RechargeDodge));
+                    StartCoroutine(nameof(RechargeDodge), false);
+                }
+            }
+
+
             canUseMoveAbility = false;
             isUsingMoveAbility = true;
+
 
             if (hpcomp) hpcomp.isInvincible = true;
             gameObject.layer = StaticHelpers.PlayerInvincibleLayer;
@@ -231,5 +281,33 @@ public class Player : MonoBehaviour
         // disable movement until grounded
         //Debug.Log("ouch");
         if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR);
+    }
+
+    private IEnumerator RechargeDodge(bool startImmediately = false)
+    {
+        if (!startImmediately) yield return new WaitForSeconds(initialDodgeRechargeDelay);
+        rechargingDodge = true;
+
+        // get the index of the stamina bar to recharge
+        int bar = 0;
+        for (int i = staminaBars.Count - 1; i >= 0; i--)
+        {
+            //rechargingDodge = true;
+            bar = i;
+            if (staminaBars[i].value < 1)
+            {
+                // replenish its stamina
+                while (staminaBars[bar].value < 1)
+                {
+                    staminaBars[bar].value += Time.deltaTime * dodgeRechargeSpeed;
+                    yield return null;
+                }
+                staminaBars[bar].value = 1f;
+            }
+            //if (!mustDepleteAllDodgesBeforeRecharging) rechargingDodge = false;
+            yield return new WaitForSeconds(secondDodgeRechargeDelay);
+        }
+
+        if (rechargingDodge) rechargingDodge = false;
     }
 }

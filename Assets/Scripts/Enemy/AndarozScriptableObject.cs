@@ -11,6 +11,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float swipeApplyDmgDelay = 0.5f;
     public float swipeReach;
     public float delayBeforeNextAttack_swipe = 3f;
+    public float delayBeforeIdle_swipe = 1f;
     public float maxAttackTime_swipe = 10f;
     public float maxAttackDistance_swipe = 5f;
     public float minAttackDistance_swipe = 4f;
@@ -27,6 +28,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float slamApplyDmgDelay = 0.5f;
     public float slamReach;
     public float delayBeforeNextAttack_slam = 3f;
+    public float delayBeforeIdle_slam = 1f;
     public float maxAttackTime_slam = 10f;
     public float maxAttackDistance_slam = 5f;
     public float minAttackDistance_slam = 4f;
@@ -43,6 +45,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float delayBetweenShots_gun = 0.5f;
     public float shootStartDelay_gun = 0.3f;
     public float delayBeforeNextAttack_gun = 3f;
+    public float delayBeforeIdle_gun = 1f;
     public float bulletSpeed = 15f;
     public float bulletSpread = 10f;
     public int shots_bullets = 50;
@@ -63,6 +66,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float delayBetweenShots_missiles = 0.5f;
     public float shootStartDelay_missiles = 0.3f;
     public float delayBeforeNextAttack_missiles = 6f;
+    public float delayBeforeIdle_missiles = 1f;
     public float missileSpeed = 7f;
     public float missileRotForce = 10f;
     public float missileMaxSpeed = 7f;
@@ -84,6 +88,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float laserDamage;
     public float attackDuration;
     public float delayBeforeNextAttack_laser = 3f;
+    public float delayBeforeIdle_laser = 1f;
     public float rotationSpeed;
     public float maxDist = 100f;
     public float maxAttackDistance_laser = 40f;

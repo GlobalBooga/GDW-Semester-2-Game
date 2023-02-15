@@ -191,6 +191,7 @@ GameObject:
   - component: {fileID: 1896939090538511046}
   - component: {fileID: -4186290192929349455}
   - component: {fileID: 2554821954583363593}
+  - component: {fileID: 5891864069383825557}
   m_Layer: 0
   m_Name: HomingMissile
   m_TagString: Untagged
@@ -288,6 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 210c911c80c096542a7c4b0b86970cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sliderHpBar: {fileID: 0}
   hpBars:
   - {fileID: 5502770979612321948}
   - {fileID: 2993584538913205244}
@@ -298,6 +300,21 @@ MonoBehaviour:
   lowHpColor: {r: 1, g: 0, b: 0, a: 1}
   isInvincible: 0
   maxHealth: 10
+--- !u!111 &5891864069383825557
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6545307244740321829}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1001 &627015189249155501
 PrefabInstance:
   m_ObjectHideFlags: 0

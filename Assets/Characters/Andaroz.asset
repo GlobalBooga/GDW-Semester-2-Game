@@ -48,8 +48,8 @@ MonoBehaviour:
   searchDetectionRateMult: 1
   canSeeThroughWalls: 1
   walkSpeed: 3
-  runSpeed: 4
-  attackMovementSpeed: 4
+  runSpeed: 12
+  attackMovementSpeed: 0
   retreatSpeed: 4
   moveForce: 15
   accelerationDrag: 1
@@ -61,7 +61,7 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: 0
-      outSlope: 1
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1
+      inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
@@ -78,9 +78,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxAttackDistance: 20
-  minAttackDistance: 15
-  comfortableAttackDist: 10
+  maxAttackDistance: 5
+  minAttackDistance: 4
+  comfortableAttackDist: 0
   chasePlayer: 1
   whatIsPlayer:
     serializedVersion: 2
@@ -96,34 +96,37 @@ MonoBehaviour:
     m_Bits: 256
   swipeDamage: 20
   swipeCooldown: 1
-  swipeApplyDmgDelay: 0.5
-  swipeReach: 0
-  delayBeforeNextAttack_swipe: 3
+  swipeApplyDmgDelay: 1
+  swipeReach: 2
+  delayBeforeNextAttack_swipe: 2
+  delayBeforeIdle_swipe: 0.3
   maxAttackTime_swipe: 10
-  maxAttackDistance_swipe: 5
+  maxAttackDistance_swipe: 6
   minAttackDistance_swipe: 4
   comfortableAttackDist_swipe: 0
-  attackMovementSpeed_swipe: 8
-  runSpeed_swipe: 8
+  attackMovementSpeed_swipe: 12
+  runSpeed_swipe: 12
   chasePlayer_swipe: 1
   maxHpForUse_swipe: 1
   slamDamage: 50
   slamCooldown: 1
-  slamApplyDmgDelay: 0.5
+  slamApplyDmgDelay: 1
   slamReach: 0
-  delayBeforeNextAttack_slam: 3
+  delayBeforeNextAttack_slam: 2
+  delayBeforeIdle_slam: 1
   maxAttackTime_slam: 10
   maxAttackDistance_slam: 5
   minAttackDistance_slam: 4
   comfortableAttackDist_slam: 0
-  attackMovementSpeed_slam: 8
-  runSpeed_slam: 8
+  attackMovementSpeed_slam: 12
+  runSpeed_slam: 12
   chasePlayer_slam: 1
   maxHpForUse_slam: 1
   gunDamage: 15
   delayBetweenShots_gun: 0.05
   shootStartDelay_gun: 0.3
   delayBeforeNextAttack_gun: 3
+  delayBeforeIdle_gun: 0.5
   bulletSpeed: 30
   bulletSpread: 10
   shots_bullets: 100
@@ -137,7 +140,8 @@ MonoBehaviour:
   missileDamage: 70
   delayBetweenShots_missiles: 0.2
   shootStartDelay_missiles: 1.65
-  delayBeforeNextAttack_missiles: 6
+  delayBeforeNextAttack_missiles: 3
+  delayBeforeIdle_missiles: 1.5
   missileSpeed: 15
   missileRotForce: 70
   missileMaxSpeed: 15
@@ -150,21 +154,22 @@ MonoBehaviour:
   minAttackDistance_missiles: 30
   comfortableAttackDist_missiles: 0
   chasePlayer_missiles: 0
-  maxHpForUse_missiles: 0.9
+  maxHpForUse_missiles: 1
   laserDamage: 100
   attackDuration: 0
-  delayBeforeNextAttack_laser: 3
+  delayBeforeNextAttack_laser: 5
+  delayBeforeIdle_laser: 3.5
   rotationSpeed: 0
   maxDist: 100
   maxAttackDistance_laser: 40
   minAttackDistance_laser: 30
   comfortableAttackDist_laser: 0
   chasePlayer_laser: 0
-  maxHpForUse_laser: 0.6
+  maxHpForUse_laser: 1
   orderedAttacks: []
   HpForStage2: 0.5
-  enableSwipe: 1
+  enableSwipe: 0
   enableSlam: 1
-  enableMachineGun: 1
-  enableMissiles: 1
+  enableMachineGun: 0
+  enableMissiles: 0
   enableLaser: 0

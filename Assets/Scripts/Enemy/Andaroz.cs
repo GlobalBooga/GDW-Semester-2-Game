@@ -1,98 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class Andaroz : Enemy
 {
-    //[Header("Melee Attack 1 - Swipe"), Space(5f)]
-    //public float swipeDamage;
-    //public float swipeCooldown = 1f;
-    //public float swipeApplyDmgDelay = 0.5f;
-    //public float swipeReach;
-    //public float delayBeforeNextAttack_swipe = 3f;
-    //public float maxAttackTime_swipe = 10f;
-    //[Range(0f, 1f)] public float maxHpForUse_swipe = 1f;
-
-    //[Space(10f)]
-    //[Header("Melee Attack 2 - AOE Ground Slam"), Space(5f)]
-    //public float slamDamage;
-    //public float slamCooldown = 1f;
-    //public float slamApplyDmgDelay = 0.5f;
-    //public float slamReach;
-    //public float delayBeforeNextAttack_slam = 3f;
-    //public float maxAttackTime_slam = 10f;
-    //[Range(0f, 1f)] public float maxHpForUse_slam = 1f;
-
-    //[Space(10f)]
-
-    //[Header("Ranged Attack 1 - Machine Gun"), Space(5f)]
-    //public float gunDamage;
-    //public float delayBetweenShots_gun = 0.5f;
-    //public float shootStartDelay_gun = 0.3f;
-    //public float delayBeforeNextAttack_gun = 3f;
-    //public float bulletSpeed = 15f;
-    //public float bulletSpread = 10f;
-    //public int shots_bullets = 50;
-    //public GameObject bullet;
-    //public Transform bulletSpawn;
-    //[Range(0f, 1f)] public float maxHpForUse_gun = 1f;
-
-    //[Space(10f)]
-
-    //[Header("Ranged Attack 2 - Missile Barrage"), Space(5f)]
-    //public float missileDamage;
-    //public float delayBetweenShots_missiles = 0.5f;
-    //public float shootStartDelay_missiles = 0.3f;
-    //public float delayBeforeNextAttack_missiles = 6f;
-    //public float missileSpeed = 7f;
-    //public float missileRotForce = 10f;
-    //public float missileMaxSpeed = 7f;
-    //public float missileSpread = 10f;
-    //public int shots_missiles = 10;
-    //public GameObject missile;
-    //public List<Transform> missileSpawns;
-    //public bool fireSequentially = true;
-    //public Crosshair crosshairController;
-    //[Range(0f, 1f)] public float maxHpForUse_missiles = 0.9f;
-
-    //[Space(10f)]
-
-    //[Header("Ranged Attack 3 - Twin Laser"), Space(5f)]
-    //public float laserDamage;
-    //public float attackDuration;
-    //public float delayBeforeNextAttack_laser = 3f;
-    //public float rotationSpeed;
-    //public float maxDist = 100f;
-    //public List<Transform> laserStart;
-    //public List<LineRenderer> lineRenderer;
-    //[Range(0f, 1f)] public float maxHpForUse_laser = 0.6f;
-
-    //[Space(10f)]
-
-    //[Header("Attack Pattern"), Space(5f)]
-    //public List<string> orderedAttacks;
-    //[Range(0f, 1f)] public float HpForStage2 = 0.5f;
-
-    //[Space(10f)]
-
-    //[Header("Balancing And Debugging"), Space(5f)]
-    //public bool enableSwipe = true;
-    //public bool enableSlam = true;
-    //public bool enableMachineGun = true;
-    //public bool enableMissiles = true;
-    //public bool enableLaser = true;
 
     public Transform bulletSpawn;
+    public GameObject muzzleFlash;
     public List<Transform> missileSpawns;
     public List<Transform> laserStart;
     public List<LineRenderer> lineRenderer;
-    private AndarozScriptableObject aso;
+    public Animator TorsoAnimator;
+    public Animator LegsAnimator;
 
+    private AndarozScriptableObject aso;
     private int prev; // the previous index for sequential firing
     private List<string> allAttacks = new() { nameof(PerformGunAttack), nameof(PerformLaserAttack), nameof(PerformMissileAttack), nameof(PerformSlamAttack), nameof(PerformSwipeAttack)};
     private Queue<string> attackPattern = new();
 
 
+    // ANIMATION KEYWORDS
+
+    private const string SWIPE_ATTACK = "Andaroz_Swipe";
+    private const string SLAM_ATTACK = "Andaroz_Slam";
+    private const string GUN_ATTACK = "Andaroz_Shoot";
+    private const string MISSILE_ATTACK = "Andaroz_Missiles";
+    private const string LASER_ATTACK = "Andaroz_Lasers";
+    private const string IDLE = "Andaroz_Idle";
+    private const string WALK = "Andaroz_Walk";
+    private const string RUN = "Andaroz_Run";
+    private const string DEATH = "Andaroz_Death";
+    private const string LEGS_WALK = "Andaroz_Legs_Walk";
+    private const string LEGS_RUN = "Andaroz_Legs_Run";
+    private const string LEGS_ATTACKSTANCE = "Andaroz_Legs_AttackStance";
+    
     internal override void Awake()
     {
         base.Awake();
@@ -152,6 +94,10 @@ public class Andaroz : Enemy
                 eso.attackMovementSpeed = 0f;
                 Debug.Log("swiping");
                 // play swipe animation
+
+                if (TorsoAnimator) TorsoAnimator.Play(SWIPE_ATTACK);
+
+
                 attacked = true;
                 yield return new WaitForSeconds(aso.swipeApplyDmgDelay);
 
@@ -167,6 +113,8 @@ public class Andaroz : Enemy
             yield return null;
         }
         
+        yield return new WaitForSeconds(aso.delayBeforeIdle_swipe);
+        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         yield return new WaitForSeconds(aso.delayBeforeNextAttack_swipe);
         ResetAttack();
     }
@@ -202,6 +150,12 @@ public class Andaroz : Enemy
 
                 // play swipe animation
                 Debug.Log("slamming");
+
+
+                if (TorsoAnimator) TorsoAnimator.Play(SLAM_ATTACK);
+
+
+
                 attacked = true;
                 yield return new WaitForSeconds(aso.slamApplyDmgDelay);
 
@@ -218,6 +172,8 @@ public class Andaroz : Enemy
             yield return null;
         }
 
+        yield return new WaitForSeconds(aso.delayBeforeIdle_slam);
+        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         yield return new WaitForSeconds(aso.delayBeforeNextAttack_slam);
         ResetAttack();
         //NextAttack();
@@ -253,6 +209,9 @@ public class Andaroz : Enemy
             }
         }
 
+        if (TorsoAnimator) TorsoAnimator.Play(MISSILE_ATTACK);
+
+
         yield return new WaitForSeconds(aso.shootStartDelay_missiles);
         int shots = 0;
         prev = 0;
@@ -265,9 +224,6 @@ public class Andaroz : Enemy
 
             Vector3 missileDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
-            // play animation
-
-            // // //
 
             if (showDebugStuff) Debug.DrawLine(body.position, body.position + missileDir * 50f, Color.red, aso.delayBetweenShots_missiles);
 
@@ -296,6 +252,9 @@ public class Andaroz : Enemy
             }
             yield return new WaitForSeconds(aso.delayBetweenShots_missiles);
         }
+
+        yield return new WaitForSeconds(aso.delayBeforeIdle_missiles);
+        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         yield return new WaitForSeconds(aso.delayBeforeNextAttack_missiles);
         ResetAttack();
         //NextAttack();
@@ -322,6 +281,13 @@ public class Andaroz : Enemy
         NewAttackDistance();
 
 
+        // animation
+
+        if (TorsoAnimator) TorsoAnimator.Play(GUN_ATTACK);
+
+
+
+
         yield return new WaitForSeconds(aso.shootStartDelay_gun);
         int shots = 0;
         while (shots++ < aso.shots_bullets)
@@ -333,10 +299,6 @@ public class Andaroz : Enemy
 
             Vector3 bulletDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
-            // play animation
-
-            // // //
-
             if (showDebugStuff) Debug.DrawLine(body.position, body.position + bulletDir * 50f, Color.red, aso.delayBetweenShots_gun);
 
             if (aso.bullet && bulletSpawn)
@@ -347,10 +309,13 @@ public class Andaroz : Enemy
                 b.Fly(bulletDir, aso.bulletSpeed, aso.gunDamage);
 
                 //play muzzle effect
+                if (muzzleFlash) muzzleFlash.SetActive(true);
             }
             yield return new WaitForSeconds(aso.delayBetweenShots_gun);
         }
 
+        yield return new WaitForSeconds(aso.delayBeforeIdle_gun);
+        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         yield return new WaitForSeconds(aso.delayBeforeNextAttack_gun);
         //NextAttack();
         ResetAttack();
@@ -373,7 +338,12 @@ public class Andaroz : Enemy
 
         // animation - arms out
 
+        if (TorsoAnimator) TorsoAnimator.Play(LASER_ATTACK);
 
+        yield return new WaitForSeconds(aso.delayBeforeIdle_laser);
+
+
+        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         yield return new WaitForSeconds(aso.delayBeforeNextAttack_laser);
         ResetAttack();
         //NextAttack();
@@ -416,5 +386,23 @@ public class Andaroz : Enemy
     {
         base.ResetAttack();
 
+
+    }
+
+    public override void OnDied()
+    {
+        StopAllCoroutines();
+        StartCoroutine(nameof(EndBossFight));
+    }
+
+
+    private IEnumerator EndBossFight()
+    {
+        if (TorsoAnimator) TorsoAnimator.Play(DEATH);
+        yield return new WaitForSeconds(1.86f);
+
+        // spawn body parts
+
+        base.OnDied();
     }
 }

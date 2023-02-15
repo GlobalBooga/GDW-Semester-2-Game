@@ -471,7 +471,7 @@ public class Enemy : MonoBehaviour
         isAttacking = false;
     }
 
-    public void OnDied()
+    public virtual void OnDied()
     {
         LevelManager.EnemyDied();
         gameObject.SetActive(false);

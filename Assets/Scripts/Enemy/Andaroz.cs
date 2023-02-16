@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using static Unity.Burst.Intrinsics.X86;
 
 public class Andaroz : Enemy
 {
-
+    
     public Transform bulletSpawn;
     public GameObject muzzleFlash;
     public List<Transform> missileSpawns;
@@ -18,7 +19,7 @@ public class Andaroz : Enemy
     private int prev; // the previous index for sequential firing
     private List<string> allAttacks = new() { nameof(PerformGunAttack), nameof(PerformLaserAttack), nameof(PerformMissileAttack), nameof(PerformSlamAttack), nameof(PerformSwipeAttack)};
     private Queue<string> attackPattern = new();
-
+    
 
     // ANIMATION KEYWORDS
 
@@ -348,6 +349,22 @@ public class Andaroz : Enemy
         ResetAttack();
         //NextAttack();
     }
+
+
+    // call in update
+    void ShootLaser()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, sso.maxDist, sso.whatBlocksSight);
+        if (hit)
+        {
+            DrawLaser(laserStart.position - transform.position, hit.point - (Vector2)transform.position);
+        }
+        else
+        {
+            DrawLaser(laserStart.position - transform.position, laserStart.position - transform.position + (body.up * sso.maxDist));
+        }
+    }
+
 
     private void NextAttack()
     {

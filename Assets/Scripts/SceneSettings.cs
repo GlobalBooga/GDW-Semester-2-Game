@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SceneSettings : MonoBehaviour
 {
@@ -15,16 +16,18 @@ public class SceneSettings : MonoBehaviour
 
     public Transform playerEntrance;
     public Vector2 sceneForward;
+    public float camRotation;
     public SceneExit sceneExit;
     public float cameraSize;
     public GameObject EnemyContainer;
     public GameObject gameplayObjectsContainer;
     public SceneObjective sceneObjective;
     private int enemyCount;
-    public TextMeshProUGUI hintText;
+    public Text hintText;
     public float hintTime = 5f;
     private bool showingHint;
     public AnimationCurve messageFade;
+    public bool isLargeRoom;
 
     public void SetScene()
     {
@@ -41,6 +44,7 @@ public class SceneSettings : MonoBehaviour
 
         Camera.main.transform.position = transform.position + Vector3.back * 10f;
         Camera.main.orthographicSize = cameraSize;
+        Camera.main.transform.rotation = Quaternion.Euler(0f, 0f, camRotation);
 
         Transform player = GameObject.Find("Player").transform;
         if (playerEntrance)

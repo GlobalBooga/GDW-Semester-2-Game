@@ -20,6 +20,8 @@ public class HPComponent : MonoBehaviour
     public float maxHealth = 100f;
     private float health;
 
+    public BossBar bossBarScript;
+
     public float GetHealth() => health;
 
 
@@ -33,13 +35,29 @@ public class HPComponent : MonoBehaviour
         {
             bar.color = fullHpColor;
         }
+
     }
 
     private void OnDisable()
     {
         //reset
         Start();
+
+        if (bossBarScript)
+        {
+            bossBarScript.gameObject.SetActive(false);
+        }
     }
+
+    private void OnEnable()
+    {
+        if (bossBarScript)
+        {
+            bossBarScript.gameObject.SetActive(true);
+            bossBarScript.bossName = gameObject.name;
+        }
+    }
+
 
     public void Reduce(float amount)
     {

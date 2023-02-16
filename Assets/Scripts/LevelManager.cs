@@ -5,7 +5,6 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     public bool doesLevelLoop = false;
-    public bool allowBacktracking = false;
     private static bool loop;
     public List<SceneSettings> orderedScenes;
     private static List<SceneSettings> scenes;

@@ -48,8 +48,8 @@ MonoBehaviour:
   searchDetectionRateMult: 1
   canSeeThroughWalls: 1
   walkSpeed: 3
-  runSpeed: 12
-  attackMovementSpeed: 0
+  runSpeed: 4
+  attackMovementSpeed: 4
   retreatSpeed: 4
   moveForce: 15
   accelerationDrag: 1
@@ -78,9 +78,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxAttackDistance: 5
-  minAttackDistance: 4
-  comfortableAttackDist: 0
+  maxAttackDistance: 20
+  minAttackDistance: 15
+  comfortableAttackDist: 10
   chasePlayer: 1
   whatIsPlayer:
     serializedVersion: 2
@@ -123,13 +123,13 @@ MonoBehaviour:
   chasePlayer_slam: 1
   maxHpForUse_slam: 1
   gunDamage: 15
-  delayBetweenShots_gun: 0.05
+  delayBetweenShots_gun: 0.1
   shootStartDelay_gun: 0.3
   delayBeforeNextAttack_gun: 3
   delayBeforeIdle_gun: 0.5
   bulletSpeed: 30
   bulletSpread: 10
-  shots_bullets: 100
+  shots_bullets: 50
   bullet: {fileID: 6545307244740321829, guid: ba70ec78eb4420e49a6feeeb86e188ae, type: 3}
   minAttackDistance_gun: 15
   maxAttackDist_gun: 20
@@ -166,10 +166,9 @@ MonoBehaviour:
   comfortableAttackDist_laser: 0
   chasePlayer_laser: 0
   maxHpForUse_laser: 1
-  orderedAttacks: []
   HpForStage2: 0.5
-  enableSwipe: 0
+  enableSwipe: 1
   enableSlam: 1
-  enableMachineGun: 0
-  enableMissiles: 0
-  enableLaser: 0
+  enableMachineGun: 1
+  enableMissiles: 1
+  enableLaser: 1

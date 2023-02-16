@@ -100,8 +100,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
 
     [Space(10f)]
 
-    [Header("Attack Pattern"), Space(5f)]
-    public List<string> orderedAttacks;
+    [Header("Stage 2"), Space(5f)]
     [Range(0f, 1f)] public float HpForStage2 = 0.5f;
 
     [Space(10f)]

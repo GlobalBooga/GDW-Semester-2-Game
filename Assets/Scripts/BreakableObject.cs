@@ -4,15 +4,27 @@ using UnityEngine;
 
 public class BreakableObject : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] Object destructableObj;
+    [SerializeField] bool hasPieces;
+    [SerializeField] Explosive explosiveCharge;
+
+    public HPComponent hp;
+
     void Start()
     {
-        
+        hp = GetComponent<HPComponent>();
+        if (hp) hp.OnHPZero = BreakObject;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void BreakObject()
     {
-        
+        if (hasPieces == true)
+        {
+            GameObject destructable = (GameObject)Instantiate(destructableObj);
+            destructable.transform.position = transform.position;
+        }
+        if (explosiveCharge) { explosiveCharge.explode(); }
+        Destroy(gameObject);
+
     }
 }

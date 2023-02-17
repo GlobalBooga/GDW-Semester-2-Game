@@ -155,22 +155,22 @@ MonoBehaviour:
   minAttackDistance_missiles: 30
   comfortableAttackDist_missiles: 0
   chasePlayer_missiles: 0
-  maxHpForUse_missiles: 0.8
+  maxHpForUse_missiles: 1
   laserDamage: 20
   delayBeforeParticles: 1
   delayParticlesToLaser: 1.3
-  laserDurationFrames: 550
+  laserDurationFrames: 530
   delayBeforeNextAttack_laser: 2
   delayLaserEndToIdle: 1
   maxAttackDistance_laser: 40
   minAttackDistance_laser: 30
   comfortableAttackDist_laser: 0
   chasePlayer_laser: 0
-  maxHpForUse_laser: 0.5
+  maxHpForUse_laser: 1
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
-  enableSwipe: 1
-  enableSlam: 1
-  enableMachineGun: 1
-  enableMissiles: 1
+  enableSwipe: 0
+  enableSlam: 0
+  enableMachineGun: 0
+  enableMissiles: 0
   enableLaser: 1

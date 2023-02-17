@@ -78,6 +78,7 @@ public class Andaroz : Enemy
         if (!goToCenterOfRoom) base.Update();
         if (rb.velocity.magnitude > 0f && !isAttacking)
         {
+            //if (TorsoAnimator) TorsoAnimator.Play(WALK);
             if (gunattack)
             {
                 if (LegsAnimator) LegsAnimator.Play(LEGS_WALK);
@@ -160,7 +161,7 @@ public class Andaroz : Enemy
         yield return new WaitForSeconds(aso.delayBeforeIdle_swipe);
         freezelegs = false;
         if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
-        if (TorsoAnimator) TorsoAnimator.Play(RUN);
+        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.delayBeforeNextAttack_swipe);
         ResetAttack();
     }
@@ -222,7 +223,7 @@ public class Andaroz : Enemy
         yield return new WaitForSeconds(aso.delayBeforeIdle_slam);
         freezelegs = false;
         if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
-        if (TorsoAnimator) TorsoAnimator.Play(RUN);
+        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.delayBeforeNextAttack_slam);
         ResetAttack();
         //NextAttack();
@@ -562,7 +563,7 @@ public class Andaroz : Enemy
             item.AddTorque(Random.Range(1f,5f),ForceMode2D.Impulse);
         }
 
-        yield return new WaitForSeconds(1.86f / 2);
+        yield return new WaitForSeconds(0.5f / 2);
 
         base.OnDied();
     }

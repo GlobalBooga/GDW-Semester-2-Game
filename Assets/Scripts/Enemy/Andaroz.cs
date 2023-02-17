@@ -76,18 +76,18 @@ public class Andaroz : Enemy
     internal override void Update()
     {
         if (!goToCenterOfRoom) base.Update();
-        if (rb.velocity.magnitude > 0f && !isAttacking)
-        {
-            //if (TorsoAnimator) TorsoAnimator.Play(WALK);
-            if (gunattack)
-            {
-                if (LegsAnimator) LegsAnimator.Play(LEGS_WALK);
-            }
-            else
-            {
-                if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
-            }
-        }
+        //if (rb.velocity.magnitude > 0f && !isAttacking)
+        //{
+        //    //if (TorsoAnimator) TorsoAnimator.Play(WALK);
+        //    if (gunattack)
+        //    {
+        //        if (LegsAnimator) LegsAnimator.Play(LEGS_WALK);
+        //    }
+        //    else
+        //    {
+        //        if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
+        //    }
+        //}
 
         //if (!freezelegs) legs.rotation = body.rotation;
     }

@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -817,10 +817,10 @@ TextureImporter:
       Level1Tiles_24: 719261425
       Level1Tiles_3: 1657428070
       Level1Tiles_2: -640222919
-      Level1Tiles_0: 615722890
+      Level1Tiles_13: 731326456
       Level1Tiles_7: -997603953
       Level1Tiles_8: 1897018450
-      Level1Tiles_13: 731326456
+      Level1Tiles_0: 615722890
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

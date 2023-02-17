@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Andaroz : Enemy
 {
-    public const string title = "ANDAROZ THE TECHNOLOGICAL MANIAC";
+    public const string title = "ANDAROZ THE GREEDY";
 
     public Transform bulletSpawn;
     public GameObject muzzleFlash;
@@ -391,7 +391,7 @@ public class Andaroz : Enemy
         aso.viewDistance = 0f;
         rotationTime = 0f;
 
-        if (Vector3.Distance(transform.position, centerOfRoom) > 3f)
+        if (Vector3.Distance(transform.position, centerOfRoom) > 5f)
         {
             playerPoses.Clear();
             playerPoses.Enqueue(centerOfRoom);

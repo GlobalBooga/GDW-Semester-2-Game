@@ -33,6 +33,11 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public static SceneSettings GetCurrentScene()
+    {
+        return scenes[currentSceneIndex];
+    }
+
     public static void AlertAllEnemiesInCurrentScene(Vector3 alertOrigin)
     {
         if (allEnemies == null) return;

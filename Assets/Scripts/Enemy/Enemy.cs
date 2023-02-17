@@ -205,6 +205,9 @@ public class Enemy : MonoBehaviour
 
     internal virtual void HandleSight()
     {
+        if (eso.viewDistance == 0) return;
+
+
         // Perform detection in intervals for performance
         if (frames >= detectionRate)
         {
@@ -419,9 +422,7 @@ public class Enemy : MonoBehaviour
         sightMin = new Vector2((Mathf.Cos(rads2) * x) - (Mathf.Sin(rads2) * y), (Mathf.Sin(rads2) * x) + (Mathf.Cos(rads2) * y));
 
         Debug.DrawLine(transform.position, transform.position + sightMax * eso.viewDistance, Color.red, Time.deltaTime);
-
         Debug.DrawLine(transform.position, transform.position + body.up, Color.red, Time.deltaTime);
-        
         Debug.DrawLine(transform.position, transform.position + sightMin * eso.viewDistance, Color.red, Time.deltaTime);
     }
 

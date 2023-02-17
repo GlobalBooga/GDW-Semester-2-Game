@@ -10,8 +10,10 @@ public class Andaroz : Enemy
     public Transform bulletSpawn;
     public GameObject muzzleFlash;
     public List<Transform> missileSpawns;
-    public List<Transform> laserStart;
-    public List<LineRenderer> lineRenderer;
+    public Transform rightLaserStart;
+    public Transform leftLaserStart;
+    public LineRenderer rightLR;
+    public LineRenderer leftLR;
     public Animator TorsoAnimator;
     public Animator LegsAnimator;
 
@@ -19,7 +21,9 @@ public class Andaroz : Enemy
     private int prev; // the previous index for sequential firing
     private List<string> allAttacks = new() { nameof(PerformGunAttack), nameof(PerformLaserAttack), nameof(PerformMissileAttack), nameof(PerformSlamAttack), nameof(PerformSwipeAttack)};
     private Queue<string> attackPattern = new();
-    
+    private Laser rightLaser;
+    private Laser leftLaser;
+
 
     // ANIMATION KEYWORDS
 
@@ -46,6 +50,8 @@ public class Andaroz : Enemy
     internal override void Start()
     {
         base.Start();
+        rightLaser = rightLR.gameObject.GetComponent<Laser>();
+        leftLaser = leftLR.gameObject.GetComponent<Laser>();
     }
 
     internal override void Update()
@@ -331,18 +337,36 @@ public class Andaroz : Enemy
         }
 
         Debug.Log("laser");
-        eso.maxAttackDistance = aso.maxAttackDistance_laser;
-        eso.minAttackDistance = aso.minAttackDistance_laser;
-        eso.comfortableAttackDist = aso.comfortableAttackDist_laser;
-        eso.chasePlayer = aso.chasePlayer_laser;
+        aso.maxAttackDistance = aso.maxAttackDistance_laser;
+        aso.minAttackDistance = aso.minAttackDistance_laser;
+        aso.comfortableAttackDist = aso.comfortableAttackDist_laser;
+        aso.chasePlayer = aso.chasePlayer_laser;
         NewAttackDistance();
 
         // animation - arms out
 
+        float temp = aso.viewDistance;
+        aso.viewDistance = 0f;
+
         if (TorsoAnimator) TorsoAnimator.Play(LASER_ATTACK);
 
-        yield return new WaitForSeconds(aso.delayBeforeIdle_laser);
+        yield return new WaitForSeconds(aso.delayParticlesToLaser);
 
+        rightLaser.TurnOn();
+        leftLaser.TurnOn();
+
+        for (int i = 0; i < aso.laserDurationFrames; i++)
+        {
+            ShootLaser();
+            yield return null;  
+        }
+
+        rightLaser.TurnOff();
+        leftLaser.TurnOff();
+        yield return new WaitForSeconds(aso.delayLaserEndToIdle);
+
+        aso.viewDistance = temp;
+        aso.reactionTime = 0;
 
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         yield return new WaitForSeconds(aso.delayBeforeNextAttack_laser);
@@ -354,15 +378,18 @@ public class Andaroz : Enemy
     // call in update
     void ShootLaser()
     {
-        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, sso.maxDist, sso.whatBlocksSight);
-        if (hit)
+        RaycastHit2D hitR = Physics2D.Raycast(rightLaserStart.position, -TorsoAnimator.transform.up, 100f, aso.whatBlocksSight);
+        RaycastHit2D hitL = Physics2D.Raycast(leftLaserStart.position, TorsoAnimator.transform.up, 100f, aso.whatBlocksSight);
+        if (hitR)
         {
-            DrawLaser(laserStart.position - transform.position, hit.point - (Vector2)transform.position);
+            rightLaser.DrawLaser(rightLaserStart.position, hitR.point);
         }
-        else
+        if (hitL)
         {
-            DrawLaser(laserStart.position - transform.position, laserStart.position - transform.position + (body.up * sso.maxDist));
+            leftLaser.DrawLaser(leftLaserStart.position, hitL.point);
         }
+
+        Physics2D.CircleCastAll(transform.position, 5, transform.up);
     }
 
 

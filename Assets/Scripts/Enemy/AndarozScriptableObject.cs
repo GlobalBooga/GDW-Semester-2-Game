@@ -86,11 +86,11 @@ public class AndarozScriptableObject : EnemyScriptableObject
 
     [Header("Ranged Attack 3 - Twin Laser"), Space(5f)]
     public float laserDamage;
-    public float attackDuration;
-    public float delayBeforeNextAttack_laser = 3f;
-    public float delayBeforeIdle_laser = 1f;
-    public float rotationSpeed;
-    public float maxDist = 100f;
+    public float delayBeforeParticles = 1f;
+    public float delayParticlesToLaser = 1.5f;
+    public int laserDurationFrames = 93;
+    public float delayBeforeNextAttack_laser = 1f;
+    public float delayLaserEndToIdle = 1f;
     public float maxAttackDistance_laser = 40f;
     public float minAttackDistance_laser = 30f;
     public float comfortableAttackDist_laser = 0f;

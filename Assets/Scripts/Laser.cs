@@ -14,7 +14,7 @@ public class Laser : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-    void DrawLaser(Vector2 startPos, Vector2 endPos)
+    public void DrawLaser(Vector2 startPos, Vector2 endPos)
     {
         if (!lineRenderer) return;
 

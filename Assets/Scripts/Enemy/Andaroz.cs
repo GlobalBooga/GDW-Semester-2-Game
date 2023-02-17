@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Andaroz : Enemy
 {
-    public const string title = "ANDAROZ THE TECHNOLOGICAL MANIAC";
+    public const string title = "ANDAROZ THE GREEDY";
 
     public Transform bulletSpawn;
     public GameObject muzzleFlash;

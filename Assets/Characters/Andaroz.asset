@@ -61,7 +61,7 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: 0
-      outSlope: 1
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1
+      inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
@@ -155,7 +155,7 @@ MonoBehaviour:
   minAttackDistance_missiles: 30
   comfortableAttackDist_missiles: 0
   chasePlayer_missiles: 0
-  maxHpForUse_missiles: 1
+  maxHpForUse_missiles: 0.8
   laserDamage: 20
   delayBeforeParticles: 1
   delayParticlesToLaser: 1.3
@@ -166,11 +166,11 @@ MonoBehaviour:
   minAttackDistance_laser: 30
   comfortableAttackDist_laser: 0
   chasePlayer_laser: 0
-  maxHpForUse_laser: 1
+  maxHpForUse_laser: 0.6
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
-  enableSwipe: 0
-  enableSlam: 0
-  enableMachineGun: 0
-  enableMissiles: 0
+  enableSwipe: 1
+  enableSlam: 1
+  enableMachineGun: 1
+  enableMissiles: 1
   enableLaser: 1

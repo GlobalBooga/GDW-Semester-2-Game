@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Andaroz
   m_EditorClassIdentifier: 
   reactionTime: 0
-  viewDistance: 40
+  viewDistance: 0
   instantDetectDist: 3
   normalFOV: 60
   searchFOV: 120
@@ -48,12 +48,12 @@ MonoBehaviour:
   searchDetectionRateMult: 1
   canSeeThroughWalls: 1
   walkSpeed: 3
-  runSpeed: 4
-  attackMovementSpeed: 4
-  retreatSpeed: 4
-  moveForce: 15
-  accelerationDrag: 1
-  deccelerationDrag: 5
+  runSpeed: 5
+  attackMovementSpeed: 12
+  retreatSpeed: 3
+  moveForce: 50
+  accelerationDrag: 5
+  deccelerationDrag: 10
   test:
     serializedVersion: 2
     m_Curve:
@@ -78,10 +78,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxAttackDistance: 40
-  minAttackDistance: 30
-  comfortableAttackDist: 0
-  chasePlayer: 0
+  maxAttackDistance: 25
+  minAttackDistance: 23
+  comfortableAttackDist: 3
+  chasePlayer: 1
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 16640
@@ -98,9 +98,9 @@ MonoBehaviour:
   swipeCooldown: 1
   swipeApplyDmgDelay: 1
   swipeReach: 2
-  delayBeforeNextAttack_swipe: 2
+  delayBeforeNextAttack_swipe: 1
   delayBeforeIdle_swipe: 0.3
-  maxAttackTime_swipe: 10
+  maxAttackTime_swipe: 3
   maxAttackDistance_swipe: 6
   minAttackDistance_swipe: 4
   comfortableAttackDist_swipe: 0
@@ -112,15 +112,16 @@ MonoBehaviour:
   slamCooldown: 1
   slamApplyDmgDelay: 1
   slamReach: 0
-  delayBeforeNextAttack_slam: 2
+  delayBeforeNextAttack_slam: 1
   delayBeforeIdle_slam: 1
-  maxAttackTime_slam: 10
+  maxAttackTime_slam: 3
   maxAttackDistance_slam: 5
   minAttackDistance_slam: 4
   comfortableAttackDist_slam: 0
   attackMovementSpeed_slam: 12
   runSpeed_slam: 12
   chasePlayer_slam: 1
+  slamParticles: {fileID: 4976167157911420468, guid: 920763e3a98cd0d4ebfb2be02dc90e29, type: 3}
   maxHpForUse_slam: 1
   gunDamage: 15
   delayBetweenShots_gun: 0.1
@@ -155,20 +156,21 @@ MonoBehaviour:
   comfortableAttackDist_missiles: 0
   chasePlayer_missiles: 0
   maxHpForUse_missiles: 1
-  laserDamage: 100
+  laserDamage: 20
   delayBeforeParticles: 1
   delayParticlesToLaser: 1.3
-  laserDurationFrames: 390
+  laserDurationFrames: 550
   delayBeforeNextAttack_laser: 2
   delayLaserEndToIdle: 1
   maxAttackDistance_laser: 40
   minAttackDistance_laser: 30
   comfortableAttackDist_laser: 0
   chasePlayer_laser: 0
-  maxHpForUse_laser: 1
+  maxHpForUse_laser: 0.5
   HpForStage2: 0.5
-  enableSwipe: 0
-  enableSlam: 0
-  enableMachineGun: 0
-  enableMissiles: 0
+  deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
+  enableSwipe: 1
+  enableSlam: 1
+  enableMachineGun: 1
+  enableMissiles: 1
   enableLaser: 1

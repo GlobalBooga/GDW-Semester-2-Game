@@ -1,12 +1,12 @@
+using Mono.Cecil.Cil;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
-using static Unity.Burst.Intrinsics.X86;
 
 public class Andaroz : Enemy
 {
-    
+    public const string title = "ANDAROZ THE TECHNOLOGICAL MANIAC";
+
     public Transform bulletSpawn;
     public GameObject muzzleFlash;
     public List<Transform> missileSpawns;
@@ -16,6 +16,10 @@ public class Andaroz : Enemy
     public LineRenderer leftLR;
     public Animator TorsoAnimator;
     public Animator LegsAnimator;
+    public Transform slamPoint;
+    public Transform legs;
+    public GameObject deathExplosive;
+    public List<Transform> deathExplosionTransforms;
 
     private AndarozScriptableObject aso;
     private int prev; // the previous index for sequential firing
@@ -24,6 +28,9 @@ public class Andaroz : Enemy
     private Laser rightLaser;
     private Laser leftLaser;
 
+    private bool goToCenterOfRoom;
+
+    private Vector3 centerOfRoom;
 
     // ANIMATION KEYWORDS
 
@@ -39,7 +46,16 @@ public class Andaroz : Enemy
     private const string LEGS_WALK = "Andaroz_Legs_Walk";
     private const string LEGS_RUN = "Andaroz_Legs_Run";
     private const string LEGS_ATTACKSTANCE = "Andaroz_Legs_AttackStance";
-    
+    private const string LEGS_SHOOT = "Andaroz_Legs_Shoot";
+
+    private float maxAttackDistance_default = 25f;
+    private float minAttackDistance_default = 23f;
+    private float runSpeed_default = 5f;
+
+    private bool stage2;
+    private bool freezelegs;
+    private bool gunattack;
+
     internal override void Awake()
     {
         base.Awake();
@@ -52,16 +68,33 @@ public class Andaroz : Enemy
         base.Start();
         rightLaser = rightLR.gameObject.GetComponent<Laser>();
         leftLaser = leftLR.gameObject.GetComponent<Laser>();
+        aso.viewDistance = 60;
+        centerOfRoom = transform.parent.position;
+        hp.OnHalfHP = Stage2;
     }
 
     internal override void Update()
     {
-        base.Update();
+        if (!goToCenterOfRoom) base.Update();
+        if (rb.velocity.magnitude > 0f && !isAttacking)
+        {
+            if (gunattack)
+            {
+                if (LegsAnimator) LegsAnimator.Play(LEGS_WALK);
+            }
+            else
+            {
+                if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
+            }
+        }
+
+        //if (!freezelegs) legs.rotation = body.rotation;
     }
 
     internal override void FixedUpdate()
     {
-        base.FixedUpdate();
+        if (!goToCenterOfRoom) base.FixedUpdate();
+        
     }
 
     internal override void Attack()
@@ -72,6 +105,7 @@ public class Andaroz : Enemy
 
     private IEnumerator PerformSwipeAttack()
     {
+        if (hp.GetHealth() == 0) yield break;
         if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_swipe)
         {
             NextAttack();
@@ -80,7 +114,6 @@ public class Andaroz : Enemy
 
 
         Debug.Log("swipe");
-        bool attacked = false;   
         eso.maxAttackDistance = aso.maxAttackDistance_swipe;
         eso.minAttackDistance = aso.minAttackDistance_swipe;
         eso.comfortableAttackDist = aso.comfortableAttackDist_swipe;
@@ -88,24 +121,27 @@ public class Andaroz : Enemy
         eso.chasePlayer = true;
         NewAttackDistance();
 
+        if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
+
+
         float time = 0f;
 
-        while (!attacked)
+        while (true)
         {
             time += Time.deltaTime;
             if (time >= aso.maxAttackTime_swipe) break;
-
+            Debug.Log(time);
             // else if we are in attack distance
             if (PlayerDistance <= eso.maxAttackDistance)
             {
                 eso.attackMovementSpeed = 0f;
                 Debug.Log("swiping");
                 // play swipe animation
-
+                freezelegs = true;
+                if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
                 if (TorsoAnimator) TorsoAnimator.Play(SWIPE_ATTACK);
 
 
-                attacked = true;
                 yield return new WaitForSeconds(aso.swipeApplyDmgDelay);
 
                 // if were still within range of swipe
@@ -113,21 +149,25 @@ public class Andaroz : Enemy
                     StaticHelpers.ApplyDamage(playerLoc.gameObject, aso.swipeDamage);
 
                 eso.attackMovementSpeed = eso.runSpeed;
+
+                break;
             }
-
-
 
             yield return null;
         }
-        
+        Debug.Log("swipe end");
+
         yield return new WaitForSeconds(aso.delayBeforeIdle_swipe);
-        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
-        yield return new WaitForSeconds(aso.delayBeforeNextAttack_swipe);
+        freezelegs = false;
+        if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
+        if (TorsoAnimator) TorsoAnimator.Play(RUN);
+        if (!stage2) yield return new WaitForSeconds(aso.delayBeforeNextAttack_swipe);
         ResetAttack();
     }
 
     private IEnumerator PerformSlamAttack()
     {
+        if (hp.GetHealth() == 0) yield break;
         if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_slam)
         {
             NextAttack();
@@ -135,7 +175,6 @@ public class Andaroz : Enemy
         }
 
         Debug.Log("slam");
-        bool attacked = false;
         eso.maxAttackDistance = aso.maxAttackDistance_slam;
         eso.minAttackDistance = aso.minAttackDistance_slam;
         eso.comfortableAttackDist = aso.comfortableAttackDist_slam;
@@ -143,13 +182,15 @@ public class Andaroz : Enemy
         eso.chasePlayer = aso.chasePlayer_slam;
         NewAttackDistance();
 
+        if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
+
         float time = 0f;
 
-        while (!attacked)
+        while (true)
         {
             time += Time.deltaTime;
             if (time >= aso.maxAttackTime_slam) break;
-
+            Debug.Log(time);
             // else if we are in attack distance
             if (PlayerDistance <= eso.maxAttackDistance)
             {
@@ -158,36 +199,38 @@ public class Andaroz : Enemy
                 // play swipe animation
                 Debug.Log("slamming");
 
+                freezelegs = true;
 
+                if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
                 if (TorsoAnimator) TorsoAnimator.Play(SLAM_ATTACK);
 
-
-
-                attacked = true;
                 yield return new WaitForSeconds(aso.slamApplyDmgDelay);
 
-                // if were still within range of swipe
+                Instantiate(aso.slamParticles, slamPoint);
 
-                // calculate aoe
-
-                if (PlayerDistance <= eso.maxAttackDistance)
-                    StaticHelpers.ApplyDamage(playerLoc.gameObject, aso.slamDamage);
+                Collider2D col = Physics2D.OverlapCircle(slamPoint.position,slamPoint.GetComponent<CircleCollider2D>().radius, aso.whatIsPlayer);
+                if (col) StaticHelpers.ApplyDamage(col.gameObject, aso.slamDamage);
 
                 eso.attackMovementSpeed = eso.runSpeed;
+
+                break;
             }
 
             yield return null;
         }
-
+        Debug.Log("slam end");
         yield return new WaitForSeconds(aso.delayBeforeIdle_slam);
-        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
-        yield return new WaitForSeconds(aso.delayBeforeNextAttack_slam);
+        freezelegs = false;
+        if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
+        if (TorsoAnimator) TorsoAnimator.Play(RUN);
+        if (!stage2) yield return new WaitForSeconds(aso.delayBeforeNextAttack_slam);
         ResetAttack();
         //NextAttack();
     }
 
     private IEnumerator PerformMissileAttack()
     {
+        if (hp.GetHealth() == 0) yield break;
         if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_missiles)
         {
             NextAttack();
@@ -216,6 +259,7 @@ public class Andaroz : Enemy
             }
         }
 
+        if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
         if (TorsoAnimator) TorsoAnimator.Play(MISSILE_ATTACK);
 
 
@@ -262,13 +306,14 @@ public class Andaroz : Enemy
 
         yield return new WaitForSeconds(aso.delayBeforeIdle_missiles);
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
-        yield return new WaitForSeconds(aso.delayBeforeNextAttack_missiles);
+        if (!stage2) yield return new WaitForSeconds(aso.delayBeforeNextAttack_missiles);
         ResetAttack();
         //NextAttack();
     }
 
     private IEnumerator PerformGunAttack()
     {
+        if (hp.GetHealth() == 0) yield break;
         if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_gun)
         {
             NextAttack();
@@ -289,10 +334,10 @@ public class Andaroz : Enemy
 
 
         // animation
-
+        gunattack = true;
+        freezelegs = true;
+        if (LegsAnimator) LegsAnimator.Play(LEGS_SHOOT);
         if (TorsoAnimator) TorsoAnimator.Play(GUN_ATTACK);
-
-
 
 
         yield return new WaitForSeconds(aso.shootStartDelay_gun);
@@ -323,31 +368,66 @@ public class Andaroz : Enemy
 
         yield return new WaitForSeconds(aso.delayBeforeIdle_gun);
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
-        yield return new WaitForSeconds(aso.delayBeforeNextAttack_gun);
+        if (!stage2) yield return new WaitForSeconds(aso.delayBeforeNextAttack_gun);
         //NextAttack();
+
+        gunattack = false;
         ResetAttack();
     }
     
     private IEnumerator PerformLaserAttack()
     {
+        if (hp.GetHealth() == 0) yield break;
+
         if (hp.GetHealth() > hp.maxHealth * aso.maxHpForUse_laser)
         {
             NextAttack();
             yield break;
         }
-
         Debug.Log("laser");
+
+        float temp = aso.viewDistance;
+        aso.viewDistance = 0f;
+        rotationTime = 0f;
+
+        if (Vector3.Distance(transform.position, centerOfRoom) > 3f)
+        {
+            playerPoses.Clear();
+            playerPoses.Enqueue(centerOfRoom);
+            aso.chasePlayer = true;
+            foundPlayer = false;
+            nextPos = centerOfRoom;
+            totalTravelDist = Vector3.Distance(transform.position, nextPos);
+            lerpStartTime = Time.time;
+            lerpStart = transform.position;
+            goToCenterOfRoom = true;
+        }
+
+        // go to center of the room
+        while (true)
+        {
+            base.FixedUpdate();
+
+            LookAt(centerOfRoom);
+
+            // if playerposes is empty, we are in the middle of the room
+            Vector3 test;
+            if (!playerPoses.TryPeek(out test)) break;
+
+            yield return null;
+        }
+
+        // stop
+        rb.velocity = Vector2.zero;
+        transform.position = centerOfRoom;
         aso.maxAttackDistance = aso.maxAttackDistance_laser;
         aso.minAttackDistance = aso.minAttackDistance_laser;
         aso.comfortableAttackDist = aso.comfortableAttackDist_laser;
         aso.chasePlayer = aso.chasePlayer_laser;
-        NewAttackDistance();
+
 
         // animation - arms out
-
-        float temp = aso.viewDistance;
-        aso.viewDistance = 0f;
-
+        if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
         if (TorsoAnimator) TorsoAnimator.Play(LASER_ATTACK);
 
         yield return new WaitForSeconds(aso.delayParticlesToLaser);
@@ -365,11 +445,12 @@ public class Andaroz : Enemy
         leftLaser.TurnOff();
         yield return new WaitForSeconds(aso.delayLaserEndToIdle);
 
+        goToCenterOfRoom = false;
         aso.viewDistance = temp;
-        aso.reactionTime = 0;
+        rotationTime = 0f;
 
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
-        yield return new WaitForSeconds(aso.delayBeforeNextAttack_laser);
+        if (!stage2) yield return new WaitForSeconds(aso.delayBeforeNextAttack_laser);
         ResetAttack();
         //NextAttack();
     }
@@ -382,10 +463,12 @@ public class Andaroz : Enemy
         RaycastHit2D hitL = Physics2D.Raycast(leftLaserStart.position, TorsoAnimator.transform.up, 100f, aso.whatBlocksSight);
         if (hitR)
         {
+            if (hitR.collider.gameObject.layer == StaticHelpers.PlayerLayer) StaticHelpers.ApplyDamage(hitR.collider.gameObject, aso.laserDamage); 
             rightLaser.DrawLaser(rightLaserStart.position, hitR.point);
         }
         if (hitL)
         {
+            if (hitL.collider.gameObject.layer == StaticHelpers.PlayerLayer) StaticHelpers.ApplyDamage(hitL.collider.gameObject, aso.laserDamage); 
             leftLaser.DrawLaser(leftLaserStart.position, hitL.point);
         }
 
@@ -429,23 +512,57 @@ public class Andaroz : Enemy
     internal override void ResetAttack()
     {
         base.ResetAttack();
-
+        aso.maxAttackDistance = maxAttackDistance_default;
+        aso.minAttackDistance = minAttackDistance_default;
+        aso.comfortableAttackDist = 3f;
+        aso.runSpeed = runSpeed_default;
+        aso.retreatSpeed = 3f;
+        NewAttackDistance();
 
     }
 
     public override void OnDied()
     {
+        rb.velocity = Vector2.zero;
         StopAllCoroutines();
+        aso.viewDistance = 0f;
         StartCoroutine(nameof(EndBossFight));
     }
 
 
+    private void Stage2()
+    {
+        Debug.Log("stage 2");
+        stage2 = true;
+
+        
+    }
+
     private IEnumerator EndBossFight()
     {
         if (TorsoAnimator) TorsoAnimator.Play(DEATH);
-        yield return new WaitForSeconds(1.86f);
+
+        rb.velocity = Vector2.zero;
+
+        yield return new WaitForSeconds(1.86f / 2);
+
+        foreach(var thing in deathExplosionTransforms)
+        {
+            GameObject g = Instantiate(deathExplosive, thing);
+            g.transform.parent = null;
+            Destroy(g, 1f);
+        }
 
         // spawn body parts
+        Rigidbody2D[] rbs = Instantiate(aso.deadMe, transform).GetComponentsInChildren<Rigidbody2D>(true);
+        foreach (var item in rbs)
+        {
+            item.transform.parent.parent = null;
+            item.AddForce(new Vector2(Random.Range(0.2f,1f), Random.Range(0.2f, 1f)) * Random.Range(4f, 8f)*15f, ForceMode2D.Impulse);
+            item.AddTorque(Random.Range(1f,5f),ForceMode2D.Impulse);
+        }
+
+        yield return new WaitForSeconds(1.86f / 2);
 
         base.OnDied();
     }

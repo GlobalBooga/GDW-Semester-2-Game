@@ -9,6 +9,7 @@ public class AutoDestroyParticles : MonoBehaviour
     void Start()
     {
         ps = GetComponent<ParticleSystem>();
+        transform.parent = null;
     }
 
     // Update is called once per frame

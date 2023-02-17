@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.UI;
 
 public class BossBar : MonoBehaviour
@@ -14,7 +15,11 @@ public class BossBar : MonoBehaviour
 
     private void OnEnable()
     {
-        if (animator) animator.Play(APPEAR);
+        if (animator)
+        {
+            animator.Play(APPEAR);
+            Invoke(nameof(DisableAnimator), 2.1f);
+        }
         if (textObj) textObj.text = bossName; 
     }
 
@@ -27,5 +32,10 @@ public class BossBar : MonoBehaviour
     private void DisableThis()
     {
         gameObject.SetActive(false);
+    }
+
+    private void DisableAnimator()
+    {
+        animator.enabled = false;
     }
 }

@@ -36,6 +36,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float attackMovementSpeed_slam = 8f;
     public float runSpeed_slam = 8f;
     public bool chasePlayer_slam = true;
+    public GameObject slamParticles;
     [Range(0f, 1f)] public float maxHpForUse_slam = 1f;
 
     [Space(10f)]
@@ -102,6 +103,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
 
     [Header("Stage 2"), Space(5f)]
     [Range(0f, 1f)] public float HpForStage2 = 0.5f;
+    public GameObject deadMe;
 
     [Space(10f)]
 

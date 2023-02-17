@@ -4,25 +4,33 @@ using UnityEngine;
 public class Explosive : MonoBehaviour
 {
     CircleCollider2D blastRadius;
-    List<GameObject> victims = new();
     [SerializeField] int damage = 50;
-    [SerializeField] Animator animator;
+    [SerializeField] GameObject explosionObj;
     [SerializeField] LayerMask whatTakesDamage;
 
     void Start()
     {       
         blastRadius = GetComponent<CircleCollider2D>();
+        blastRadius.enabled = false;
     }
 
-    public void explode()
+    private void OnDestroy()
     {
+        Explode();
+    }
+
+    public void Explode()
+    {
+        GameObject g = Instantiate(explosionObj, transform);
+        g.transform.parent = null;
+        Destroy(g, 1f);
+
         Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, blastRadius.radius, whatTakesDamage);
         if (col.Length > 0)
         {
 
             foreach (var obj in col)
             {
-                Debug.Log(obj.gameObject.name);
                 StaticHelpers.ApplyDamage(obj.gameObject, damage);
             }
         }

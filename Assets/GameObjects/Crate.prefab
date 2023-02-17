@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 2448546500792859346}
   - component: {fileID: 3393841867159744756}
   - component: {fileID: 3642354544135077366}
-  m_Layer: 0
+  - component: {fileID: -9169584470001308743}
+  - component: {fileID: -8033810186987532832}
+  m_Layer: 16
   m_Name: Crate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 2448546500792859345}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -28.28, y: 2.42, z: 0.30943632}
-  m_LocalScale: {x: 2.218006, y: 2.281725, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -72,11 +74,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 2076337807
-  m_SortingLayer: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 0867e745d466ad742a1943372894ad8a, type: 3}
-  m_Color: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -126,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ShadowGroup: 0
   m_ComponentVersion: 1
-  m_HasRenderer: 0
+  m_HasRenderer: 1
   m_UseRendererSilhouette: 1
   m_CastsShadows: 1
   m_SelfShadows: 0
@@ -138,4 +140,41 @@ MonoBehaviour:
   - {x: 0.3199997, y: -0.32000005, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: -368012
+  m_InstanceId: 73086
+--- !u!114 &-9169584470001308743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2448546500792859345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e0867f38a6d3304f863682091ff8588, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destructableObj: {fileID: 5337624722421082935, guid: 388aaa154f267d342949417a5a58f8b9, type: 3}
+  hasPieces: 1
+  explosiveCharge: {fileID: 0}
+  hp: {fileID: -8033810186987532832}
+--- !u!114 &-8033810186987532832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2448546500792859345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 210c911c80c096542a7c4b0b86970cbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sliderHpBar: {fileID: 0}
+  hpBars: []
+  hpText: {fileID: 0}
+  hpColorThreshold: 0.5
+  fullHpColor: {r: 0.208916, g: 0.6792453, b: 0.1762193, a: 1}
+  midHpColor: {r: 0.735849, g: 0.7018685, b: 0.1423104, a: 1}
+  lowHpColor: {r: 1, g: 0, b: 0, a: 1}
+  isInvincible: 0
+  maxHealth: 50

@@ -62,6 +62,8 @@ public class Player : MonoBehaviour
     public Vector2 MouseDirection => (MousePosition - (Vector2)transform.position).normalized;
     public bool IsMoving => RawDirection != Vector2.zero;
 
+    public float rotateControlsbyAngle = 0;
+
 
     #region Unity Messages
 
@@ -149,7 +151,7 @@ public class Player : MonoBehaviour
     {
         //bool movingInSameDir;
         bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > runSpeed;
-        rb.AddForce(RawDirection * moveForce * rb.mass, ForceMode2D.Force); //if (!isTooFast) 
+        rb.AddForce(RotatedControls() * moveForce * rb.mass, ForceMode2D.Force); //if (!isTooFast) 
 
         if (isTooFast)
         {
@@ -243,7 +245,7 @@ public class Player : MonoBehaviour
             else
             {
                 // dash in direction
-                rb.AddForce((dir + RawDirection * 2.5f).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
+                rb.AddForce((dir + RotatedControls() * 2.5f).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
             }
             rb.drag = 10f;
             Invoke(nameof(EndDodge), dodgeDuration);
@@ -309,5 +311,29 @@ public class Player : MonoBehaviour
         }
 
         if (rechargingDodge) rechargingDodge = false;
+    }
+            
+
+    public Vector2 RotatedControls()
+    {
+        if (rotateControlsbyAngle ==0)
+        {
+            return RawDirection;
+        }
+        if (rotateControlsbyAngle == 90f)
+        {
+            //Debug.Log("called");
+            return new Vector2(RawDirection.y * 1, RawDirection.x * -1);
+        }
+        else if (rotateControlsbyAngle == -90f)
+        {
+            return new Vector2(RawDirection.y, -RawDirection.x);
+        }
+        else if (rotateControlsbyAngle == 180f)
+        {
+            return new Vector2(-RawDirection.y, -RawDirection.x);
+
+        }
+        else return RawDirection;
     }
 }

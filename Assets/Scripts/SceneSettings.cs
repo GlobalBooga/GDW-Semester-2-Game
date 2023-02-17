@@ -45,6 +45,7 @@ public class SceneSettings : MonoBehaviour
         Camera.main.transform.position = transform.position + Vector3.back * 10f;
         Camera.main.orthographicSize = cameraSize;
         Camera.main.transform.rotation = Quaternion.Euler(0f, 0f, camRotation);
+        LevelManager.RotateControls(camRotation);
 
         Transform player = GameObject.Find("Player").transform;
         if (playerEntrance)

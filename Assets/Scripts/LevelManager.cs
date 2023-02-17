@@ -102,4 +102,9 @@ public class LevelManager : MonoBehaviour
     {
         scenes[currentSceneIndex].ShowHint();
     }
+
+    public static void RotateControls(float angle)
+    {
+        GameObject.Find("Player").GetComponent<Player>().rotateControlsbyAngle = angle;
+    }
 }

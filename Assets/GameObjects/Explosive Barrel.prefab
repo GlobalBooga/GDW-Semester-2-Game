@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 50
-  animator: {fileID: 0}
+  explosionObj: {fileID: 9057497890785895117, guid: 348599aa93f197243b388ad1995cfde9, type: 3}
   whatTakesDamage:
     serializedVersion: 2
     m_Bits: 66304
@@ -220,7 +220,7 @@ MonoBehaviour:
   - {x: 0.07905668, y: -0.31065774, z: 0.00000023841858}
   m_ShapePathHash: 852497522
   m_Mesh: {fileID: 0}
-  m_InstanceId: 311168
+  m_InstanceId: 59124
 --- !u!114 &3647431242455224827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,8 +240,10 @@ MonoBehaviour:
   fullHpColor: {r: 0.208916, g: 0.6792453, b: 0.1762193, a: 1}
   midHpColor: {r: 0.735849, g: 0.7018685, b: 0.1423104, a: 1}
   lowHpColor: {r: 1, g: 0, b: 0, a: 1}
+  postDamageInvincibilityTime: 0
   isInvincible: 0
   maxHealth: 50
+  bossBarScript: {fileID: 0}
 --- !u!114 &2756979745557484448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,5 +258,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destructableObj: {fileID: 0}
   hasPieces: 0
-  explosiveCharge: {fileID: 6705472457274128241}
   hp: {fileID: 3647431242455224827}

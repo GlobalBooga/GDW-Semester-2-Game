@@ -6,7 +6,7 @@ public class BreakableObject : MonoBehaviour
 {
     [SerializeField] Object destructableObj;
     [SerializeField] bool hasPieces;
-    [SerializeField] Explosive explosiveCharge;
+    //[SerializeField] Explosive explosiveCharge;
 
     public HPComponent hp;
 
@@ -23,7 +23,7 @@ public class BreakableObject : MonoBehaviour
             GameObject destructable = (GameObject)Instantiate(destructableObj);
             destructable.transform.position = transform.position;
         }
-        if (explosiveCharge) { explosiveCharge.explode(); }
+        //if (explosiveCharge) { explosiveCharge.Explode(); }
         Destroy(gameObject);
 
     }

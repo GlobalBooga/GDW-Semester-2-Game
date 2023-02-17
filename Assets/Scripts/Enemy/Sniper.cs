@@ -108,9 +108,6 @@ public class Sniper : Enemy
         ResetAttack();
     }
 
-
-
-
     // call in update
     void ShootLaser()
     {

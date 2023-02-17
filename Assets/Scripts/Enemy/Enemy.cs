@@ -14,14 +14,14 @@ public class Enemy : MonoBehaviour
     internal float lookSpeed = 0.01f;
     internal float rotationTime;
     private float fov;
-    private bool foundPlayer;
-    private Queue<Vector3> playerPoses = new();
+    internal bool foundPlayer;
+    internal Queue<Vector3> playerPoses = new();
     private Queue<Vector3> playerPosesHidden = new();
     private float timeSinceLastPos = 0;
-    private float totalTravelDist;
-    private float lerpStartTime;
-    private Vector3 lerpStart;
-    private Vector3 nextPos;
+    internal float totalTravelDist;
+    internal float lerpStartTime;
+    internal Vector3 lerpStart;
+    internal Vector3 nextPos;
     //private bool saveOneMorePos;
     private int frames;
     private int detectionRate = 50; // the average
@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour
     public Transform body;
 
     private SpriteRenderer sr;
-    private Rigidbody2D rb;
+    internal Rigidbody2D rb;
     internal Transform playerLoc;
     internal HPComponent hp;
     private Vector3 originalPos;
@@ -195,7 +195,7 @@ public class Enemy : MonoBehaviour
                 }
                 
                 // when we arrive at the last pos
-                else
+                else if (eso.viewDistance > 0)
                 {
                     StartCoroutine(nameof(InspectSurroundings));
                 }
@@ -205,6 +205,9 @@ public class Enemy : MonoBehaviour
 
     internal virtual void HandleSight()
     {
+        if (eso.viewDistance == 0) return;
+
+
         // Perform detection in intervals for performance
         if (frames >= detectionRate)
         {
@@ -215,7 +218,7 @@ public class Enemy : MonoBehaviour
             {
                 lockedOnPlayer = true;
                 rotationTime = 0f;
-                Debug.Log("too close");
+                //Debug.Log("too close");
             }
 
             // basic can see player check
@@ -236,7 +239,7 @@ public class Enemy : MonoBehaviour
                     //fov = normalFOV;
 
                     Invoke(nameof(OnPlayerDiscovered), eso.reactionTime);
-                    Debug.Log("found player");
+                    //Debug.Log("found player");
                 }
             }
             // if we can't see the player anymore - called once
@@ -253,7 +256,7 @@ public class Enemy : MonoBehaviour
 
                 eso.test = AnimationCurve.EaseInOut(0,0,1,1);
 
-                Debug.Log("lost player");
+                //Debug.Log("lost player");
                 // Change some detection related properties
                 foundPlayer = false;
 
@@ -419,9 +422,7 @@ public class Enemy : MonoBehaviour
         sightMin = new Vector2((Mathf.Cos(rads2) * x) - (Mathf.Sin(rads2) * y), (Mathf.Sin(rads2) * x) + (Mathf.Cos(rads2) * y));
 
         Debug.DrawLine(transform.position, transform.position + sightMax * eso.viewDistance, Color.red, Time.deltaTime);
-
         Debug.DrawLine(transform.position, transform.position + body.up, Color.red, Time.deltaTime);
-        
         Debug.DrawLine(transform.position, transform.position + sightMin * eso.viewDistance, Color.red, Time.deltaTime);
     }
 

@@ -5,7 +5,6 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     public bool doesLevelLoop = false;
-    public bool allowBacktracking = false;
     private static bool loop;
     public List<SceneSettings> orderedScenes;
     private static List<SceneSettings> scenes;
@@ -32,6 +31,11 @@ public class LevelManager : MonoBehaviour
                 allEnemies = ss.EnemyContainer.GetComponentsInChildren<Enemy>();
             else allEnemies = null;
         }
+    }
+
+    public static SceneSettings GetCurrentScene()
+    {
+        return scenes[currentSceneIndex];
     }
 
     public static void AlertAllEnemiesInCurrentScene(Vector3 alertOrigin)

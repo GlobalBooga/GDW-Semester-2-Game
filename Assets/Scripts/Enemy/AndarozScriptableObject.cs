@@ -36,6 +36,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float attackMovementSpeed_slam = 8f;
     public float runSpeed_slam = 8f;
     public bool chasePlayer_slam = true;
+    public GameObject slamParticles;
     [Range(0f, 1f)] public float maxHpForUse_slam = 1f;
 
     [Space(10f)]
@@ -86,11 +87,11 @@ public class AndarozScriptableObject : EnemyScriptableObject
 
     [Header("Ranged Attack 3 - Twin Laser"), Space(5f)]
     public float laserDamage;
-    public float attackDuration;
-    public float delayBeforeNextAttack_laser = 3f;
-    public float delayBeforeIdle_laser = 1f;
-    public float rotationSpeed;
-    public float maxDist = 100f;
+    public float delayBeforeParticles = 1f;
+    public float delayParticlesToLaser = 1.5f;
+    public int laserDurationFrames = 93;
+    public float delayBeforeNextAttack_laser = 1f;
+    public float delayLaserEndToIdle = 1f;
     public float maxAttackDistance_laser = 40f;
     public float minAttackDistance_laser = 30f;
     public float comfortableAttackDist_laser = 0f;
@@ -100,9 +101,9 @@ public class AndarozScriptableObject : EnemyScriptableObject
 
     [Space(10f)]
 
-    [Header("Attack Pattern"), Space(5f)]
-    public List<string> orderedAttacks;
+    [Header("Stage 2"), Space(5f)]
     [Range(0f, 1f)] public float HpForStage2 = 0.5f;
+    public GameObject deadMe;
 
     [Space(10f)]
 

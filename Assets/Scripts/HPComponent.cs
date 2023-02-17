@@ -14,17 +14,20 @@ public class HPComponent : MonoBehaviour
     public Color midHpColor = new Color(0.735849f, 0.7018685f, 0.1423104f, 1f);
     public Color lowHpColor = new Color(1f, 0f, 0f, 1f);
     //public Color lowHpColor = new Color(0.5943396f, 0.1654058f, 0.1654058f, 1f); // old
-
+    public float postDamageInvincibilityTime = 0;
     public bool isInvincible;
 
     public float maxHealth = 100f;
     private float health;
+
+    public BossBar bossBarScript;
 
     public float GetHealth() => health;
 
 
     public List<Action> OnHit = new List<Action>();
     public Action OnHPZero;
+    public Action OnHalfHP;
 
     private void Start()
     {
@@ -33,17 +36,35 @@ public class HPComponent : MonoBehaviour
         {
             bar.color = fullHpColor;
         }
+
     }
 
     private void OnDisable()
     {
         //reset
         Start();
+
+        if (bossBarScript)
+        {
+            bossBarScript.gameObject.SetActive(false);
+        }
     }
+
+    private void OnEnable()
+    {
+        if (bossBarScript)
+        {
+            if (gameObject.name == "Andaroz") bossBarScript.bossName = Andaroz.title;
+
+            bossBarScript.gameObject.SetActive(true);
+        }
+    }
+
 
     public void Reduce(float amount)
     {
         if (isInvincible) return;
+        if (postDamageInvincibilityTime > 0) isInvincible = true;
 
         // DEAD
         if ((health -= amount) <= 0f)
@@ -64,6 +85,14 @@ public class HPComponent : MonoBehaviour
         // UPDATING THE HPBAR(S)
         UpdateBars();
 
+        if (health <= maxHealth / 2 && OnHalfHP != null) OnHalfHP.Invoke();
+
+        if (postDamageInvincibilityTime > 0) Invoke(nameof(ResetDamageable), postDamageInvincibilityTime);
+    }
+
+    private void ResetDamageable()
+    {
+        isInvincible = false;
     }
 
     public void Add(float amount)

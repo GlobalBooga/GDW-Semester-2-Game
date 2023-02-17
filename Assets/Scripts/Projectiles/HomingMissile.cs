@@ -5,23 +5,16 @@ public class HomingMissile : Bullet
     private Transform target;
     private float force;
     private float maxSpeed;
-    private BoxCollider2D bc;
     private HPComponent hp;
     public Transform body;
     public GameObject HPBars;
+    public Explosive explosive;
 
     internal override void Awake()
     {
-        base.Awake();
-        bc = GetComponent<BoxCollider2D>();
         if (TryGetComponent(out hp)) hp.OnHPZero = Explode;
+        base.Awake();
     }
-
-    /*private void Update()
-    {
-        if (hp && showHP && HPBars) HPBars.SetActive(true);
-        else if(hp && !showHP && HPBars) HPBars.SetActive(false);
-    }*/
 
     public void Fly(Transform target, Vector2 initialDir, float initForce, float rotationForce, float maxSpeed, float damage = 0)
     {
@@ -61,8 +54,6 @@ public class HomingMissile : Bullet
 
     public void Explode()
     {
-        // calculate aoe dmg
-        // apply aoe damage
         Destroy(gameObject);
     }
 }

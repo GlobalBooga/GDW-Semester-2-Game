@@ -8,6 +8,7 @@ public class Bow : Gun
     public float lockOnDistance = 20f;
     public float lockOnAngle = 60f;
     public float homingForce = 10f;
+    public float arrowLifetime = 0.5f;
     public LayerMask whatIsEnemy;
 
     internal override void Awake()
@@ -55,9 +56,10 @@ public class Bow : Gun
         if (bullet && bulletSpawn)
         {
             HomingArrow a = Instantiate(bullet, bulletSpawn).GetComponent<HomingArrow>();
-            a.gameObject.layer = StaticHelpers.PlayerProjectileLayer;
+            //a.gameObject.layer = StaticHelpers.PlayerProjectileLayer;
             if (target) a.Fly(target, transform.parent.up, homingForce, bulletSpeed, damage);
             else a.Fly(transform.up, bulletSpeed, damage);
+            Destroy(a.gameObject, arrowLifetime);
         }
 
         if (cooldown > 0) Invoke(nameof(ResetUse), cooldown);

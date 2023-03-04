@@ -30,6 +30,10 @@ public class HomingArrow : HomingMissile
 
     internal override void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.layer == StaticHelpers.EnemyLayer)
+        {
+            collision.gameObject.GetComponent<Enemy>().Alert(transform.position);
+        }
         StaticHelpers.ApplyDamage(collision.gameObject, damage);
         Destroy(gameObject);
     }

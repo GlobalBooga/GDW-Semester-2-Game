@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6442120876064009941}
   - component: {fileID: 8041706916177100220}
-  m_Layer: 10
+  m_Layer: 19
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1896939090538511046}
   - component: {fileID: 657843592361160897}
   - component: {fileID: 3848048798998404989}
-  m_Layer: 10
+  m_Layer: 19
   m_Name: HomingArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,6 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 785504cef5ce0e74088e9a2e857eee84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  specialObjectDamageMultiplier: 0
   body: {fileID: 6545307244740321819}
   HPBars: {fileID: 0}
   explosive: {fileID: 0}

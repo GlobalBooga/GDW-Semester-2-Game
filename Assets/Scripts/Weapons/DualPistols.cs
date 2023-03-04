@@ -26,6 +26,12 @@ public class DualPistols : Weapon
         }
     }
 
+    public override void UseAbility()
+    {
+        // play animation
+        
+    }
+
     public override void Drop(Vector2 forwards)
     {
         base.Drop(forwards);

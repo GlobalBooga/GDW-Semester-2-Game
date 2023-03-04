@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bcc5b13863933d41820dd513ff7db91, type: 3}
   m_Name: Andaroz
   m_EditorClassIdentifier: 
-  reactionTime: 0
+  defaultReactionTime: 0
   viewDistance: 60
   instantDetectDist: 3
   normalFOV: 60
@@ -47,13 +47,13 @@ MonoBehaviour:
   minDistanceBetweenPoses: 1
   searchDetectionRateMult: 1
   canSeeThroughWalls: 1
-  walkSpeed: 3
-  runSpeed: 5
-  attackMovementSpeed: 4
-  retreatSpeed: 3
-  moveForce: 50
-  accelerationDrag: 5
-  deccelerationDrag: 10
+  defualtWalkSpeed: 3
+  defaultRunSpeed: 15
+  defaultAttackMovementSpeed: 15
+  defaultRetreatSpeed: 3
+  defaultMoveForce: 50
+  defaultAccelerationDrag: 5
+  defaultDeccelerationDrag: 25
   test:
     serializedVersion: 2
     m_Curve:
@@ -78,9 +78,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxAttackDistance: 25
-  minAttackDistance: 23
-  comfortableAttackDist: 3
+  defaultMaxAttackDistance: 20
+  defaultMinAttackDistance: 15
+  defaultComfortableAttackDist: 0
   chasePlayer: 1
   whatIsPlayer:
     serializedVersion: 2
@@ -90,59 +90,66 @@ MonoBehaviour:
     m_Bits: 64
   whatBlocksSight:
     serializedVersion: 2
-    m_Bits: 16704
+    m_Bits: 82240
   whatTakesDamage:
     serializedVersion: 2
     m_Bits: 256
-  swipeDamage: 20
-  swipeCooldown: 1
-  swipeApplyDmgDelay: 1
-  swipeReach: 2
-  delayBeforeNextAttack_swipe: 1
-  delayBeforeIdle_swipe: 0.3
-  maxAttackTime_swipe: 3
-  maxAttackDistance_swipe: 6
-  minAttackDistance_swipe: 4
-  comfortableAttackDist_swipe: 0
-  attackMovementSpeed_swipe: 12
-  runSpeed_swipe: 12
-  chasePlayer_swipe: 1
-  maxHpForUse_swipe: 1
-  slamDamage: 50
-  slamCooldown: 1
-  slamApplyDmgDelay: 1
-  slamReach: 0
-  delayBeforeNextAttack_slam: 1
-  delayBeforeIdle_slam: 1
-  maxAttackTime_slam: 3
-  maxAttackDistance_slam: 5
-  minAttackDistance_slam: 4
-  comfortableAttackDist_slam: 0
-  attackMovementSpeed_slam: 12
-  runSpeed_slam: 12
-  chasePlayer_slam: 1
-  slamParticles: {fileID: 4976167157911420468, guid: 920763e3a98cd0d4ebfb2be02dc90e29, type: 3}
-  maxHpForUse_slam: 1
-  gunDamage: 15
-  delayBetweenShots_gun: 0.1
-  shootStartDelay_gun: 0.3
-  delayBeforeNextAttack_gun: 3
-  delayBeforeIdle_gun: 0.5
+  swipe_damage: 0
+  swipe_cooldown: 1
+  swipe_applyDmgDelay: 1
+  swipe_delayBeforeNextAttack: 1
+  swipe_delayBeforeIdle: 0.5
+  swipe_maxAttackTime: 4
+  swipe_maxAttackDistance: 6
+  swipe_minAttackDistance: 5
+  swipe_comfortableAttackDist: 0
+  swipe_attackMovementSpeed: 18
+  swipe_runSpeed: 0
+  swipe_retreatSpeed: 0
+  swipe_chasePlayer: 1
+  swipe_lockRotation: 1
+  swipe_lockRotDelay: 0.7
+  swipe_maxHpForUse: 1
+  slam_damage: 0
+  slam_cooldown: 1
+  slam_applyDmgDelay: 1
+  slam_reach: 0
+  slam_delayBeforeNextAttack: 1
+  slam_delayBeforeIdle: 1
+  slam_maxAttackTime: 5
+  slam_maxAttackDistance: 5
+  slam_minAttackDistance: 4
+  slam_comfortableAttackDist: 0
+  slam_attackMovementSpeed: 18
+  slam_runSpeed: 0
+  slam_retreatSpeed: 0
+  slam_chasePlayer: 1
+  slam_lockRotation: 1
+  slam_lockRotDelay: 0.7
+  slam_Particles: {fileID: 4976167157911420468, guid: 920763e3a98cd0d4ebfb2be02dc90e29, type: 3}
+  slam_maxHpForUse: 1
+  gun_damage: 0
+  gun_delayBetweenShots: 0.1
+  gun_shootStartDelay: 0.5
+  gun_delayBeforeNextAttack: 3
+  gun_delayBeforeIdle: 1
   bulletSpeed: 30
   bulletSpread: 10
   shots_bullets: 50
   bullet: {fileID: 6545307244740321829, guid: ba70ec78eb4420e49a6feeeb86e188ae, type: 3}
-  minAttackDistance_gun: 15
-  maxAttackDist_gun: 20
-  attackMovementSpeed_gun: 4
-  comfortableAttackDist_gun: 10
-  chasePlayer_gun: 1
-  maxHpForUse_gun: 1
-  missileDamage: 70
-  delayBetweenShots_missiles: 0.2
-  shootStartDelay_missiles: 1.65
-  delayBeforeNextAttack_missiles: 3
-  delayBeforeIdle_missiles: 1.5
+  gun_minAttackDistance: 17
+  gun_maxAttackDistance: 20
+  gun_attackMovementSpeed: 3
+  gun_comfortableAttackDist: 10
+  gun_runSpeed: 3
+  gun_retreatSpeed: 3
+  gun_chasePlayer: 1
+  gun_maxHpForUse: 1
+  missile_damage: 0
+  missile_delayBetweenShots: 0.2
+  missile_shootStartDelay: 1.65
+  missile_delayBeforeNextAttack: 3
+  missile_delayBeforeIdle: 1
   missileSpeed: 15
   missileRotForce: 70
   missileMaxSpeed: 15
@@ -151,26 +158,34 @@ MonoBehaviour:
   crosshairController: {fileID: 1336308465829088357, guid: b57007077a03ec94682ae7906b103ac5, type: 3}
   missile: {fileID: 6545307244740321829, guid: 45f776f1fe02de74bad65ddb5ebb7239, type: 3}
   fireSequentially: 1
-  maxAttackDistance_missiles: 40
-  minAttackDistance_missiles: 30
-  comfortableAttackDist_missiles: 0
-  chasePlayer_missiles: 0
-  maxHpForUse_missiles: 0.8
-  laserDamage: 20
-  delayBeforeParticles: 1
-  delayParticlesToLaser: 1.3
-  laserDurationFrames: 500
-  delayBeforeNextAttack_laser: 2
+  missile_maxAttackDistance: 40
+  missile_minAttackDistance: 30
+  missile_comfortableAttackDist: 0
+  missile_runSpeed: 0
+  missile_retreatSpeed: 0
+  missile_attackMovementSpeed: 0
+  missile_chasePlayer: 1
+  missile_lockRotation: 0
+  missile_lockRotDelay: 0.2
+  missile_maxHpForUse: 1
+  laser_damage: 0
+  delayBeforeParticles: 2
+  delayParticlesToLaser: 1.6
+  laser_durationFrames: 530
   delayLaserEndToIdle: 1
-  maxAttackDistance_laser: 40
-  minAttackDistance_laser: 30
-  comfortableAttackDist_laser: 0
-  chasePlayer_laser: 0
-  maxHpForUse_laser: 0.6
+  laser_delayBeforeNextAttack: 1
+  laser_maxAttackDistance: 40
+  laser_minAttackDistance: 30
+  laser_comfortableAttackDist: 0
+  laser_runSpeed: 0
+  laser_retreatSpeed: 0
+  laser_attackMovementSpeed: 0
+  laser_chasePlayer: 0
+  laser_maxHpForUse: 1
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
   enableSwipe: 1
   enableSlam: 1
   enableMachineGun: 1
   enableMissiles: 1
-  enableLaser: 1
+  enableLaser: 0

@@ -1,16 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
     [Header("Properties"), Space(5f)]
     public float damage;
     public float cooldown;
-    public float range;
     [HideInInspector] public bool readyToUse = true;
     public bool isAutoUse;
     public ParticleSystem pickupIndicator;
+    public Image weaponAbilityCooldown;
+    public Image weaponImage;
+
+    public float abilityCooldown = 6f;
+    internal bool canUseAbility = true;
 
     private CircleCollider2D cc;
     private Rigidbody2D rb;
@@ -34,6 +39,16 @@ public class Weapon : MonoBehaviour
     }
 
     public virtual void Use()
+    {
+
+    }
+
+    public virtual void UseAbility()
+    {
+        if (weaponAbilityCooldown) weaponAbilityCooldown.fillAmount = 0f;
+    }
+
+    public virtual void EndAbility()
     {
 
     }
@@ -76,5 +91,27 @@ public class Weapon : MonoBehaviour
     {
         rb.simulated = cc.enabled = false;
         pickupIndicator.gameObject.SetActive(false);
+    }
+
+    public IEnumerator CooldownAbility()
+    {
+        EndAbility();
+
+        // cooldown
+        float time = 0f;
+        if (weaponAbilityCooldown)
+        {
+            while (time < abilityCooldown)
+            {
+                if (time > 0) weaponAbilityCooldown.fillAmount = time / abilityCooldown;
+                time += Time.deltaTime;
+                yield return null;
+            }
+        }
+        else yield return new WaitForSeconds(abilityCooldown);
+
+
+        // end of cooldown
+        canUseAbility = true;
     }
 }

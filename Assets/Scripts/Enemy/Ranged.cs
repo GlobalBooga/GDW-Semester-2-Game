@@ -51,7 +51,7 @@ public class Ranged : Enemy
             if (Time.time - time >= timeInterval)
             {
                 time = Time.time;
-                LevelManager.AlertAllEnemiesInCurrentScene(transform.position);
+                LevelManager.instance.AlertAllEnemiesInCurrentScene(transform.position);
             }
 
             // calculate spread

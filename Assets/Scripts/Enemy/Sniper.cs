@@ -94,7 +94,7 @@ public class Sniper : Enemy
         }
 
         // alert everyone
-        LevelManager.AlertAllEnemiesInCurrentScene(transform.position);
+        LevelManager.instance.AlertAllEnemiesInCurrentScene(transform.position);
 
         // Play animation
         if (animator) animator.Play(LASER_SHOT_ANIM);

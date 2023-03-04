@@ -13,14 +13,11 @@ public class HPComponent : MonoBehaviour
     public Color fullHpColor = new Color(0.208916f, 0.6792453f, 0.1762193f, 1f);
     public Color midHpColor = new Color(0.735849f, 0.7018685f, 0.1423104f, 1f);
     public Color lowHpColor = new Color(1f, 0f, 0f, 1f);
-    //public Color lowHpColor = new Color(0.5943396f, 0.1654058f, 0.1654058f, 1f); // old
     public float postDamageInvincibilityTime = 0;
     public bool isInvincible;
 
     public float maxHealth = 100f;
     private float health;
-
-    public BossBar bossBarScript;
 
     public float GetHealth() => health;
 
@@ -42,24 +39,8 @@ public class HPComponent : MonoBehaviour
     private void OnDisable()
     {
         //reset
-        Start();
-
-        if (bossBarScript)
-        {
-            bossBarScript.gameObject.SetActive(false);
-        }
+        Start();       
     }
-
-    private void OnEnable()
-    {
-        if (bossBarScript)
-        {
-            if (gameObject.name == "Andaroz") bossBarScript.bossName = Andaroz.title;
-
-            bossBarScript.gameObject.SetActive(true);
-        }
-    }
-
 
     public void Reduce(float amount)
     {

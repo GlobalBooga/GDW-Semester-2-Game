@@ -37,6 +37,11 @@ public class Gun : Weapon
         if (!readyToUse) return;
         readyToUse = false;
 
+        Fire();
+    }
+
+    internal virtual void Fire()
+    {
         if (muzzleFlash)
         {
             muzzleFlash.SetActive(true);
@@ -46,7 +51,7 @@ public class Gun : Weapon
         if (Time.time - time >= alertInterval)
         {
             time = Time.time;
-            LevelManager.AlertAllEnemiesInCurrentScene(transform.position);
+            LevelManager.instance.AlertAllEnemiesInCurrentScene(transform.position);
         }
 
 
@@ -67,7 +72,7 @@ public class Gun : Weapon
 
         if (cooldown > 0) Invoke(nameof(ResetUse), cooldown);
         else ResetUse();
-    }
+    }    
 
 
     public override void Drop(Vector2 forwards)

@@ -44,7 +44,7 @@ public class Melee : Enemy
         yield return new WaitForSeconds(mso.applyDmgDelay);
 
         // if we hit
-        if (PlayerDistance <= eso.maxAttackDistance)
+        if (PlayerDistance <= eso.defaultMaxAttackDistance)
         {
             //Invoke(nameof(ApplyDamage), applyDmgDelay);
             StaticHelpers.ApplyDamage(playerLoc.gameObject, mso.damage);

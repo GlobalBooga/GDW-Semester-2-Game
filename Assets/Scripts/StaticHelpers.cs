@@ -12,6 +12,7 @@ public class StaticHelpers
     public static LayerMask PickupLayer => LayerMask.NameToLayer("Pickup");
     public static LayerMask EnemyMissile => LayerMask.NameToLayer("EnemyMissile");
     public static LayerMask PlayerInvincibleLayer => LayerMask.NameToLayer("PlayerInvincible");
+    public static LayerMask BreakableObjectsLayer => LayerMask.NameToLayer("Breakable Objects");
 
     public static bool ApplyDamage(GameObject other, float damage)
     {

@@ -619,17 +619,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4770469877047556186, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
-      propertyPath: m_AngularDrag
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 4770469877047556191, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
       propertyPath: m_Name
       value: Andaroz's Blaster
-      objectReference: {fileID: 0}
-    - target: {fileID: 4770469878312874258, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
-      propertyPath: m_SortingOrder
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}

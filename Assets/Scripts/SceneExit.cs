@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SceneExit : MonoBehaviour
 {
-    public Animator screenOverlayAnimator;
-    public float transitionTime = 0.2f;
+    
     BoxCollider2D bc;
-    private const string TRANSITION_ANIM = "SceneTransition";
     private bool willFailToDetectTriggerEnter = false;
 
     private void Start()
@@ -25,7 +21,7 @@ public class SceneExit : MonoBehaviour
             collision.gameObject.layer == StaticHelpers.PlayerInvincibleLayer)
         {
             //Debug.Log("trigger enter");
-            StartSceneTransition();
+            LevelManager.instance.StartSceneTransition();
         }
     }
 
@@ -37,7 +33,7 @@ public class SceneExit : MonoBehaviour
         {
             willFailToDetectTriggerEnter=false;
             //Debug.Log("trigger enter");
-            StartSceneTransition();
+            LevelManager.instance.StartSceneTransition();
         }
     }
 
@@ -59,7 +55,7 @@ public class SceneExit : MonoBehaviour
         {
             //Debug.Log("must kill remaining enemies");
             willFailToDetectTriggerEnter = true;
-            LevelManager.ShowHint();
+            LevelManager.instance.ShowHint();
         }
     }
 
@@ -81,17 +77,5 @@ public class SceneExit : MonoBehaviour
     public void Block()
     {
         if (bc) bc.isTrigger = false;
-    }
-
-    private void NextScene()
-    {
-        LevelManager.NextScene();
-    }
-
-    private void StartSceneTransition()
-    {
-        if (screenOverlayAnimator) screenOverlayAnimator.Play(TRANSITION_ANIM);
-        if (transitionTime > 0) Invoke(nameof(NextScene), transitionTime);
-        else NextScene();
     }
 }

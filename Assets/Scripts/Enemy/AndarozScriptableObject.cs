@@ -5,69 +5,73 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="Base",menuName = "Enemy/Andaroz")]
 public class AndarozScriptableObject : EnemyScriptableObject
 {
+    [Space(10f)]
     [Header("Melee Attack 1 - Swipe"), Space(5f)]
-    public float swipeDamage;
-    public float swipeCooldown = 1f;
-    public float swipeApplyDmgDelay = 0.5f;
-    public float swipeReach;
-    public float delayBeforeNextAttack_swipe = 3f;
-    public float delayBeforeIdle_swipe = 1f;
-    public float maxAttackTime_swipe = 10f;
-    public float maxAttackDistance_swipe = 5f;
-    public float minAttackDistance_swipe = 4f;
-    public float comfortableAttackDist_swipe = 0f;
-    public float attackMovementSpeed_swipe = 8f;
-    public float runSpeed_swipe = 8f;
-    public bool chasePlayer_swipe = true;
-    [Range(0f, 1f)] public float maxHpForUse_swipe = 1f;
+    public float swipe_damage;
+    public float swipe_cooldown = 1f;
+    public float swipe_applyDmgDelay = 0.5f;
+    public float swipe_delayBeforeNextAttack = 3f;
+    public float swipe_delayBeforeIdle = 1f;
+    public float swipe_maxAttackTime = 10f;
+    public float swipe_maxAttackDistance = 5f;
+    public float swipe_minAttackDistance = 4f;
+    public float swipe_comfortableAttackDist = 0f;
+    public float swipe_attackMovementSpeed = 8f;
+    public float swipe_runSpeed = 8f;
+    public float swipe_retreatSpeed = 0f;
+    public bool swipe_chasePlayer = true;
+    public bool swipe_lockRotation = true;
+    public float swipe_lockRotDelay = 0.2f;
+    [Range(0f, 1f)] public float swipe_maxHpForUse = 1f;
 
     [Space(10f)]
     [Header("Melee Attack 2 - AOE Ground Slam"), Space(5f)]
-    public float slamDamage;
-    public float slamCooldown = 1f;
-    public float slamApplyDmgDelay = 0.5f;
-    public float slamReach;
-    public float delayBeforeNextAttack_slam = 3f;
-    public float delayBeforeIdle_slam = 1f;
-    public float maxAttackTime_slam = 10f;
-    public float maxAttackDistance_slam = 5f;
-    public float minAttackDistance_slam = 4f;
-    public float comfortableAttackDist_slam = 0f;
-    public float attackMovementSpeed_slam = 8f;
-    public float runSpeed_slam = 8f;
-    public bool chasePlayer_slam = true;
-    public GameObject slamParticles;
-    [Range(0f, 1f)] public float maxHpForUse_slam = 1f;
+    public float slam_damage;
+    public float slam_cooldown = 1f;
+    public float slam_applyDmgDelay = 0.5f;
+    public float slam_reach;
+    public float slam_delayBeforeNextAttack = 3f;
+    public float slam_delayBeforeIdle = 1f;
+    public float slam_maxAttackTime = 10f;
+    public float slam_maxAttackDistance = 5f;
+    public float slam_minAttackDistance = 4f;
+    public float slam_comfortableAttackDist = 0f;
+    public float slam_attackMovementSpeed = 8f;
+    public float slam_runSpeed = 8f;
+    public float slam_retreatSpeed = 0f;
+    public bool slam_chasePlayer = true;
+    public bool slam_lockRotation = true;
+    public float slam_lockRotDelay = 0.2f;
+    public GameObject slam_Particles;
+    [Range(0f, 1f)] public float slam_maxHpForUse = 1f;
 
     [Space(10f)]
-
     [Header("Ranged Attack 1 - Machine Gun"), Space(5f)]
-    public float gunDamage;
-    public float delayBetweenShots_gun = 0.5f;
-    public float shootStartDelay_gun = 0.3f;
-    public float delayBeforeNextAttack_gun = 3f;
-    public float delayBeforeIdle_gun = 1f;
+    public float gun_damage;
+    public float gun_delayBetweenShots = 0.5f;
+    public float gun_shootStartDelay = 0.3f;
+    public float gun_delayBeforeNextAttack = 3f;
+    public float gun_delayBeforeIdle = 1f;
     public float bulletSpeed = 15f;
     public float bulletSpread = 10f;
     public int shots_bullets = 50;
     public GameObject bullet;
-    public float minAttackDistance_gun = 10f;
-    public float maxAttackDist_gun = 15;
-    public float attackMovementSpeed_gun = 3f;
-    public float comfortableAttackDist_gun = 0f;
-    public bool chasePlayer_gun = true;
-    [Range(0f, 1f)] public float maxHpForUse_gun = 1f;
-
-
+    public float gun_minAttackDistance = 10f;
+    public float gun_maxAttackDistance = 15;
+    public float gun_attackMovementSpeed = 3f;
+    public float gun_comfortableAttackDist = 0f;
+    public float gun_runSpeed = 3f;
+    public float gun_retreatSpeed = 0f;
+    public bool gun_chasePlayer = true;
+    [Range(0f, 1f)] public float gun_maxHpForUse = 1f;
 
     [Space(10f)]
-
     [Header("Ranged Attack 2 - Missile Barrage"), Space(5f)]
-    public float missileDamage;
-    public float delayBetweenShots_missiles = 0.5f;
-    public float shootStartDelay_missiles = 0.3f;
-    public float delayBeforeNextAttack_missiles = 6f;
-    public float delayBeforeIdle_missiles = 1f;
+    public float missile_damage;
+    public float missile_delayBetweenShots = 0.5f;
+    public float missile_shootStartDelay = 0.3f;
+    public float missile_delayBeforeNextAttack = 6f;
+    public float missile_delayBeforeIdle = 1f;
     public float missileSpeed = 7f;
     public float missileRotForce = 10f;
     public float missileMaxSpeed = 7f;
@@ -76,37 +80,40 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public GameObject crosshairController;
     public GameObject missile;
     public bool fireSequentially = true;
-    public float maxAttackDistance_missiles = 40f;
-    public float minAttackDistance_missiles = 30f;
-    public float comfortableAttackDist_missiles = 0f;
-    public bool chasePlayer_missiles = false;
-    [Range(0f, 1f)] public float maxHpForUse_missiles = 0.9f;
-
+    public float missile_maxAttackDistance = 40f;
+    public float missile_minAttackDistance = 30f;
+    public float missile_comfortableAttackDist = 0f;
+    public float missile_runSpeed = 0f;
+    public float missile_retreatSpeed = 0f;
+    public float missile_attackMovementSpeed = 0f;
+    public bool missile_chasePlayer = false;
+    public bool missile_lockRotation = true;
+    public float missile_lockRotDelay = 0.2f;
+    [Range(0f, 1f)] public float missile_maxHpForUse = 0.9f;
 
     [Space(10f)]
-
     [Header("Ranged Attack 3 - Twin Laser"), Space(5f)]
-    public float laserDamage;
+    public float laser_damage;
     public float delayBeforeParticles = 1f;
     public float delayParticlesToLaser = 1.5f;
-    public int laserDurationFrames = 93;
-    public float delayBeforeNextAttack_laser = 1f;
+    public int laser_durationFrames = 93;
     public float delayLaserEndToIdle = 1f;
-    public float maxAttackDistance_laser = 40f;
-    public float minAttackDistance_laser = 30f;
-    public float comfortableAttackDist_laser = 0f;
-    public bool chasePlayer_laser = false;
-    [Range(0f, 1f)] public float maxHpForUse_laser = 0.6f;
-
+    public float laser_delayBeforeNextAttack = 1f;
+    public float laser_maxAttackDistance = 40f;
+    public float laser_minAttackDistance = 30f;
+    public float laser_comfortableAttackDist = 0f;
+    public float laser_runSpeed = 0f;
+    public float laser_retreatSpeed = 0f;
+    public float laser_attackMovementSpeed = 0f;
+    public bool laser_chasePlayer = false;
+    [Range(0f, 1f)] public float laser_maxHpForUse = 0.6f;
 
     [Space(10f)]
-
     [Header("Stage 2"), Space(5f)]
     [Range(0f, 1f)] public float HpForStage2 = 0.5f;
     public GameObject deadMe;
 
     [Space(10f)]
-
     [Header("Testing And Debugging"), Space(5f)]
     public bool enableSwipe = true;
     public bool enableSlam = true;

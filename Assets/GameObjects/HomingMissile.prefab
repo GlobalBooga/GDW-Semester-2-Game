@@ -303,7 +303,6 @@ MonoBehaviour:
   postDamageInvincibilityTime: 0
   isInvincible: 0
   maxHealth: 20
-  bossBarScript: {fileID: 0}
 --- !u!111 &5891864069383825557
 Animation:
   m_ObjectHideFlags: 0
@@ -368,7 +367,7 @@ MonoBehaviour:
   explosionObj: {fileID: 9037374813675163426, guid: 277a39b2026598c459ab044113e74102, type: 3}
   whatTakesDamage:
     serializedVersion: 2
-    m_Bits: 197376
+    m_Bits: 459520
 --- !u!58 &8726539250642315022
 CircleCollider2D:
   m_ObjectHideFlags: 0

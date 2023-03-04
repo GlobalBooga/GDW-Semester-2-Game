@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
@@ -23,9 +24,12 @@ public class Bullet : MonoBehaviour
 
     internal virtual void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log(collision.gameObject.name);
         // play hit effect
-
-        StaticHelpers.ApplyDamage(collision.gameObject, damage);
+        if (collision.gameObject.layer == StaticHelpers.SpecialBreakableObjectLayer)
+            StaticHelpers.ApplyDamage(collision.gameObject, damage * 0.25f);
+        else
+            StaticHelpers.ApplyDamage(collision.gameObject, damage);
 
         Destroy(gameObject);
     }

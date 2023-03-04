@@ -53,7 +53,6 @@ public class SceneManager : MonoBehaviour
         if (currentScene.playerEntrance)
         {
             player.position = currentScene.playerEntrance.position + (Vector3)((player.position - currentScene.playerEntrance.position) * Vector2.Perpendicular(currentScene.enterDirection));
-            Debug.Log(Vector2.Perpendicular(currentScene.enterDirection));
         }
         else
         {

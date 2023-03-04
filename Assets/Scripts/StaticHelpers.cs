@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StaticHelpers 
 {
+    public static LayerMask AllLayers => LayerMask.NameToLayer("All");
     public static LayerMask PlayerLayer => LayerMask.NameToLayer("Player");
     public static LayerMask EnemyLayer => LayerMask.NameToLayer("Enemy");
     public static LayerMask WallLayer => LayerMask.NameToLayer("Wall");
@@ -13,6 +14,7 @@ public class StaticHelpers
     public static LayerMask EnemyMissile => LayerMask.NameToLayer("EnemyMissile");
     public static LayerMask PlayerInvincibleLayer => LayerMask.NameToLayer("PlayerInvincible");
     public static LayerMask BreakableObjectsLayer => LayerMask.NameToLayer("Breakable Objects");
+    public static LayerMask SpecialBreakableObjectLayer => LayerMask.NameToLayer("SpecialBreakableObject");
 
     public static bool ApplyDamage(GameObject other, float damage)
     {

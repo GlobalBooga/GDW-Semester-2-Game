@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Andaroz : Enemy
 {
@@ -83,13 +84,11 @@ public class Andaroz : Enemy
         }
     }
 
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == StaticHelpers.BreakableObjectsLayer)
+        if (collision.gameObject.layer == StaticHelpers.SpecialBreakableObjectLayer)
         {
-            Debug.Log("hit pillar");
-            
+            StaticHelpers.ApplyDamage(collision.gameObject, eso.defaultMoveForce);
         }
     }
 
@@ -145,8 +144,17 @@ public class Andaroz : Enemy
                 yield return new WaitForSeconds(aso.swipe_applyDmgDelay);
 
                 // if were still within range of swipe
-                if (PlayerDistance <= maxAttackDistance)
-                    StaticHelpers.ApplyDamage(playerLoc.gameObject, aso.swipe_damage);
+                Collider2D[] cols = Physics2D.OverlapCircleAll(body.position, maxAttackDistance, aso.whatTakesDamage);
+                if (cols.Length > 0)
+                {
+                    foreach (var item in cols)
+                    {
+                        if (Vector3.Angle(body.up, item.transform.position - transform.position) < aso.swipe_angle / 2f)
+                        {
+                            StaticHelpers.ApplyDamage(item.gameObject, aso.swipe_damage);
+                        }
+                    }
+                }
 
                 attackMovementSpeed = aso.swipe_attackMovementSpeed;
 
@@ -158,7 +166,6 @@ public class Andaroz : Enemy
         Debug.Log("swipe end");
 
         yield return new WaitForSeconds(aso.swipe_delayBeforeIdle);
-        ////freezelegs = false;
         if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.swipe_delayBeforeNextAttack);
@@ -207,17 +214,21 @@ public class Andaroz : Enemy
                 // play swipe animation
                 Debug.Log("slamming");
 
-                //freezelegs = true;
-
                 if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
                 if (TorsoAnimator) TorsoAnimator.Play(SLAM_ATTACK);
 
                 yield return new WaitForSeconds(aso.slam_applyDmgDelay);
 
                 Instantiate(aso.slam_Particles, slamPoint);
-
-                Collider2D col = Physics2D.OverlapCircle(slamPoint.position,slamPoint.GetComponent<CircleCollider2D>().radius, aso.whatIsPlayer);
-                if (col) StaticHelpers.ApplyDamage(col.gameObject, aso.slam_damage);
+                
+                Collider2D[] cols = Physics2D.OverlapCircleAll(slamPoint.position,slamPoint.GetComponent<CircleCollider2D>().radius, aso.whatTakesDamage);
+                if (cols.Length > 0) 
+                {
+                    foreach (var item in cols)
+                    {
+                        StaticHelpers.ApplyDamage(item.gameObject, aso.slam_damage);
+                    }
+                }
 
                 attackMovementSpeed = aso.swipe_attackMovementSpeed;
 
@@ -228,12 +239,10 @@ public class Andaroz : Enemy
         }
         Debug.Log("slam end");
         yield return new WaitForSeconds(aso.slam_delayBeforeIdle);
-        //freezelegs = false;
         if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.slam_delayBeforeNextAttack);
         ResetAttack();
-        //NextAttack();
     }
 
     private void SetSlamBehaviour()
@@ -360,8 +369,6 @@ public class Andaroz : Enemy
 
 
         // animation
-        //gunattack = true;
-        //freezelegs = true;
         if (LegsAnimator) LegsAnimator.Play(LEGS_SHOOT);
         if (TorsoAnimator) TorsoAnimator.Play(GUN_ATTACK);
 
@@ -395,9 +402,6 @@ public class Andaroz : Enemy
         yield return new WaitForSeconds(aso.gun_delayBeforeIdle);
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.gun_delayBeforeNextAttack);
-        //NextAttack();
-
-        //gunattack = false;
         ResetAttack();
     }
 
@@ -482,13 +486,11 @@ public class Andaroz : Enemy
         yield return new WaitForSeconds(aso.delayLaserEndToIdle);
 
         goToCenterOfRoom = false;
-        //aso.viewDistance = temp;
         rotationTime = 0f;
 
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.laser_delayBeforeNextAttack);
         ResetAttack();
-        //NextAttack();
     }
 
     private void SetLaserBehaviour()
@@ -509,16 +511,16 @@ public class Andaroz : Enemy
         RaycastHit2D hitL = Physics2D.Raycast(leftLaserStart.position, TorsoAnimator.transform.up, 100f, aso.whatBlocksSight);
         if (hitR)
         {
-            if (hitR.collider.gameObject.layer == StaticHelpers.PlayerLayer) StaticHelpers.ApplyDamage(hitR.collider.gameObject, aso.laser_damage); 
+            if (hitR.collider.gameObject.layer == StaticHelpers.PlayerLayer) StaticHelpers.ApplyDamage(hitR.collider.gameObject, aso.laser_damage);
+            else StaticHelpers.ApplyDamage(hitR.transform.gameObject, aso.laser_damage * 2f);
             rightLaser.DrawLaser(rightLaserStart.position, hitR.point);
         }
         if (hitL)
         {
-            if (hitL.collider.gameObject.layer == StaticHelpers.PlayerLayer) StaticHelpers.ApplyDamage(hitL.collider.gameObject, aso.laser_damage); 
+            if (hitL.collider.gameObject.layer == StaticHelpers.PlayerLayer) StaticHelpers.ApplyDamage(hitL.collider.gameObject, aso.laser_damage);
+            else StaticHelpers.ApplyDamage(hitL.transform.gameObject, aso.laser_damage * 2f);
             leftLaser.DrawLaser(leftLaserStart.position, hitL.point);
         }
-
-        Physics2D.CircleCastAll(transform.position, 5, transform.up);
     }
 
     private void NextAttack()

@@ -168,7 +168,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destructableObj: {fileID: 0}
   hasPieces: 0
-  explosiveCharge: {fileID: 0}
   hp: {fileID: -1631672884396091974}
 --- !u!114 &-1631672884396091974
 MonoBehaviour:
@@ -185,9 +184,10 @@ MonoBehaviour:
   sliderHpBar: {fileID: 0}
   hpBars: []
   hpText: {fileID: 0}
-  hpColorThreshold: 0.5
+  hpColorThreshold: 0.8
   fullHpColor: {r: 0.208916, g: 0.6792453, b: 0.1762193, a: 1}
   midHpColor: {r: 0.735849, g: 0.7018685, b: 0.1423104, a: 1}
   lowHpColor: {r: 1, g: 0, b: 0, a: 1}
+  postDamageInvincibilityTime: 0
   isInvincible: 0
   maxHealth: 50

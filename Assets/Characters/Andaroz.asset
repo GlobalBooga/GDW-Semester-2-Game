@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Andaroz
   m_EditorClassIdentifier: 
   defaultReactionTime: 0
-  viewDistance: 60
+  viewDistance: 0
   instantDetectDist: 3
   normalFOV: 60
   searchFOV: 120
@@ -42,7 +42,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxStoredPoses: 8
-  loseSightOfPlayerDelay: 1
   secondsBetweenPoses: 0.5
   minDistanceBetweenPoses: 1
   searchDetectionRateMult: 1
@@ -52,8 +51,9 @@ MonoBehaviour:
   defaultAttackMovementSpeed: 15
   defaultRetreatSpeed: 3
   defaultMoveForce: 50
-  defaultAccelerationDrag: 5
-  defaultDeccelerationDrag: 25
+  defaultAccelerationDrag: 1
+  defaultDeccelerationDrag: 15
+  snappyness: 80
   test:
     serializedVersion: 2
     m_Curve:
@@ -90,11 +90,12 @@ MonoBehaviour:
     m_Bits: 64
   whatBlocksSight:
     serializedVersion: 2
-    m_Bits: 82240
+    m_Bits: 344384
   whatTakesDamage:
     serializedVersion: 2
-    m_Bits: 256
-  swipe_damage: 0
+    m_Bits: 262400
+  swipe_damage: 30
+  swipe_angle: 180
   swipe_cooldown: 1
   swipe_applyDmgDelay: 1
   swipe_delayBeforeNextAttack: 1
@@ -110,7 +111,7 @@ MonoBehaviour:
   swipe_lockRotation: 1
   swipe_lockRotDelay: 0.7
   swipe_maxHpForUse: 1
-  slam_damage: 0
+  slam_damage: 50
   slam_cooldown: 1
   slam_applyDmgDelay: 1
   slam_reach: 0
@@ -127,8 +128,8 @@ MonoBehaviour:
   slam_lockRotation: 1
   slam_lockRotDelay: 0.7
   slam_Particles: {fileID: 4976167157911420468, guid: 920763e3a98cd0d4ebfb2be02dc90e29, type: 3}
-  slam_maxHpForUse: 1
-  gun_damage: 0
+  slam_maxHpForUse: 0.9
+  gun_damage: 15
   gun_delayBetweenShots: 0.1
   gun_shootStartDelay: 0.5
   gun_delayBeforeNextAttack: 3
@@ -144,8 +145,8 @@ MonoBehaviour:
   gun_runSpeed: 3
   gun_retreatSpeed: 3
   gun_chasePlayer: 1
-  gun_maxHpForUse: 1
-  missile_damage: 0
+  gun_maxHpForUse: 0.8
+  missile_damage: 70
   missile_delayBetweenShots: 0.2
   missile_shootStartDelay: 1.65
   missile_delayBeforeNextAttack: 3
@@ -167,8 +168,8 @@ MonoBehaviour:
   missile_chasePlayer: 1
   missile_lockRotation: 0
   missile_lockRotDelay: 0.2
-  missile_maxHpForUse: 1
-  laser_damage: 0
+  missile_maxHpForUse: 0.7
+  laser_damage: 20
   delayBeforeParticles: 2
   delayParticlesToLaser: 1.6
   laser_durationFrames: 530
@@ -181,7 +182,7 @@ MonoBehaviour:
   laser_retreatSpeed: 0
   laser_attackMovementSpeed: 0
   laser_chasePlayer: 0
-  laser_maxHpForUse: 1
+  laser_maxHpForUse: 0.5
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
   enableSwipe: 1

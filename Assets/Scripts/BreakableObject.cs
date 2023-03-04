@@ -23,7 +23,6 @@ public class BreakableObject : MonoBehaviour
             GameObject destructable = (GameObject)Instantiate(destructableObj);
             destructable.transform.position = transform.position;
         }
-        //if (explosiveCharge) { explosiveCharge.Explode(); }
         Destroy(gameObject);
 
     }

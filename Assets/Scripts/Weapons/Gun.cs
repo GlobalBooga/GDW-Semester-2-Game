@@ -68,6 +68,7 @@ public class Gun : Weapon
             b.transform.Rotate(0f, 0f, Vector2.SignedAngle(transform.up, bulletDir));
             b.gameObject.layer = StaticHelpers.PlayerProjectileLayer;
             b.Fly(bulletDir, bulletSpeed, damage);
+            b.specialObjectDamageMultiplier = 0f;
         }
 
         if (cooldown > 0) Invoke(nameof(ResetUse), cooldown);

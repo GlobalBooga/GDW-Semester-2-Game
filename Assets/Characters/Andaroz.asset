@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Andaroz
   m_EditorClassIdentifier: 
   defaultReactionTime: 0
-  viewDistance: 0
+  viewDistance: 60
   instantDetectDist: 3
   normalFOV: 60
   searchFOV: 120
@@ -110,6 +110,7 @@ MonoBehaviour:
   swipe_chasePlayer: 1
   swipe_lockRotation: 1
   swipe_lockRotDelay: 0.7
+  swipe_pillarDamageMultiplier: 1
   swipe_maxHpForUse: 1
   slam_damage: 50
   slam_cooldown: 1
@@ -128,6 +129,7 @@ MonoBehaviour:
   slam_lockRotation: 1
   slam_lockRotDelay: 0.7
   slam_Particles: {fileID: 4976167157911420468, guid: 920763e3a98cd0d4ebfb2be02dc90e29, type: 3}
+  slam_pillarDamageMultiplier: 1
   slam_maxHpForUse: 0.9
   gun_damage: 15
   gun_delayBetweenShots: 0.1
@@ -145,6 +147,7 @@ MonoBehaviour:
   gun_runSpeed: 3
   gun_retreatSpeed: 3
   gun_chasePlayer: 1
+  gun_pillarDamageMultiplier: 0.2
   gun_maxHpForUse: 0.8
   missile_damage: 70
   missile_delayBetweenShots: 0.2
@@ -168,6 +171,7 @@ MonoBehaviour:
   missile_chasePlayer: 1
   missile_lockRotation: 0
   missile_lockRotDelay: 0.2
+  missile_pillarDamageMultiplier: 0.4
   missile_maxHpForUse: 0.7
   laser_damage: 20
   delayBeforeParticles: 2
@@ -182,6 +186,7 @@ MonoBehaviour:
   laser_retreatSpeed: 0
   laser_attackMovementSpeed: 0
   laser_chasePlayer: 0
+  laser_pillarDamageMultiplier: 2
   laser_maxHpForUse: 0.5
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}

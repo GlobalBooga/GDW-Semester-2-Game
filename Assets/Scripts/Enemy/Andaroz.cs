@@ -48,13 +48,7 @@ public class Andaroz : Enemy
     private const string LEGS_ATTACKSTANCE = "Andaroz_Legs_AttackStance";
     private const string LEGS_SHOOT = "Andaroz_Legs_Shoot";
 
-    //private float maxAttackDistance_default = 25f;
-    //private float minAttackDistance_default = 23f;
-    //private float runSpeed_default = 5f;
-
     private bool stage2;
-    //private bool //freezelegs;
-    //private bool gunattack;
 
 
 
@@ -151,7 +145,14 @@ public class Andaroz : Enemy
                     {
                         if (Vector3.Angle(body.up, item.transform.position - transform.position) < aso.swipe_angle / 2f)
                         {
-                            StaticHelpers.ApplyDamage(item.gameObject, aso.swipe_damage);
+                            if (item.gameObject.layer == StaticHelpers.PlayerLayer)
+                            {
+                                StaticHelpers.ApplyDamage(item.gameObject, aso.swipe_damage);
+                            }
+                            else if (aso.swipe_pillarDamageMultiplier > 0)
+                            {
+                                StaticHelpers.ApplyDamage(item.gameObject, aso.swipe_damage * aso.swipe_pillarDamageMultiplier);
+                            }
                         }
                     }
                 }
@@ -226,7 +227,17 @@ public class Andaroz : Enemy
                 {
                     foreach (var item in cols)
                     {
-                        StaticHelpers.ApplyDamage(item.gameObject, aso.slam_damage);
+                        if (item.gameObject.layer == StaticHelpers.SpecialBreakableObjectLayer)
+                        {
+                            if (aso.slam_pillarDamageMultiplier > 0)
+                            {
+                                StaticHelpers.ApplyDamage(item.gameObject, aso.slam_damage * aso.slam_pillarDamageMultiplier);
+                            }
+                        }
+                        else
+                        {
+                            StaticHelpers.ApplyDamage(item.gameObject, aso.slam_damage);
+                        }
                     }
                 }
 
@@ -326,7 +337,7 @@ public class Andaroz : Enemy
                 b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.up, missileDir));
                 b.gameObject.layer = StaticHelpers.EnemyMissile;
                 b.Fly(playerLoc, missileDir, aso.missileRotForce, aso.missileMaxSpeed, aso.missile_damage);
-
+                b.specialObjectDamageMultiplier = aso.missile_pillarDamageMultiplier;
                 //play muzzle effect
             }
             yield return new WaitForSeconds(aso.missile_delayBetweenShots);
@@ -392,6 +403,7 @@ public class Andaroz : Enemy
                 b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.up, bulletDir));
                 b.gameObject.layer = StaticHelpers.EnemyProjectileLayer;
                 b.Fly(bulletDir, aso.bulletSpeed, aso.gun_damage);
+                b.specialObjectDamageMultiplier = aso.gun_pillarDamageMultiplier;
 
                 //play muzzle effect
                 if (muzzleFlash) muzzleFlash.SetActive(true);
@@ -512,13 +524,13 @@ public class Andaroz : Enemy
         if (hitR)
         {
             if (hitR.collider.gameObject.layer == StaticHelpers.PlayerLayer) StaticHelpers.ApplyDamage(hitR.collider.gameObject, aso.laser_damage);
-            else StaticHelpers.ApplyDamage(hitR.transform.gameObject, aso.laser_damage * 2f);
+            else if (aso.laser_pillarDamageMultiplier > 0) StaticHelpers.ApplyDamage(hitR.transform.gameObject, aso.laser_damage * aso.laser_pillarDamageMultiplier);
             rightLaser.DrawLaser(rightLaserStart.position, hitR.point);
         }
         if (hitL)
         {
             if (hitL.collider.gameObject.layer == StaticHelpers.PlayerLayer) StaticHelpers.ApplyDamage(hitL.collider.gameObject, aso.laser_damage);
-            else StaticHelpers.ApplyDamage(hitL.transform.gameObject, aso.laser_damage * 2f);
+            else if (aso.laser_pillarDamageMultiplier > 0) StaticHelpers.ApplyDamage(hitL.transform.gameObject, aso.laser_damage * aso.laser_pillarDamageMultiplier);
             leftLaser.DrawLaser(leftLaserStart.position, hitL.point);
         }
     }

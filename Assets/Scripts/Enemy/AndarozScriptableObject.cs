@@ -23,7 +23,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public bool swipe_chasePlayer = true;
     public bool swipe_lockRotation = true;
     public float swipe_lockRotDelay = 0.2f;
-    //public bool swipe_damagePillars = true;
+    public float swipe_pillarDamageMultiplier = 1;
     [Range(0f, 1f)] public float swipe_maxHpForUse = 1f;
 
     [Space(10f)]
@@ -45,7 +45,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public bool slam_lockRotation = true;
     public float slam_lockRotDelay = 0.2f;
     public GameObject slam_Particles;
-    //public bool slam_damagePillars = true;
+    public float slam_pillarDamageMultiplier = 1;
     [Range(0f, 1f)] public float slam_maxHpForUse = 1f;
 
     [Space(10f)]
@@ -66,7 +66,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float gun_runSpeed = 3f;
     public float gun_retreatSpeed = 0f;
     public bool gun_chasePlayer = true;
-    //public bool gun_damagePillars = false;
+    public float gun_pillarDamageMultiplier = 1;
     [Range(0f, 1f)] public float gun_maxHpForUse = 1f;
 
     [Space(10f)]
@@ -93,7 +93,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public bool missile_chasePlayer = false;
     public bool missile_lockRotation = true;
     public float missile_lockRotDelay = 0.2f;
-    //public bool missile_damagePillars = true;
+    public float missile_pillarDamageMultiplier = 1;
     [Range(0f, 1f)] public float missile_maxHpForUse = 0.9f;
 
     [Space(10f)]
@@ -111,7 +111,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float laser_retreatSpeed = 0f;
     public float laser_attackMovementSpeed = 0f;
     public bool laser_chasePlayer = false;
-    //public bool laser_damagePillars = true;
+    public float laser_pillarDamageMultiplier = 1;
     [Range(0f, 1f)] public float laser_maxHpForUse = 0.6f;
 
     [Space(10f)]

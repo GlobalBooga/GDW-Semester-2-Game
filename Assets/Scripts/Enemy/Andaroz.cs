@@ -50,6 +50,8 @@ public class Andaroz : Enemy
     private bool pauseMovement;
     private bool scriptedMoment;
 
+    private bool fight = false;
+
     internal override void Awake()
     {
         base.Awake();
@@ -64,21 +66,15 @@ public class Andaroz : Enemy
         centerOfRoom = transform.parent.position;
         hp.OnHalfHP = Stage2;
         aso = (AndarozScriptableObject)eso;
+        StartCoroutine(nameof(StartBossFight));
     }
 
     internal override void Update()
     {
         // look at the player
         // go to the center of the room when on stage 2
-        if (!goToCenterOfRoom) base.Update();
-
-
-        /*if (!goToCenterOfRoom || !isAttacking) base.Update();
-        if (hp.GetHealth() == 0) 
-        {
-            StopAllCoroutines();
-            rb.velocity = Vector2.zero;
-        }*/
+        if (!goToCenterOfRoom && fight) base.Update();
+        
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -617,8 +613,8 @@ public class Andaroz : Enemy
 
     public override void OnDied()
     {
-        rb.velocity = Vector2.zero;
         StopAllCoroutines();
+        rb.velocity = Vector2.zero;
         StartCoroutine(nameof(EndBossFight));
     }
 
@@ -626,6 +622,18 @@ public class Andaroz : Enemy
     {
         Debug.Log("stage 2");
         stage2 = true;
+    }
+
+    private IEnumerator StartBossFight()
+    {
+        for (int i = 5; i > 0; i--)
+        {
+            Debug.Log(i);
+            yield return new WaitForSeconds(1);
+        }
+        fight = true;
+        LevelManager.instance.EnablePlayerInput();
+        LevelManager.instance.startBossBattle = true;
     }
 
     private IEnumerator EndBossFight()

@@ -7,6 +7,21 @@ public class BossRoomManager : SceneManager
     [SerializeField] private BossBar bossBarScript;
     [SerializeField] private LargeRoomCameraController largeRoomCamera;
 
+    private void Update()
+    {
+        if (LevelManager.instance.startBossBattle)
+        {
+            LevelManager.instance.startBossBattle = false;
+            if (bossBarScript)
+            {
+                bossBarScript.bossName = LevelManager.instance.bossTitle;
+
+                bossBarScript.gameObject.SetActive(true);
+            }
+            if (largeRoomCamera) largeRoomCamera.enabled = true;
+        }
+    }
+
     public override void SetScene()
     {
         base.SetScene();
@@ -15,15 +30,7 @@ public class BossRoomManager : SceneManager
     public override void ForceSetScene()
     {
         base.ForceSetScene();
-
-        if (bossBarScript)
-        {
-            bossBarScript.bossName = LevelManager.instance.bossTitle;
-
-            bossBarScript.gameObject.SetActive(true);
-        }
-        if (largeRoomCamera) largeRoomCamera.enabled = true;
-
+        LevelManager.instance.DisablePlayerInput();
         CameraShake.instance.restoreCamPosAfterShake = false;
     }
 

@@ -43,6 +43,8 @@ public class LevelManager : MonoBehaviour
 
     private Player player;
 
+    public bool startBossBattle;
+
     private void Awake()
     {
         instance = this;
@@ -82,7 +84,6 @@ public class LevelManager : MonoBehaviour
     {
         // close the current scene
         orderedScenes[currentSceneIndex].manager.DisableScene();
-
 
         // if last scene in level and not a looping level
         if (currentSceneIndex == orderedScenes.Count - 1 && !loop)

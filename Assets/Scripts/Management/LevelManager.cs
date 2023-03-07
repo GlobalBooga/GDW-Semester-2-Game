@@ -61,6 +61,8 @@ public class LevelManager : MonoBehaviour
 
     public void AlertAllEnemiesInCurrentScene(Vector3 alertOrigin)
     {
+        if (!orderedScenes[currentSceneIndex].enemyContainer) return;
+
         Enemy[] enemies = orderedScenes[currentSceneIndex].enemyContainer.GetComponentsInChildren<Enemy>();
 
         if (enemies == null) return;

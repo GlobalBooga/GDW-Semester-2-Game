@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Cinemachine;
+using Unity.VisualScripting;
 
 public class CameraShake : MonoBehaviour
 {
@@ -36,11 +37,14 @@ public class CameraShake : MonoBehaviour
         if (restoreCameraPos)
         {
             float dist = (Time.time - startTime) * 8f;
-            float alpha = dist / totalDist;
-            Camera.main.transform.position = Vector3.Lerp(lerpStart, lerpEnd, curve.Evaluate(alpha));
-            if (alpha > 1)
+            if (totalDist > 0)
             {
-                restoreCameraPos = false;
+                float alpha = dist / totalDist;
+                Camera.main.transform.position = Vector3.Lerp(lerpStart, lerpEnd, curve.Evaluate(alpha));
+                if (alpha > 1)
+                {
+                    restoreCameraPos = false;
+                }
             }
         }
     }

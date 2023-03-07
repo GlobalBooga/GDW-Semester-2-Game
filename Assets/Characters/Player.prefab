@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6518958586976302556}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 90, y: 3.66, z: 0}
+  m_LocalPosition: {x: -36.33, y: 3.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2076337807
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 8c993a52c6562d746a8d61eb9e1d6b7e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -106,7 +106,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: ade639ac257b19549a806b95c2e253e3, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -142,8 +142,8 @@ MonoBehaviour:
   interactRange: 1
   runSpeed: 8
   moveForce: 40
-  accelerationDrag: 1
-  deccelerationDrag: 15
+  accelerationDrag: 5
+  deccelerationDrag: 20
   dodgeCooldown: 0.5
   dodgeDuration: 0.3
   dodgeForce: 50
@@ -178,8 +178,7 @@ MonoBehaviour:
   lowHpColor: {r: 1, g: 1, b: 1, a: 1}
   postDamageInvincibilityTime: 0.2
   isInvincible: 0
-  maxHealth: 100
-  bossBarScript: {fileID: 0}
+  maxHealth: 500
 --- !u!114 &6518958586976302533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,7 +225,7 @@ MonoBehaviour:
   - {x: -0.186409, y: -0.17676282, z: 0}
   m_ShapePathHash: 743514181
   m_Mesh: {fileID: 0}
-  m_InstanceId: 324536
+  m_InstanceId: -56380
 --- !u!1001 &28481615352064451
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -234,6 +233,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6518958586976302528}
     m_Modifications:
+    - target: {fileID: 6490480546525062093, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
+      propertyPath: cooldown
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6490480546525062093, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
+      propertyPath: isAutoUse
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6490480546525062093, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
+      propertyPath: alertsEnemies
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6490480546673826243, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
+      propertyPath: alertsEnemies
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6490480546948791346, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -277,6 +292,22 @@ PrefabInstance:
     - target: {fileID: 6490480546948791346, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6490480546948791347, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
+      propertyPath: cooldown
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6490480546948791347, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
+      propertyPath: isAutoUse
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6490480546948791347, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
+      propertyPath: cameraShakeTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6490480546948791347, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
+      propertyPath: cameraShakeIntensity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6490480546948791372, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
       propertyPath: m_Name

@@ -15,7 +15,6 @@ public class SceneManager : MonoBehaviour
     public SceneObjective sceneObjective;
     public float cameraSize;
     private int enemyCount;
-    //private bool disable;
 
     private LevelManager.Scene currentScene;
 
@@ -47,7 +46,6 @@ public class SceneManager : MonoBehaviour
         }
 
         Camera.main.transform.position = transform.position + Vector3.back * 10f;
-        //CameraShake.instance.SetCameraPosition(transform.position);
         CameraShake.instance.SetCameraSize(cameraSize);
 
         Transform player = GameObject.Find("Player").transform;
@@ -84,8 +82,8 @@ public class SceneManager : MonoBehaviour
                 LevelManager.instance.hintText.text = "Find the Key.";
                 LevelManager.instance.CurrentScene.exit.Block();
                 break;
-            case SceneObjective.None:
             case SceneObjective.Boss:
+            case SceneObjective.None:
             default:
                 Invoke(nameof(Unblock), 0.5f);
                 LevelManager.instance.hintText.text = "";

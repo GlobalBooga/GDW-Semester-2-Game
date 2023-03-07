@@ -10,7 +10,6 @@ public class BossRoomManager : SceneManager
     public override void SetScene()
     {
         base.SetScene();
-
     }
 
     public override void ForceSetScene()
@@ -24,6 +23,8 @@ public class BossRoomManager : SceneManager
             bossBarScript.gameObject.SetActive(true);
         }
         if (largeRoomCamera) largeRoomCamera.enabled = true;
+
+        CameraShake.instance.restoreCamPosAfterShake = false;
     }
 
     public override void DisableScene()
@@ -35,6 +36,8 @@ public class BossRoomManager : SceneManager
             bossBarScript.gameObject.SetActive(false);
         }
         if (largeRoomCamera) largeRoomCamera.enabled = false;
+
+        CameraShake.instance.restoreCamPosAfterShake = true;
     }
 
     public override void EnableScene()

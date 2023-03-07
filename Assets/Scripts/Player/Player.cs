@@ -257,6 +257,16 @@ public class Player : MonoBehaviour
         };
     }
 
+    public void DisableGeneralControls()
+    {
+        controls.General.Disable();
+    }
+
+    public void EnableGeneralControls()
+    {
+        controls.General.Enable();
+    }
+
     private void EndDodge()
     {
         rb.drag = accelerationDrag;

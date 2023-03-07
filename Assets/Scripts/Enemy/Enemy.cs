@@ -227,7 +227,7 @@ public class Enemy : MonoBehaviour
     internal void SearchForPlayer()
     {
         float distCovered = (Time.time - lerpStartTime) * runSpeed;
-        transform.position = Vector3.Lerp(lerpStart, nextPos, eso.test.Evaluate(distCovered / totalTravelDist));
+        if (totalTravelDist > 0) transform.position = Vector3.Lerp(lerpStart, nextPos, eso.test.Evaluate(distCovered / totalTravelDist));
 
         if (Vector3.Distance(transform.position, nextPos) < 0.05f)
         {

@@ -128,6 +128,8 @@ MonoBehaviour:
   slam_chasePlayer: 1
   slam_lockRotation: 1
   slam_lockRotDelay: 0.7
+  slam_cameraShakeIntensity: 8
+  slam_cameraShakeTime: 0.3
   slam_Particles: {fileID: 4976167157911420468, guid: 920763e3a98cd0d4ebfb2be02dc90e29, type: 3}
   slam_pillarDamageMultiplier: 1
   slam_maxHpForUse: 1
@@ -176,7 +178,7 @@ MonoBehaviour:
   laser_damage: 20
   delayBeforeParticles: 2
   delayParticlesToLaser: 1.6
-  laser_durationFrames: 530
+  laser_duration: 2.5
   delayLaserEndToIdle: 1
   laser_delayBeforeNextAttack: 1
   laser_maxAttackDistance: 40
@@ -187,11 +189,13 @@ MonoBehaviour:
   laser_attackMovementSpeed: 0
   laser_chasePlayer: 0
   laser_pillarDamageMultiplier: 2
+  laser_cameraShakeIntensity: 10
+  laser_cameraShakeTime: 3.25
   laser_maxHpForUse: 1
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
-  enableSwipe: 1
+  enableSwipe: 0
   enableSlam: 0
   enableMachineGun: 0
-  enableMissiles: 0
+  enableMissiles: 1
   enableLaser: 0

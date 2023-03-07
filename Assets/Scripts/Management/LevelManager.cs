@@ -41,10 +41,12 @@ public class LevelManager : MonoBehaviour
     private int currentSceneIndex = 0;
     private bool showingHint;
 
+    private Player player;
+
     private void Awake()
     {
         instance = this;
-        
+        player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     private void Start()
@@ -166,5 +168,27 @@ public class LevelManager : MonoBehaviour
         if (screenOverlayAnimator) screenOverlayAnimator.Play(TRANSITION_ANIM);
         if (transitionTime > 0) Invoke(nameof(NextScene), transitionTime);
         else NextScene();
+    }
+
+    public void DisablePlayerInput()
+    {
+        if (!player)
+        {
+            Debug.LogError("For some reason, LevelManager can't find player");
+            return;
+        }
+
+        player.DisableGeneralControls();
+    }
+
+    public void EnablePlayerInput()
+    {
+        if (!player)
+        {
+            Debug.LogError("For some reason, LevelManager can't find player");
+            return;
+        }
+
+        player.EnableGeneralControls();
     }
 }

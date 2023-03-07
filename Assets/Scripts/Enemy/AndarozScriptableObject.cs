@@ -44,6 +44,8 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public bool slam_chasePlayer = true;
     public bool slam_lockRotation = true;
     public float slam_lockRotDelay = 0.2f;
+    public float slam_cameraShakeIntensity = 8f;
+    public float slam_cameraShakeTime = 0.3f;
     public GameObject slam_Particles;
     public float slam_pillarDamageMultiplier = 1;
     [Range(0f, 1f)] public float slam_maxHpForUse = 1f;
@@ -101,7 +103,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float laser_damage;
     public float delayBeforeParticles = 1f;
     public float delayParticlesToLaser = 1.5f;
-    public int laser_durationFrames = 93;
+    public float laser_duration = 3;
     public float delayLaserEndToIdle = 1f;
     public float laser_delayBeforeNextAttack = 1f;
     public float laser_maxAttackDistance = 40f;
@@ -112,6 +114,8 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float laser_attackMovementSpeed = 0f;
     public bool laser_chasePlayer = false;
     public float laser_pillarDamageMultiplier = 1;
+    public float laser_cameraShakeIntensity = 10f;
+    public float laser_cameraShakeTime = 3.25f;
     [Range(0f, 1f)] public float laser_maxHpForUse = 0.6f;
 
     [Space(10f)]

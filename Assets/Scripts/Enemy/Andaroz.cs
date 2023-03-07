@@ -47,6 +47,9 @@ public class Andaroz : Enemy
 
     private bool stage2;
 
+    private bool pauseMovement;
+    private bool scriptedMoment;
+
     internal override void Awake()
     {
         base.Awake();
@@ -65,12 +68,17 @@ public class Andaroz : Enemy
 
     internal override void Update()
     {
-        if (!goToCenterOfRoom || !isAttacking) base.Update();
+        // look at the player
+        // go to the center of the room when on stage 2
+        if (!goToCenterOfRoom) base.Update();
+
+
+        /*if (!goToCenterOfRoom || !isAttacking) base.Update();
         if (hp.GetHealth() == 0) 
         {
             StopAllCoroutines();
             rb.velocity = Vector2.zero;
-        }
+        }*/
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -83,8 +91,26 @@ public class Andaroz : Enemy
 
     internal override void FixedUpdate()
     {
-        if (!goToCenterOfRoom || !isAttacking) base.FixedUpdate();
-        
+        // walk towards the player
+        if (!pauseMovement)
+        {
+            // Standard chase player
+            if (eso.chasePlayer && lockedOnPlayer && PlayerDistance > attackDistance)
+            {
+                ChasePlayer();
+            }
+            // if player is getting too close
+            else if (lockedOnPlayer && PlayerDistance < comfortableAttackDist)
+            {
+                Retreat();
+            }
+            // if we are in the comfortable attack zone
+            // or if we just havent discovered the player yet
+            else
+            {
+                Stay();
+            }
+        }
     }
 
     internal override void Attack()
@@ -95,15 +121,15 @@ public class Andaroz : Enemy
 
     private IEnumerator PerformSwipeAttack()
     {
-        // prepare - look at player
+        /*// prepare - look at player
         while (!LookAt(playerLoc.position)) yield return null;
-
+*/
         if (hp.GetHealth() == 0) yield break;
-        if (hp.GetHealth() > hp.maxHealth * aso.swipe_maxHpForUse)
+       /* if (hp.GetHealth() > hp.maxHealth * aso.swipe_maxHpForUse)
         {
             NextAttack();
             yield break;
-        }
+        }*/
 
         Debug.Log("swipe");
         SetSwipeBehaviour();
@@ -116,7 +142,7 @@ public class Andaroz : Enemy
 
         while (true)
         {
-            UpdateDetection();
+            //UpdateDetection();
 
             time += Time.deltaTime;
             if (time >= aso.swipe_maxAttackTime) break;
@@ -223,6 +249,8 @@ public class Andaroz : Enemy
                 yield return new WaitForSeconds(aso.slam_applyDmgDelay);
 
                 Instantiate(aso.slam_Particles, slamPoint);
+
+                CameraShake.instance.ShakeCamera(aso.slam_cameraShakeIntensity, aso.slam_cameraShakeTime);
                 
                 // Apply damage
                 Collider2D[] cols = Physics2D.OverlapCircleAll(slamPoint.position,slamPoint.GetComponent<CircleCollider2D>().radius, aso.whatTakesDamage);
@@ -445,11 +473,14 @@ public class Andaroz : Enemy
         }
         Debug.Log("laser");
 
-        //float temp = aso.viewDistance;
-        //aso.viewDistance = 0f;
+        rotationTime = 0;
+        if (Vector3.Distance(transform.position, centerOfRoom) > 5f)
+        {
+            while (!LookAt(centerOfRoom)) yield return null;
+        }
 
         LockRotation();
-
+        
         // set center of room as goto position
         if (Vector3.Distance(transform.position, centerOfRoom) > 5f)
         {
@@ -467,10 +498,7 @@ public class Andaroz : Enemy
             // go to center of the room
             while (true)
             {
-                //base.FixedUpdate();
                 SearchForPlayer();
-
-                LookAt(centerOfRoom);
 
                 // if playerposes is empty, we are in the middle of the room
                 Vector3 test;
@@ -495,7 +523,9 @@ public class Andaroz : Enemy
         rightLaser.TurnOn();
         leftLaser.TurnOn();
 
-        for (int i = 0; i < aso.laser_durationFrames; i++)
+        CameraShake.instance.ShakeCamera(aso.laser_cameraShakeIntensity, aso.laser_cameraShakeTime);
+
+        for (float i = 0; i < aso.laser_duration; i+=Time.deltaTime)
         {
             ShootLaser();
             yield return null;  

@@ -9,6 +9,7 @@ public class CameraShake : MonoBehaviour
 
     CinemachineVirtualCamera virtualCamera;
     CinemachineBasicMultiChannelPerlin perlinThing;
+    CinemachineHardLockToTarget bodysettings;
 
     private float intensity;
     private float time;
@@ -22,12 +23,16 @@ public class CameraShake : MonoBehaviour
     Vector3 lerpEnd;
     AnimationCurve curve;
 
+    private float damping;
+    [HideInInspector] public bool restoreCamPosAfterShake = true;
+
 
     // Start is called before the first frame update
     void Start()
     {
         virtualCamera = GetComponent<CinemachineVirtualCamera>();   
         perlinThing = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        bodysettings = virtualCamera.GetCinemachineComponent<CinemachineHardLockToTarget>();
         instance = this;
         curve = AnimationCurve.EaseInOut(0,0,1,1);
     }
@@ -65,7 +70,6 @@ public class CameraShake : MonoBehaviour
     {
         restoreCameraPos = false;
         isShaking = true;
-        Debug.Log("sheke start");
         perlinThing.m_AmplitudeGain = intensity;
         for (float i = 0; i < time; i+=Time.deltaTime)
         {
@@ -73,10 +77,9 @@ public class CameraShake : MonoBehaviour
             yield return null;
         }
         perlinThing.m_AmplitudeGain = 0f;
-        Debug.Log("sheke ed");
         isShaking = false;
 
-        RestoreCamPos();
+        if (restoreCamPosAfterShake) RestoreCamPos();
     }
 
     private void RestoreCamPos()

@@ -5,6 +5,8 @@ public class Explosive : MonoBehaviour
 {
     CircleCollider2D blastRadius;
     [SerializeField] int damage = 50;
+    [SerializeField] float cameraShakeIntensity;
+    [SerializeField] float cameraShakeTime;
     [SerializeField] GameObject explosionObj;
     [SerializeField] LayerMask whatTakesDamage;
 
@@ -28,6 +30,8 @@ public class Explosive : MonoBehaviour
 
     private void Explode()
     {
+        CameraShake.instance.ShakeCamera(cameraShakeIntensity, cameraShakeTime);
+
         GameObject g = Instantiate(explosionObj, transform);
         g.transform.parent = null;
         Destroy(g, 1f);

@@ -47,7 +47,8 @@ public class SceneManager : MonoBehaviour
         }
 
         Camera.main.transform.position = transform.position + Vector3.back * 10f;
-        Camera.main.orthographicSize = cameraSize;
+        //CameraShake.instance.SetCameraPosition(transform.position);
+        CameraShake.instance.SetCameraSize(cameraSize);
 
         Transform player = GameObject.Find("Player").transform;
         if (currentScene.playerEntrance)

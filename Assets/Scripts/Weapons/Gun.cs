@@ -7,6 +7,8 @@ public class Gun : Weapon
     public bool alertsEnemies = true;
     public float bulletSpread;
     public float bulletSpeed;
+    public float cameraShakeIntensity;
+    public float cameraShakeTime;
     public GameObject muzzleFlash;
     public GameObject bullet;
     public Transform bulletSpawn;
@@ -46,6 +48,8 @@ public class Gun : Weapon
         {
             muzzleFlash.SetActive(true);
         }
+
+        CameraShake.instance.ShakeCamera(cameraShakeIntensity, cameraShakeTime);
 
         // Alert enemies
         if (Time.time - time >= alertInterval)

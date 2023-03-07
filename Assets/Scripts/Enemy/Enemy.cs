@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(HPComponent))]
@@ -115,8 +116,20 @@ public class Enemy : MonoBehaviour
 
     internal virtual void Update()
     {
+        UpdateDetection();
+
+        // base attack logic
+        if (canAttack && attackReady)
+        {
+            attackReady = false;
+            Attack();
+        }
+    }
+
+    internal void UpdateDetection()
+    {
         if (showDebugStuff) CalculateEnemyView();
-        if (showForwards) Debug.DrawLine(transform.position,transform.position + body.up, Color.red, Time.deltaTime);
+        if (showForwards) Debug.DrawLine(transform.position, transform.position + body.up, Color.red, Time.deltaTime);
 
         HandleSight();
 
@@ -126,13 +139,6 @@ public class Enemy : MonoBehaviour
 
             // If we are chasing the player, look at the last known point
             if (!eso.canSeeThroughWalls && !foundPlayer && !isAlerted && playerPoses.Count > 0f) LookAt(playerPoses.Last());
-        }
-
-        // base attack logic
-        if (canAttack && attackReady)
-        {
-            attackReady = false;
-            Attack();
         }
     }
 

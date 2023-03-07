@@ -110,7 +110,7 @@ MonoBehaviour:
   swipe_chasePlayer: 1
   swipe_lockRotation: 1
   swipe_lockRotDelay: 0.7
-  swipe_pillarDamageMultiplier: 1
+  swipe_pillarDamageMultiplier: 1.5
   swipe_maxHpForUse: 1
   slam_damage: 50
   slam_cooldown: 1
@@ -130,7 +130,7 @@ MonoBehaviour:
   slam_lockRotDelay: 0.7
   slam_Particles: {fileID: 4976167157911420468, guid: 920763e3a98cd0d4ebfb2be02dc90e29, type: 3}
   slam_pillarDamageMultiplier: 1
-  slam_maxHpForUse: 0.9
+  slam_maxHpForUse: 1
   gun_damage: 15
   gun_delayBetweenShots: 0.1
   gun_shootStartDelay: 0.5
@@ -148,7 +148,7 @@ MonoBehaviour:
   gun_retreatSpeed: 3
   gun_chasePlayer: 1
   gun_pillarDamageMultiplier: 0.2
-  gun_maxHpForUse: 0.8
+  gun_maxHpForUse: 1
   missile_damage: 70
   missile_delayBetweenShots: 0.2
   missile_shootStartDelay: 1.65
@@ -172,7 +172,7 @@ MonoBehaviour:
   missile_lockRotation: 0
   missile_lockRotDelay: 0.2
   missile_pillarDamageMultiplier: 0.4
-  missile_maxHpForUse: 0.7
+  missile_maxHpForUse: 1
   laser_damage: 20
   delayBeforeParticles: 2
   delayParticlesToLaser: 1.6
@@ -187,11 +187,11 @@ MonoBehaviour:
   laser_attackMovementSpeed: 0
   laser_chasePlayer: 0
   laser_pillarDamageMultiplier: 2
-  laser_maxHpForUse: 0.5
+  laser_maxHpForUse: 1
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
   enableSwipe: 1
-  enableSlam: 1
-  enableMachineGun: 1
-  enableMissiles: 1
+  enableSlam: 0
+  enableMachineGun: 0
+  enableMissiles: 0
   enableLaser: 0

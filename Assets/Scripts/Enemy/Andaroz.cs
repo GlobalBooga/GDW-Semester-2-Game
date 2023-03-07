@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Andaroz : Enemy
 {
@@ -50,8 +47,6 @@ public class Andaroz : Enemy
 
     private bool stage2;
 
-
-
     internal override void Awake()
     {
         base.Awake();
@@ -70,7 +65,7 @@ public class Andaroz : Enemy
 
     internal override void Update()
     {
-        if (!goToCenterOfRoom) base.Update();
+        if (!goToCenterOfRoom || !isAttacking) base.Update();
         if (hp.GetHealth() == 0) 
         {
             StopAllCoroutines();
@@ -88,7 +83,7 @@ public class Andaroz : Enemy
 
     internal override void FixedUpdate()
     {
-        if (!goToCenterOfRoom) base.FixedUpdate();
+        if (!goToCenterOfRoom || !isAttacking) base.FixedUpdate();
         
     }
 
@@ -100,13 +95,15 @@ public class Andaroz : Enemy
 
     private IEnumerator PerformSwipeAttack()
     {
+        // prepare - look at player
+        while (!LookAt(playerLoc.position)) yield return null;
+
         if (hp.GetHealth() == 0) yield break;
         if (hp.GetHealth() > hp.maxHealth * aso.swipe_maxHpForUse)
         {
             NextAttack();
             yield break;
         }
-
 
         Debug.Log("swipe");
         SetSwipeBehaviour();
@@ -119,18 +116,20 @@ public class Andaroz : Enemy
 
         while (true)
         {
+            UpdateDetection();
+
             time += Time.deltaTime;
             if (time >= aso.swipe_maxAttackTime) break;
             //Debug.Log(time);
             // else if we are in attack distance
             if (PlayerDistance <= maxAttackDistance)
             {
+                // Locking rotation
                 if (aso.swipe_lockRotation) Invoke(nameof(LockRotation),aso.swipe_lockRotDelay);
 
                 Debug.Log("swiping");
 
                 // play swipe animation
-                ////freezelegs = true;
                 if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
                 if (TorsoAnimator) TorsoAnimator.Play(SWIPE_ATTACK);
 
@@ -167,6 +166,9 @@ public class Andaroz : Enemy
         Debug.Log("swipe end");
 
         yield return new WaitForSeconds(aso.swipe_delayBeforeIdle);
+        // unlock rotation
+        SetDefaultBehaviour();
+        NewAttackDistance();
         if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.swipe_delayBeforeNextAttack);
@@ -222,6 +224,7 @@ public class Andaroz : Enemy
 
                 Instantiate(aso.slam_Particles, slamPoint);
                 
+                // Apply damage
                 Collider2D[] cols = Physics2D.OverlapCircleAll(slamPoint.position,slamPoint.GetComponent<CircleCollider2D>().radius, aso.whatTakesDamage);
                 if (cols.Length > 0) 
                 {
@@ -250,6 +253,8 @@ public class Andaroz : Enemy
         }
         Debug.Log("slam end");
         yield return new WaitForSeconds(aso.slam_delayBeforeIdle);
+        SetDefaultBehaviour();
+        NewAttackDistance();
         if (LegsAnimator) LegsAnimator.Play(LEGS_RUN);
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.slam_delayBeforeNextAttack);
@@ -347,7 +352,8 @@ public class Andaroz : Enemy
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.missile_delayBeforeNextAttack);
         ResetAttack();
-        //NextAttack();
+        SetDefaultBehaviour();
+        NewAttackDistance();
     }
 
     private void SetMissileBehaviour()
@@ -415,6 +421,8 @@ public class Andaroz : Enemy
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.gun_delayBeforeNextAttack);
         ResetAttack();
+        SetDefaultBehaviour();
+        NewAttackDistance();
     }
 
     private void SetGunBehaviour()
@@ -503,6 +511,8 @@ public class Andaroz : Enemy
         if (TorsoAnimator) TorsoAnimator.Play(IDLE);
         if (!stage2) yield return new WaitForSeconds(aso.laser_delayBeforeNextAttack);
         ResetAttack();
+        SetDefaultBehaviour();
+        NewAttackDistance();
     }
 
     private void SetLaserBehaviour()
@@ -543,8 +553,8 @@ public class Andaroz : Enemy
         if (attackPattern.Count == 0) NewAttackOrder();
 
         // skip disabled attacks
-        if (attackPattern.Peek() == nameof(PerformSwipeAttack) && !aso.enableSwipe) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(PerformSlamAttack) && !aso.enableSlam) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformSwipeAttack) && (!aso.enableSwipe || stage2)) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(PerformSlamAttack) && (!aso.enableSlam || stage2)) { attackPattern.Dequeue(); NextAttack(); return; }
         if (attackPattern.Peek() == nameof(PerformGunAttack) && !aso.enableMachineGun) { attackPattern.Dequeue(); NextAttack(); return; }
         if (attackPattern.Peek() == nameof(PerformMissileAttack) && !aso.enableMissiles) { attackPattern.Dequeue(); NextAttack(); return; }
         if (attackPattern.Peek() == nameof(PerformLaserAttack) && !aso.enableLaser) { attackPattern.Dequeue(); NextAttack(); return; }
@@ -571,15 +581,14 @@ public class Andaroz : Enemy
     internal override void ResetAttack()
     {
         base.ResetAttack();
-        SetDefaultBehaviour();
-        NewAttackDistance();
+        //SetDefaultBehaviour();
+        //NewAttackDistance();
     }
 
     public override void OnDied()
     {
         rb.velocity = Vector2.zero;
         StopAllCoroutines();
-        aso.viewDistance = 0f;
         StartCoroutine(nameof(EndBossFight));
     }
 

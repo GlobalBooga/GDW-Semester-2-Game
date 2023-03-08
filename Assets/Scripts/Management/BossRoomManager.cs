@@ -30,6 +30,7 @@ public class BossRoomManager : SceneManager
     public override void ForceSetScene()
     {
         base.ForceSetScene();
+
         LevelManager.instance.DisablePlayerInput();
         CameraShake.instance.restoreCamPosAfterShake = false;
     }
@@ -55,5 +56,10 @@ public class BossRoomManager : SceneManager
     public override void ProgressKillAllEnemies()
     {
         base.ProgressKillAllEnemies();
+    }
+
+    public LargeRoomCameraController GetLargeRoomCameraController()
+    {
+        return largeRoomCamera;
     }
 }

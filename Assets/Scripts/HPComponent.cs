@@ -25,6 +25,7 @@ public class HPComponent : MonoBehaviour
     public List<Action> OnHit = new List<Action>();
     public Action OnHPZero;
     public Action OnHalfHP;
+    private bool onhalfhpcalled;
 
     private void Start()
     {
@@ -66,7 +67,11 @@ public class HPComponent : MonoBehaviour
         // UPDATING THE HPBAR(S)
         UpdateBars();
 
-        if (health <= maxHealth / 2 && OnHalfHP != null) OnHalfHP.Invoke();
+        if (health <= maxHealth / 2 && OnHalfHP != null && !onhalfhpcalled)
+        {
+            OnHalfHP.Invoke();
+            onhalfhpcalled = true;
+        }
 
         if (postDamageInvincibilityTime > 0) Invoke(nameof(ResetDamageable), postDamageInvincibilityTime);
     }

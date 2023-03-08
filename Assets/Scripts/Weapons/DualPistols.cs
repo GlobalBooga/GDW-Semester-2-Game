@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class DualPistols : Weapon
 {
-    public Gun rightPistol;
-    public Gun leftPistol;
+    public DualPistols_Single rightPistol;
+    public DualPistols_Single leftPistol;
     public float cameraShakeIntensity;
     public float cameraShakeTime;
     private bool right = true;
+    public bool alertEnemies = true;
+
+    [Header("Weapon Ability"), Space(5f)]
+    public float newCooldown = 0.08f;
+    public float abilityShots;
 
 
     public override void Use()
@@ -16,42 +21,81 @@ public class DualPistols : Weapon
         if (!readyToUse) return;
         readyToUse = false;
 
-        float cool = 0f;
-
         if (rightPistol && right)
         {
             right = false;
-            rightPistol.cameraShakeIntensity = cameraShakeIntensity;
-            rightPistol.cameraShakeTime = cameraShakeTime;
+            UpdateGunProperties(rightPistol);
             rightPistol.Use();
-            cool = rightPistol.cooldown;
         }
         else if (leftPistol && !right)
         {
             right = true;
-            leftPistol.cameraShakeIntensity = cameraShakeIntensity;
-            leftPistol.cameraShakeTime = cameraShakeTime;
+            UpdateGunProperties(leftPistol);
             leftPistol.Use();
-            cool = leftPistol.cooldown;
         }
 
-        if (cool > 0) Invoke(nameof(ResetUse), cool);
+        if (cooldown > 0) Invoke(nameof(ResetUse), cooldown);
         else ResetUse();
-    }
-
-    public override void UseAbility()
-    {
-        // play animation
-        
     }
 
     public override void Drop(Vector2 forwards)
     {
         base.Drop(forwards);
+        rightPistol.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        leftPistol.gameObject.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     public override void Pickup(Transform parentTo, Weapon weapon)
     {
         base.Pickup(parentTo, weapon);
+        rightPistol.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        leftPistol.gameObject.GetComponent<SpriteRenderer>().enabled = false;
     }
+
+    public override void UseAbility()
+    {
+        if (!canUseAbility) return;
+        canUseAbility = false;
+        readyToUse = false;
+
+        LevelManager.instance.DisablePlayerRotation();
+
+        base.UseAbility();
+
+        UpdateGunProperties(rightPistol);
+        UpdateGunProperties(leftPistol);
+
+        StartCoroutine(nameof(FireAbility));
+    }
+
+    private IEnumerator FireAbility()
+    {
+        for (int i = 0; i < abilityShots; i++)
+        {
+            rightPistol.Fire();
+            leftPistol.Fire();
+            yield return new WaitForSeconds(newCooldown);
+        }
+
+        StartCoroutine(nameof(CooldownAbility));
+    }
+
+    public override void EndAbility()
+    {
+        base.EndAbility();
+        LevelManager.instance.EnablePlayerRotation();
+        readyToUse = true;
+    }
+
+    private void UpdateGunProperties(DualPistols_Single gun)
+    {
+        gun.damage = damage;
+        gun.cameraShakeIntensity = cameraShakeIntensity;
+        gun.cameraShakeTime = cameraShakeTime;
+        gun.cooldown = cooldown;
+        gun.newCooldown = newCooldown;
+        gun.abilityShots = abilityShots;
+        gun.alertsEnemies = alertEnemies;
+    }
+
 }

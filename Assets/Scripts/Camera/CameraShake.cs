@@ -82,10 +82,15 @@ public class CameraShake : MonoBehaviour
         if (restoreCamPosAfterShake) RestoreCamPos();
     }
 
-    private void RestoreCamPos()
+    public void RestoreCamPos()
+    {
+        RestoreCamPos(Vector2.zero);
+    }
+
+    public void RestoreCamPos(Vector2 offset)
     {
         lerpStart = Camera.main.transform.position;
-        lerpEnd = LevelManager.instance.CurrentScene.playerEntrance.parent.position + Vector3.back * 10;
+        lerpEnd = LevelManager.instance.CurrentScene.playerEntrance.parent.position + new Vector3(offset.x, offset.y, -10f);
         totalDist = Vector3.Distance(lerpStart, lerpEnd);
         startTime = Time.time;
         restoreCameraPos = true;
@@ -96,8 +101,53 @@ public class CameraShake : MonoBehaviour
         virtualCamera.m_Lens.OrthographicSize = size;   
     }
 
+    public void LerpCameraSize(float size)
+    {
+        StartCoroutine(nameof(LerpCameraSizeRoutine), size);      
+    }
+
+    private IEnumerator LerpCameraSizeRoutine(float size)
+    {
+        yield return null;
+        float currentSize = virtualCamera.m_Lens.OrthographicSize;
+
+        float startTime = Time.time;
+        float difference = Mathf.Abs(currentSize - size);
+
+        float alpha = 0;
+
+        while (alpha < 1)
+        {
+            float time = (Time.time - startTime) * 4f;
+            alpha = time / difference;
+            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(currentSize, size, alpha);
+            yield return null;
+        }
+    }
+
     public void SetCameraPosition(Vector2 position)
     {
         virtualCamera.transform.position = new Vector3(position.x, position.y, -10f);
+    }
+
+    public void SetCameraFollow(Transform trans)
+    {
+        virtualCamera.GetCinemachineComponent<CinemachineHardLockToTarget>().m_Damping = 2f;
+        virtualCamera.Follow = trans;
+        if (trans.position.z == 0)
+        {
+            GetComponent<CinemachineCameraOffset>().m_Offset = Vector3.back * 10f;
+        }
+        else
+        {
+            GetComponent<CinemachineCameraOffset>().m_Offset = Vector3.zero;
+        }
+        Invoke(nameof(ResetDamping), 1f);
+    }
+
+    private void ResetDamping()
+    {
+        virtualCamera.GetCinemachineComponent<CinemachineHardLockToTarget>().m_Damping = 0f;
+
     }
 }

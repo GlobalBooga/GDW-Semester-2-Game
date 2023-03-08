@@ -61,7 +61,7 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: 0
-      outSlope: 1
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1
+      inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
@@ -94,7 +94,7 @@ MonoBehaviour:
   whatTakesDamage:
     serializedVersion: 2
     m_Bits: 262400
-  swipe_damage: 30
+  swipe_damage: 70
   swipe_angle: 180
   swipe_cooldown: 1
   swipe_applyDmgDelay: 1
@@ -112,7 +112,7 @@ MonoBehaviour:
   swipe_lockRotDelay: 0.7
   swipe_pillarDamageMultiplier: 1.5
   swipe_maxHpForUse: 1
-  slam_damage: 50
+  slam_damage: 120
   slam_cooldown: 1
   slam_applyDmgDelay: 1
   slam_reach: 0
@@ -132,8 +132,8 @@ MonoBehaviour:
   slam_cameraShakeTime: 0.3
   slam_Particles: {fileID: 4976167157911420468, guid: 920763e3a98cd0d4ebfb2be02dc90e29, type: 3}
   slam_pillarDamageMultiplier: 1
-  slam_maxHpForUse: 1
-  gun_damage: 15
+  slam_maxHpForUse: 0.9
+  gun_damage: 20
   gun_delayBetweenShots: 0.1
   gun_shootStartDelay: 0.5
   gun_delayBeforeNextAttack: 3
@@ -142,16 +142,16 @@ MonoBehaviour:
   bulletSpread: 10
   shots_bullets: 50
   bullet: {fileID: 6545307244740321829, guid: ba70ec78eb4420e49a6feeeb86e188ae, type: 3}
-  gun_minAttackDistance: 17
-  gun_maxAttackDistance: 20
+  gun_minAttackDistance: 10
+  gun_maxAttackDistance: 15
   gun_attackMovementSpeed: 3
   gun_comfortableAttackDist: 10
   gun_runSpeed: 3
   gun_retreatSpeed: 3
   gun_chasePlayer: 1
   gun_pillarDamageMultiplier: 0.2
-  gun_maxHpForUse: 1
-  missile_damage: 70
+  gun_maxHpForUse: 0.8
+  missile_damage: 100
   missile_delayBetweenShots: 0.2
   missile_shootStartDelay: 1.65
   missile_delayBeforeNextAttack: 3
@@ -174,11 +174,12 @@ MonoBehaviour:
   missile_lockRotation: 0
   missile_lockRotDelay: 0.2
   missile_pillarDamageMultiplier: 0.4
-  missile_maxHpForUse: 1
-  laser_damage: 20
+  missile_maxHpForUse: 0.7
+  laser_damage: 200
   delayBeforeParticles: 2
-  delayParticlesToLaser: 1.6
-  laser_duration: 2.5
+  delayParticlesToLaser: 1.65
+  laser_duration: 3
+  laser_duration_firstTime: 4
   delayLaserEndToIdle: 1
   laser_delayBeforeNextAttack: 1
   laser_maxAttackDistance: 40
@@ -190,8 +191,10 @@ MonoBehaviour:
   laser_chasePlayer: 0
   laser_pillarDamageMultiplier: 2
   laser_cameraShakeIntensity: 10
-  laser_cameraShakeTime: 3.25
-  laser_maxHpForUse: 1
+  laser_cameraShakeTime: 3.8
+  laser_cameraShakeIntensity_firstTime: 6
+  laser_cameraShakeTime_firstTime: 5
+  laser_maxHpForUse: 0.5
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
   enableSwipe: 1

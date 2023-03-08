@@ -104,6 +104,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float delayBeforeParticles = 1f;
     public float delayParticlesToLaser = 1.5f;
     public float laser_duration = 3;
+    public float laser_duration_firstTime = 5f;
     public float delayLaserEndToIdle = 1f;
     public float laser_delayBeforeNextAttack = 1f;
     public float laser_maxAttackDistance = 40f;
@@ -116,6 +117,8 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public float laser_pillarDamageMultiplier = 1;
     public float laser_cameraShakeIntensity = 10f;
     public float laser_cameraShakeTime = 3.25f;
+    public float laser_cameraShakeIntensity_firstTime = 6f;
+    public float laser_cameraShakeTime_firstTime = 5f;
     [Range(0f, 1f)] public float laser_maxHpForUse = 0.6f;
 
     [Space(10f)]

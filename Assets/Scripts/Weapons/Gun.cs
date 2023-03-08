@@ -42,7 +42,7 @@ public class Gun : Weapon
         Fire();
     }
 
-    internal virtual void Fire()
+    public virtual void Fire()
     {
         if (muzzleFlash)
         {

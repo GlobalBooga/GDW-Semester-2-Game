@@ -23,6 +23,7 @@ public class HomingMissile : Bullet
         this.target = target;
         force = rotationForce;
         this.maxSpeed = maxSpeed;
+        if (explosive) explosive.damage = damage;
     }
 
     internal virtual void Update()

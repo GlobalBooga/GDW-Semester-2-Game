@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
 
     private Player player;
 
-    public bool startBossBattle;
+    [HideInInspector] public bool startBossBattle;
 
     private void Awake()
     {
@@ -191,5 +191,34 @@ public class LevelManager : MonoBehaviour
         }
 
         player.EnableGeneralControls();
+    }
+
+    public void DisablePlayerRotation()
+    {
+        if (!player)
+        {
+            Debug.LogError("For some reason, LevelManager can't find player");
+            return;
+        }
+
+        player.DisableRotation();
+    }
+
+    public void EnablePlayerRotation()
+    {
+        if (!player)
+        {
+            Debug.LogError("For some reason, LevelManager can't find player");
+            return;
+        }
+
+        player.EnableRotation();
+    }
+
+    public Vector4 GetCurrentLargeRoomBounds()
+    {
+        BossRoomManager b = CurrentScene.manager as BossRoomManager;
+        LargeRoomCameraController largeRoom = b.GetLargeRoomCameraController();
+        return new Vector4 (largeRoom.rightBound, largeRoom.leftBound, largeRoom.upperBound, largeRoom.lowerBound);
     }
 }

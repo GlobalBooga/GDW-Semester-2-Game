@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1890357494751211575}
   - component: {fileID: 1890357494751211574}
   - component: {fileID: 1890357494751211576}
+  - component: {fileID: 5745798973946175656}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: Untagged
@@ -84,6 +85,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57bd9ba9dcf207440ad67e797db215f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  restoreCamPosAfterShake: 1
+--- !u!114 &5745798973946175656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890357494751211573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d70cc20219cd84593f67d248eafe36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_ApplyAfter: 0
+  m_PreserveComposition: 0
 --- !u!1 &1890357494774553106
 GameObject:
   m_ObjectHideFlags: 0

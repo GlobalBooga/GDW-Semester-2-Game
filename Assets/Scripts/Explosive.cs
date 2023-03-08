@@ -4,7 +4,7 @@ using UnityEngine;
 public class Explosive : MonoBehaviour
 {
     CircleCollider2D blastRadius;
-    [SerializeField] int damage = 50;
+    public float damage = 50;
     [SerializeField] float cameraShakeIntensity;
     [SerializeField] float cameraShakeTime;
     [SerializeField] GameObject explosionObj;

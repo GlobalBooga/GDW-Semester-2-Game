@@ -1,5 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,12 +22,12 @@ public class Weapon : MonoBehaviour
 
     private const float startDelay = 0.25f;
 
+    public Action OnAbilityEnded;
+
     internal virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<CircleCollider2D>();
-
-
     }
 
     internal virtual void OnValidate()
@@ -50,7 +50,7 @@ public class Weapon : MonoBehaviour
 
     public virtual void EndAbility()
     {
-
+        if (OnAbilityEnded != null) OnAbilityEnded.Invoke();
     }
 
     internal virtual void ResetUse()

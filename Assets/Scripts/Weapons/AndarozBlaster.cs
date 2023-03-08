@@ -68,6 +68,8 @@ public class AndarozBlaster : Gun
 
     public override void EndAbility()
     {
+        base.EndAbility();
+
         cooldown = temp;
         readyToUse = true;
     }

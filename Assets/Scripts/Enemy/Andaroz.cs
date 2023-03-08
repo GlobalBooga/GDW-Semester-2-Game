@@ -36,6 +36,7 @@ public class Andaroz : Enemy
     private const string GUN_ATTACK = "Andaroz_Shoot";
     private const string MISSILE_ATTACK = "Andaroz_Missiles";
     private const string LASER_ATTACK = "Andaroz_Lasers";
+    private const string LASER_ATTACK_LONG = "Andaroz_Lasers_FirstTime";
     private const string IDLE = "Andaroz_Idle";
     private const string WALK = "Andaroz_Walk";
     private const string RUN = "Andaroz_Run";
@@ -48,13 +49,26 @@ public class Andaroz : Enemy
     private bool stage2;
 
     private bool pauseMovement;
-    private bool scriptedMoment;
+    //private bool scriptedMoment;
 
     private bool fight = false;
+
+    private bool firstTime;
+    private bool completeStage2;
 
     internal override void Awake()
     {
         base.Awake();
+    }
+
+    private void OnEnable()
+    {
+        Invoke(nameof(StartBossFight), 2f);
+    }
+
+    internal override void OnDisable()
+    {
+        CancelInvoke();
     }
 
     internal override void Start()
@@ -62,11 +76,9 @@ public class Andaroz : Enemy
         base.Start();
         rightLaser = rightLR.gameObject.GetComponent<Laser>();
         leftLaser = leftLR.gameObject.GetComponent<Laser>();
-        //eso.viewDistance = 60;
         centerOfRoom = transform.parent.position;
         hp.OnHalfHP = Stage2;
         aso = (AndarozScriptableObject)eso;
-        StartCoroutine(nameof(StartBossFight));
     }
 
     internal override void Update()
@@ -88,7 +100,7 @@ public class Andaroz : Enemy
     internal override void FixedUpdate()
     {
         // walk towards the player
-        if (!pauseMovement)
+        if (!pauseMovement && fight)
         {
             // Standard chase player
             if (eso.chasePlayer && lockedOnPlayer && PlayerDistance > attackDistance)
@@ -127,7 +139,7 @@ public class Andaroz : Enemy
             yield break;
         }*/
 
-        Debug.Log("swipe");
+        //Debug.Log("swipe");
         SetSwipeBehaviour();
         NewAttackDistance();
 
@@ -149,7 +161,7 @@ public class Andaroz : Enemy
                 // Locking rotation
                 if (aso.swipe_lockRotation) Invoke(nameof(LockRotation),aso.swipe_lockRotDelay);
 
-                Debug.Log("swiping");
+                //Debug.Log("swiping");
 
                 // play swipe animation
                 if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
@@ -185,7 +197,7 @@ public class Andaroz : Enemy
 
             yield return null;
         }
-        Debug.Log("swipe end");
+        //Debug.Log("swipe end");
 
         yield return new WaitForSeconds(aso.swipe_delayBeforeIdle);
         // unlock rotation
@@ -216,7 +228,7 @@ public class Andaroz : Enemy
             yield break;
         }
 
-        Debug.Log("slam");
+        //Debug.Log("slam");
         SetSlamBehaviour();
         NewAttackDistance();
 
@@ -237,7 +249,7 @@ public class Andaroz : Enemy
                 if (aso.slam_lockRotation) Invoke(nameof(LockRotation), aso.slam_lockRotDelay);
 
                 // play swipe animation
-                Debug.Log("slamming");
+                //Debug.Log("slamming");
 
                 if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
                 if (TorsoAnimator) TorsoAnimator.Play(SLAM_ATTACK);
@@ -275,7 +287,7 @@ public class Andaroz : Enemy
 
             yield return null;
         }
-        Debug.Log("slam end");
+        //Debug.Log("slam end");
         yield return new WaitForSeconds(aso.slam_delayBeforeIdle);
         SetDefaultBehaviour();
         NewAttackDistance();
@@ -306,7 +318,7 @@ public class Andaroz : Enemy
         }
 
         // homing missile attack
-        Debug.Log("missile");
+        //Debug.Log("missile");
 
 
         SetMissileBehaviour();
@@ -403,7 +415,7 @@ public class Andaroz : Enemy
         // GUN ATTACK
         // in this attack, Andaroz chases the player at walking speed.
         // he is always facing the player
-        Debug.Log("gun");
+        //Debug.Log("gun");
 
         SetGunBehaviour();
         NewAttackDistance();
@@ -470,6 +482,8 @@ public class Andaroz : Enemy
         Debug.Log("laser");
 
         rotationTime = 0;
+        lockRotation = false;
+        SetDefaultBehaviour();
         if (Vector3.Distance(transform.position, centerOfRoom) > 5f)
         {
             while (!LookAt(centerOfRoom)) yield return null;
@@ -504,31 +518,61 @@ public class Andaroz : Enemy
             }
         }
 
-
         // stop
         rb.velocity = Vector2.zero;
+
+        lockRotation = false;
+
+        // look at player
+        if (firstTime)
+        {
+            while (!LookAt(playerLoc.position)) yield return null;
+        }
+
+        lockRotation = true;
+
         //transform.position = centerOfRoom;
         SetLaserBehaviour();
-        
+
+        hp.isInvincible = true;
+
         // animation - arms out
         if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
-        if (TorsoAnimator) TorsoAnimator.Play(LASER_ATTACK);
+        if (!firstTime) TorsoAnimator.Play(LASER_ATTACK);
+        else TorsoAnimator.Play(LASER_ATTACK_LONG);
 
         yield return new WaitForSeconds(aso.delayParticlesToLaser);
 
         rightLaser.TurnOn();
         leftLaser.TurnOn();
 
-        CameraShake.instance.ShakeCamera(aso.laser_cameraShakeIntensity, aso.laser_cameraShakeTime);
-
-        for (float i = 0; i < aso.laser_duration; i+=Time.deltaTime)
+        if (!firstTime)
         {
-            ShootLaser();
-            yield return null;  
+
+            CameraShake.instance.ShakeCamera(aso.laser_cameraShakeIntensity, aso.laser_cameraShakeTime);
+            for (float i = 0; i < aso.laser_duration; i += Time.deltaTime)
+            {
+                ShootLaser();
+                yield return null;
+            }
+        }
+        else
+        {
+            completeStage2 = true;
+            firstTime = false;
+            CameraShake.instance.ShakeCamera(aso.laser_cameraShakeIntensity_firstTime, aso.laser_cameraShakeTime_firstTime);
+            for (float i = 0; i < aso.laser_duration_firstTime; i += Time.deltaTime)
+            {
+                ShootLaser();
+                yield return null;
+            }
         }
 
         rightLaser.TurnOff();
         leftLaser.TurnOff();
+        
+        hp.isInvincible = false;
+
         yield return new WaitForSeconds(aso.delayLaserEndToIdle);
 
         goToCenterOfRoom = false;
@@ -614,6 +658,7 @@ public class Andaroz : Enemy
     public override void OnDied()
     {
         StopAllCoroutines();
+        LockRotation();
         rb.velocity = Vector2.zero;
         StartCoroutine(nameof(EndBossFight));
     }
@@ -622,15 +667,54 @@ public class Andaroz : Enemy
     {
         Debug.Log("stage 2");
         stage2 = true;
+        pauseMovement = true;
+        rotationTime = 0;
+        hp.isInvincible = true;
+        StopAllCoroutines();
+
+        CameraShake.instance.LerpCameraSize(12f);
+        CameraShake.instance.SetCameraFollow(transform);
+
+        StartCoroutine(nameof(Stage2Routine));
     }
 
-    private IEnumerator StartBossFight()
+    private IEnumerator Stage2Routine()
     {
-        for (int i = 5; i > 0; i--)
-        {
-            Debug.Log(i);
-            yield return new WaitForSeconds(1);
-        }
+        yield return new WaitForSeconds(0.5f);
+
+        pauseMovement = true;
+        if (TorsoAnimator) TorsoAnimator.Play(IDLE);
+
+        // Look at player
+        rotationTime = 0;
+        while (!LookAt(playerLoc.position)) yield return null;
+
+        // pause player input for scripted event
+        LevelManager.instance.DisablePlayerInput();
+
+        Debug.Log("lets end this..");
+
+        yield return new WaitForSeconds(0.5f);
+
+        attackPattern.Clear();
+        pauseMovement = false;
+        firstTime = true;
+        StartCoroutine(nameof(PerformLaserAttack));
+
+        while(!completeStage2) yield return null;
+
+        CameraShake.instance.LerpCameraSize(15f);
+        CameraShake.instance.SetCameraFollow(Camera.main.transform);
+
+        CameraShake.instance.RestoreCamPos(new Vector2(0, Mathf.Clamp(playerLoc.position.y, LevelManager.instance.GetCurrentLargeRoomBounds().w, LevelManager.instance.GetCurrentLargeRoomBounds().z)));
+        yield return new WaitForSeconds(1f);
+
+        // resume player input
+        LevelManager.instance.EnablePlayerInput();
+    }
+
+    private void StartBossFight()
+    {
         fight = true;
         LevelManager.instance.EnablePlayerInput();
         LevelManager.instance.startBossBattle = true;

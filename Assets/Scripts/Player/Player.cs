@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public float moveForce = 15f;
     public float accelerationDrag = 1f;
     public float deccelerationDrag = 5f;
+    private bool rotationEnabled = true;
 
     [Space(10f)]
 
@@ -117,7 +118,7 @@ public class Player : MonoBehaviour
                 weapon.Use();
         }
 
-        if (controls.General.enabled) transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(MouseDirection, Vector3.up, Vector3.back));
+        if (rotationEnabled) transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(MouseDirection, Vector3.up, Vector3.back));
         Debug.DrawLine(transform.position, transform.position + (Vector3)MouseDirection * 1.5f, Color.red, Time.deltaTime);
     }
 
@@ -181,8 +182,6 @@ public class Player : MonoBehaviour
         };
 
         controls.General.Attack.started += ctx => { if (weapon) weapon.Use(); };
-
-        controls.General.Reload.started += ctx => { };
 
         controls.General.MovementAbility.started += ctx =>
         {
@@ -249,11 +248,14 @@ public class Player : MonoBehaviour
             
         };
         
-        controls.General.Ultimate.started += ctx => { };
-        
-        controls.General.WeaponAbility.started += ctx => 
+        controls.General.WeaponAbility.started += ctx =>
         {
-            if (weapon) weapon.UseAbility();
+            if (weapon)
+            {
+                controls.General.Attack.Disable();
+                weapon.UseAbility();
+                weapon.OnAbilityEnded = OnAbilityEnded;
+            }
         };
     }
 
@@ -321,5 +323,20 @@ public class Player : MonoBehaviour
         }
 
         if (rechargingDodge) rechargingDodge = false;
+    }
+
+    public void DisableRotation()
+    {
+        rotationEnabled = false;
+    }
+
+    public void EnableRotation()
+    {
+        rotationEnabled = true;
+    }
+
+    public void OnAbilityEnded()
+    {
+        controls.General.Attack.Enable();
     }
 }

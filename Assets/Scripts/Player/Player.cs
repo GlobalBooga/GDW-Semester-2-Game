@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
     [Space(10f)]
 
     [Header("Objects"), Space(5f)]
+    public Sprite defaultSprite;
     private Rigidbody2D rb;
     private CircleCollider2D cc;
     private HPComponent hpcomp;
@@ -45,6 +46,7 @@ public class Player : MonoBehaviour
     private GameObject pickupable;
     public Animator screenOverlayAnimator;
     public List<Slider> staminaBars;
+    private SpriteRenderer sr;
 
     // for animations
     public const string PLAYER_HIT_INDICATOR = "PlayerDamageTaken";
@@ -89,6 +91,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         cc = gameObject.GetComponent<CircleCollider2D>();
         hpcomp = gameObject.GetComponent<HPComponent>();
+        sr = GetComponent<SpriteRenderer>();
 
         if (hpcomp)
         {
@@ -338,5 +341,11 @@ public class Player : MonoBehaviour
     public void OnAbilityEnded()
     {
         controls.General.Attack.Enable();
+    }
+
+    public void SetSprite(Sprite sprite)
+    {
+        if (sprite) sr.sprite = sprite;
+        else sr.sprite = defaultSprite;
     }
 }

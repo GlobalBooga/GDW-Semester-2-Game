@@ -12,13 +12,14 @@ public class Weapon : MonoBehaviour
     public bool isAutoUse;
     public ParticleSystem pickupIndicator;
     public Image weaponAbilityCooldown;
-    public Image weaponImage;
+    public Sprite holdingSprite;
 
     public float abilityCooldown = 6f;
     internal bool canUseAbility = true;
 
     private CircleCollider2D cc;
     private Rigidbody2D rb;
+    public SpriteRenderer sr;
 
     private const float startDelay = 0.25f;
 
@@ -70,6 +71,8 @@ public class Weapon : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.AddForce(forwards * 2.5f, ForceMode2D.Impulse);
         Invoke(nameof(SetPickupable), startDelay);
+        
+        if (sr) sr.enabled = true;
     }
 
     public virtual void Pickup(Transform parentTo, Weapon weapon)
@@ -79,6 +82,10 @@ public class Weapon : MonoBehaviour
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         SetHeld();
+
+        if (sr) sr.enabled = false;
+        if (holdingSprite) LevelManager.instance.SetPlayerSprite(holdingSprite); 
+        else LevelManager.instance.SetPlayerSprite(null);
     }
 
     private void SetPickupable()

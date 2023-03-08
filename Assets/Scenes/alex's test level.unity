@@ -9255,7 +9255,7 @@ MonoBehaviour:
     gameplayObjectContainer: {fileID: 2057414077}
     playerEntrance: {fileID: 1881690474}
     enterDirection: {x: 0, y: 0}
-    skip: 1
+    skip: 0
   - manager: {fileID: 216215175}
     exit: {fileID: 330222506}
     enemyContainer: {fileID: 1664030503}
@@ -9276,7 +9276,7 @@ MonoBehaviour:
     gameplayObjectContainer: {fileID: 1561470880}
     playerEntrance: {fileID: 478604714}
     enterDirection: {x: 0, y: 0}
-    skip: 0
+    skip: 1
   startBossBattle: 0
 --- !u!1 &615583261 stripped
 GameObject:
@@ -13611,8 +13611,9 @@ MonoBehaviour:
   isAutoUse: 1
   pickupIndicator: {fileID: 284105571}
   weaponAbilityCooldown: {fileID: 0}
-  weaponImage: {fileID: 0}
+  holdingSprite: {fileID: 21300000, guid: d0ffebb9e4ee7a447ba8114ae8c4a377, type: 3}
   abilityCooldown: 6
+  sr: {fileID: 1325938063}
   alertsEnemies: 0
   bulletSpread: 0
   bulletSpeed: 20
@@ -16729,6 +16730,11 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!212 &1628079101 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4770469878312874258, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
+  m_PrefabInstance: {fileID: 4770469877497549900}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1637988192
 GameObject:
   m_ObjectHideFlags: 0
@@ -18447,6 +18453,11 @@ Transform:
   m_Father: {fileID: 1552509383}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1785877791 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6518958586212372876, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+  m_PrefabInstance: {fileID: 7048374858443768163}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1787306118 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7595987315075666721, guid: 3d2909e8a10a2694d94f964541e8f64c, type: 3}
@@ -18680,6 +18691,11 @@ Transform:
   m_Father: {fileID: 2060572449}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1810129154 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6518958586200505611, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+  m_PrefabInstance: {fileID: 7048374858443768163}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1814878756
 GameObject:
   m_ObjectHideFlags: 0
@@ -20974,17 +20990,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &2125876701 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4056811224185010530, guid: 3d2909e8a10a2694d94f964541e8f64c, type: 3}
-  m_PrefabInstance: {fileID: 4056811225019408095}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1724305298702439272
 Transform:
   m_ObjectHideFlags: 0
@@ -26224,8 +26229,9 @@ MonoBehaviour:
   isAutoUse: 1
   pickupIndicator: {fileID: 1724305299331911210}
   weaponAbilityCooldown: {fileID: 0}
-  weaponImage: {fileID: 0}
+  holdingSprite: {fileID: 0}
   abilityCooldown: 6
+  sr: {fileID: 0}
   rightPistol: {fileID: 0}
   leftPistol: {fileID: 0}
   cameraShakeIntensity: 1
@@ -26338,8 +26344,9 @@ MonoBehaviour:
   isAutoUse: 0
   pickupIndicator: {fileID: 0}
   weaponAbilityCooldown: {fileID: 0}
-  weaponImage: {fileID: 0}
+  holdingSprite: {fileID: 0}
   abilityCooldown: 6
+  sr: {fileID: 0}
   alertsEnemies: 0
   bulletSpread: 5
   bulletSpeed: 25
@@ -26417,8 +26424,9 @@ MonoBehaviour:
   isAutoUse: 0
   pickupIndicator: {fileID: 0}
   weaponAbilityCooldown: {fileID: 0}
-  weaponImage: {fileID: 0}
+  holdingSprite: {fileID: 0}
   abilityCooldown: 6
+  sr: {fileID: 0}
   alertsEnemies: 1
   bulletSpread: 5
   bulletSpeed: 25
@@ -27196,6 +27204,10 @@ PrefabInstance:
       value: 0.8003197
       objectReference: {fileID: 0}
     - target: {fileID: 3529289144573427137, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
+      propertyPath: sr
+      value: 
+      objectReference: {fileID: 1628079101}
+    - target: {fileID: 3529289144573427137, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
       propertyPath: damage
       value: 20
       objectReference: {fileID: 0}
@@ -27203,6 +27215,10 @@ PrefabInstance:
       propertyPath: abilityShots
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 3529289144573427137, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
+      propertyPath: holdingSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2767ffc6d4156714894a56884237f2fe, type: 3}
     - target: {fileID: 3529289144573427137, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
       propertyPath: cameraShakeTime
       value: 0.2
@@ -27271,6 +27287,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Andaroz's Blaster
       objectReference: {fileID: 0}
+    - target: {fileID: 4770469878461794893, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
 --- !u!1001 &7048374858443768163
@@ -27280,6 +27300,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 398716428294883033, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+      propertyPath: sr
+      value: 
+      objectReference: {fileID: 1785877791}
+    - target: {fileID: 4572028774593052922, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+      propertyPath: sr
+      value: 
+      objectReference: {fileID: 1810129154}
     - target: {fileID: 4572028774593052922, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
       propertyPath: alertsEnemies
       value: 1
@@ -27303,11 +27331,15 @@ PrefabInstance:
     - target: {fileID: 6518958586063181296, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
       propertyPath: weaponImage
       value: 
-      objectReference: {fileID: 2125876701}
+      objectReference: {fileID: 0}
     - target: {fileID: 6518958586063181296, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
       propertyPath: abilityShots
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 6518958586063181296, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+      propertyPath: holdingSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 920944b1bec9c624383caa1e57e67d78, type: 3}
     - target: {fileID: 6518958586063181296, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
       propertyPath: weaponAbilityCooldown
       value: 
@@ -27384,6 +27416,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 6518958586976302529, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+      propertyPath: m_Size.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6518958586976302529, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+      propertyPath: m_Size.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6518958586976302529, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 920944b1bec9c624383caa1e57e67d78, type: 3}
+    - target: {fileID: 6518958586976302529, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6518958586976302530, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
       propertyPath: sliderHpBar
       value: 
@@ -27404,6 +27452,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6518958586976302559, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
+      propertyPath: defaultSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 920944b1bec9c624383caa1e57e67d78, type: 3}
     - target: {fileID: 6518958586976302559, guid: 85c516b588c280f4c8efa99b8684f303, type: 3}
       propertyPath: screenOverlayAnimator
       value: 

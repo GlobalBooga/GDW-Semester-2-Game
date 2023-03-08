@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DualPistols_Single : Gun
 {
@@ -34,13 +35,13 @@ public class DualPistols_Single : Gun
         readyToUse = true;
     }
 
-    public override void Drop(Vector2 forwards)
+    public new void Drop()
     {
-        base.Drop(forwards);
+        if (sr) sr.enabled = true; 
     }
 
-    public override void Pickup(Transform parentTo, Weapon weapon)
+    public void Pickup()
     {
-        base.Pickup(parentTo, weapon);
+        if (sr) sr.enabled = false;
     }
 }

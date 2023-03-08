@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class LevelManager : MonoBehaviour
 {
@@ -220,5 +221,13 @@ public class LevelManager : MonoBehaviour
         BossRoomManager b = CurrentScene.manager as BossRoomManager;
         LargeRoomCameraController largeRoom = b.GetLargeRoomCameraController();
         return new Vector4 (largeRoom.rightBound, largeRoom.leftBound, largeRoom.upperBound, largeRoom.lowerBound);
+    }
+    
+
+    public void SetPlayerSprite(Sprite sprite)
+    {
+        if (!player) return;
+
+        player.SetSprite(sprite);
     }
 }

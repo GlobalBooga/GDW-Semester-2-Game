@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DualPistols : Weapon
 {
     public DualPistols_Single rightPistol;
     public DualPistols_Single leftPistol;
+    //public Image holdingSprite;
     public float cameraShakeIntensity;
     public float cameraShakeTime;
     private bool right = true;
@@ -41,15 +43,15 @@ public class DualPistols : Weapon
     public override void Drop(Vector2 forwards)
     {
         base.Drop(forwards);
-        rightPistol.gameObject.GetComponent<SpriteRenderer>().enabled = true;
-        leftPistol.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        rightPistol.Drop();
+        leftPistol.Drop();
     }
 
     public override void Pickup(Transform parentTo, Weapon weapon)
     {
         base.Pickup(parentTo, weapon);
-        rightPistol.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-        leftPistol.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        rightPistol.Pickup();
+        leftPistol.Pickup();
     }
 
     public override void UseAbility()

@@ -83,6 +83,7 @@ public class Gun : Weapon
     public override void Drop(Vector2 forwards)
     {
         base.Drop(forwards);
+
     }
 
     public override void Pickup(Transform parentTo, Weapon weapon)

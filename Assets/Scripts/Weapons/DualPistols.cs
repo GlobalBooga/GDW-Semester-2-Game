@@ -7,16 +7,12 @@ public class DualPistols : Weapon
 {
     public DualPistols_Single rightPistol;
     public DualPistols_Single leftPistol;
-    //public Image holdingSprite;
     public float cameraShakeIntensity;
     public float cameraShakeTime;
+    public float bulletSpread;
+    public float bulletSpeed;
     private bool right = true;
     public bool alertEnemies = true;
-
-    [Header("Weapon Ability"), Space(5f)]
-    public float newCooldown = 0.08f;
-    public float abilityShots;
-
 
     public override void Use()
     {
@@ -56,48 +52,20 @@ public class DualPistols : Weapon
 
     public override void UseAbility()
     {
-        if (!canUseAbility) return;
-        canUseAbility = false;
-        readyToUse = false;
-
-        LevelManager.instance.DisablePlayerRotation();
-
         base.UseAbility();
-
         UpdateGunProperties(rightPistol);
         UpdateGunProperties(leftPistol);
-
-        StartCoroutine(nameof(FireAbility));
     }
 
-    private IEnumerator FireAbility()
-    {
-        for (int i = 0; i < abilityShots; i++)
-        {
-            rightPistol.Fire();
-            leftPistol.Fire();
-            yield return new WaitForSeconds(newCooldown);
-        }
-
-        StartCoroutine(nameof(CooldownAbility));
-    }
-
-    public override void EndAbility()
-    {
-        base.EndAbility();
-        LevelManager.instance.EnablePlayerRotation();
-        readyToUse = true;
-    }
-
-    private void UpdateGunProperties(DualPistols_Single gun)
+    public virtual void UpdateGunProperties(DualPistols_Single gun)
     {
         gun.damage = damage;
         gun.cameraShakeIntensity = cameraShakeIntensity;
         gun.cameraShakeTime = cameraShakeTime;
         gun.cooldown = cooldown;
-        gun.newCooldown = newCooldown;
-        gun.abilityShots = abilityShots;
         gun.alertsEnemies = alertEnemies;
+        gun.bulletSpeed = bulletSpeed;
+        gun.bulletSpread = bulletSpread;
     }
 
 }

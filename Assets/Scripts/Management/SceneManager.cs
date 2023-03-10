@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SceneManager : MonoBehaviour
@@ -15,6 +14,7 @@ public class SceneManager : MonoBehaviour
     public SceneObjective sceneObjective;
     public float cameraSize;
     private int enemyCount;
+    public bool isIndoors;
 
     private LevelManager.Scene currentScene;
 
@@ -45,6 +45,8 @@ public class SceneManager : MonoBehaviour
             }
         }
 
+        if (isIndoors) LevelManager.instance.globalLight.intensity = 0f;
+        else LevelManager.instance.SetGlobalLightAccordingToWeather();
         Camera.main.transform.position = transform.position + Vector3.back * 10f;
         CameraShake.instance.SetCameraSize(cameraSize);
 

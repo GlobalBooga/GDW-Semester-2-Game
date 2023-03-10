@@ -12,31 +12,13 @@ public class AndarozBlaster : Gun
     private float temp;
     public ParticleSystem chargeParticles;
 
-    internal override void Awake()
-    {
-        base.Awake();
-    }
-
-    internal override void OnValidate()
-    {
-        base.OnValidate();
-    }
-
-    internal override void ResetUse()
-    {
-        base.ResetUse();
-    }
-
-    public override void Use()
-    {
-        base.Use();
-    }
 
     public override void UseAbility()
     {
         if (!canUseAbility) return;
         canUseAbility = false;
         readyToUse = false;
+        usingAbility = true;
 
         base.UseAbility();
 
@@ -59,6 +41,7 @@ public class AndarozBlaster : Gun
         
         for (int i = 0; i < abilityShots; i++)
         {
+            if (i == abilityShots - 1) usingAbility = false;
             Fire();
             yield return new WaitForSeconds(newCooldown);
         }

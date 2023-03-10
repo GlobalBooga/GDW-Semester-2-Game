@@ -5,6 +5,8 @@ public class BossBar : MonoBehaviour
 {
     public Animator animator;
     public Text textObj;
+    public Color lightTheme;
+    public Color darkTheme;
     [HideInInspector] public string bossName;
 
     private const string APPEAR = "BossHpBarAppear";
@@ -17,7 +19,7 @@ public class BossBar : MonoBehaviour
             animator.Play(APPEAR);
             Invoke(nameof(DisableAnimator), 2.1f);
         }
-        if (textObj) textObj.text = bossName; 
+        if (textObj) textObj.text = bossName;
     }
 
     private void Dissapear()
@@ -34,5 +36,15 @@ public class BossBar : MonoBehaviour
     private void DisableAnimator()
     {
         animator.enabled = false;
+    }
+
+    public void SetLightTheme()
+    {
+        textObj.color = lightTheme;
+    }
+
+    public void SetDarkTheme()
+    {
+        textObj.color = darkTheme;
     }
 }

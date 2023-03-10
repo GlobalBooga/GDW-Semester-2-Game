@@ -11,12 +11,14 @@ public class Weapon : MonoBehaviour
     [HideInInspector] public bool readyToUse = true;
     public bool isAutoUse;
     public ParticleSystem pickupIndicator;
-    public Image weaponAbilityCooldown;
     public Sprite holdingSprite;
+    public Sprite iconSprite;
 
     public float abilityCooldown = 6f;
     internal bool canUseAbility = true;
+    internal bool usingAbility;
 
+    private Image weaponAbilityCooldown;
     private CircleCollider2D cc;
     private Rigidbody2D rb;
     public SpriteRenderer sr;
@@ -25,10 +27,17 @@ public class Weapon : MonoBehaviour
 
     public Action OnAbilityEnded;
 
+
     internal virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<CircleCollider2D>();
+    }
+
+    private void Start()
+    {
+        weaponAbilityCooldown = Hud.instance.abilityCooldown;
+        
     }
 
     internal virtual void OnValidate()
@@ -51,12 +60,12 @@ public class Weapon : MonoBehaviour
 
     public virtual void EndAbility()
     {
-        if (OnAbilityEnded != null) OnAbilityEnded.Invoke();
+        
     }
 
     internal virtual void ResetUse()
     {
-        readyToUse = true;
+        if (!usingAbility) readyToUse = true;
     }
 
     public void Drop()
@@ -84,7 +93,8 @@ public class Weapon : MonoBehaviour
         SetHeld();
 
         if (sr) sr.enabled = false;
-        if (holdingSprite) LevelManager.instance.SetPlayerSprite(holdingSprite); 
+        if (holdingSprite) LevelManager.instance.SetPlayerSprite(holdingSprite);
+        if (iconSprite) Hud.instance.SetWeaponIconImage(iconSprite);
         else LevelManager.instance.SetPlayerSprite(null);
     }
 

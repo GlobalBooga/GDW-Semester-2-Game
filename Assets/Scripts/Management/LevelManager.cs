@@ -2,11 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class LevelManager : MonoBehaviour
 {
+    public enum Weather
+    {
+        day_clear,
+        day_snow,
+        night_clear,
+        night_snow,
+        max
+    }
+
     [Serializable]
     public struct Scene
     {
@@ -27,6 +36,15 @@ public class LevelManager : MonoBehaviour
     public Text hintText;
     public bool loop;
 
+    [Header("Weather Settings")]
+    public float dayClearBrightness = 1f;
+    public float daySnowBrightness = 0.8f;
+    public float nightClearBrightness = 0.25f;
+    public float nightSnowBrightness = 0.1f;
+    public Light2D globalLight;
+    public GameObject snowPrefab;
+    private Weather weather;
+
     [Header("Scene Transition")]
     public Animator screenOverlayAnimator;
     public float transitionTime = 0.2f;
@@ -41,6 +59,7 @@ public class LevelManager : MonoBehaviour
 
     private int currentSceneIndex = 0;
     private bool showingHint;
+    private bool isQuitting;
 
     private Player player;
 
@@ -50,6 +69,16 @@ public class LevelManager : MonoBehaviour
     {
         instance = this;
         player = GameObject.Find("Player").GetComponent<Player>();
+
+
+        weather = (Weather)UnityEngine.Random.Range(0, (int)Weather.max);
+        SetGlobalLightAccordingToWeather();
+        
+    }
+
+    private void OnApplicationQuit()
+    {
+        isQuitting = true;
     }
 
     private void Start()
@@ -223,11 +252,42 @@ public class LevelManager : MonoBehaviour
         return new Vector4 (largeRoom.rightBound, largeRoom.leftBound, largeRoom.upperBound, largeRoom.lowerBound);
     }
     
-
     public void SetPlayerSprite(Sprite sprite)
     {
         if (!player) return;
 
         player.SetSprite(sprite);
     }
+
+    public Player GetPlayer()
+    {
+        return player;
+    }
+
+    public void SetGlobalLightAccordingToWeather()
+    {
+        switch (weather)
+        {
+            case Weather.day_clear:
+                globalLight.intensity = dayClearBrightness;
+                if (snowPrefab) snowPrefab.SetActive(false);
+                break;
+            case Weather.day_snow:
+                globalLight.intensity = daySnowBrightness;
+                if (snowPrefab) snowPrefab.SetActive(true);
+                break;
+            case Weather.night_clear:
+                globalLight.intensity = nightClearBrightness;
+                if (snowPrefab) snowPrefab.SetActive(false);
+                break;
+            case Weather.night_snow:
+                globalLight.intensity = nightSnowBrightness;
+                if (snowPrefab) snowPrefab.SetActive(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public bool IsQuitting() => isQuitting;
 }

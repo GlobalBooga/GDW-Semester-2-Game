@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
@@ -47,6 +48,7 @@ public class Player : MonoBehaviour
     public Animator screenOverlayAnimator;
     public List<Slider> staminaBars;
     private SpriteRenderer sr;
+    public GameObject flashlight;
 
     // for animations
     public const string PLAYER_HIT_INDICATOR = "PlayerDamageTaken";
@@ -117,8 +119,7 @@ public class Player : MonoBehaviour
         // If we are still holding down attack button, continue attacking
         if (weapon)
         {
-            if (weapon.readyToUse && weapon.isAutoUse && controls.General.Attack.IsPressed()) 
-                weapon.Use();
+            if (weapon.readyToUse && weapon.isAutoUse && controls.General.Attack.IsPressed()) weapon.Use();
         }
 
         if (rotationEnabled) transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(MouseDirection, Vector3.up, Vector3.back));
@@ -255,9 +256,10 @@ public class Player : MonoBehaviour
         {
             if (weapon)
             {
-                controls.General.Attack.Disable();
-                weapon.UseAbility();
-                weapon.OnAbilityEnded = OnAbilityEnded;
+                if (weapon.canUseAbility)
+                {
+                    weapon.UseAbility();
+                }
             }
         };
     }
@@ -338,14 +340,19 @@ public class Player : MonoBehaviour
         rotationEnabled = true;
     }
 
-    public void OnAbilityEnded()
-    {
-        controls.General.Attack.Enable();
-    }
-
     public void SetSprite(Sprite sprite)
     {
         if (sprite) sr.sprite = sprite;
         else sr.sprite = defaultSprite;
+    }
+
+    public void FlashlightOn()
+    {
+        flashlight.SetActive(true);
+    }
+
+    public void FlashlightOff()
+    {
+        flashlight.SetActive(false);
     }
 }

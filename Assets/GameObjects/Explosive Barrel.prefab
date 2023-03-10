@@ -67,7 +67,9 @@ MonoBehaviour:
   explosionObj: {fileID: 9057497890785895117, guid: 348599aa93f197243b388ad1995cfde9, type: 3}
   whatTakesDamage:
     serializedVersion: 2
-    m_Bits: 197376
+    m_Bits: 1245952
+  playerDamageMultiplier: 1
+  specialObjectDamageMultiplier: 0
 --- !u!1 &4264694897828176043
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,7 +224,7 @@ MonoBehaviour:
   - {x: 0.08902359, y: -0.31508756, z: 0.00000023841858}
   m_ShapePathHash: -1465224361
   m_Mesh: {fileID: 0}
-  m_InstanceId: 157044
+  m_InstanceId: 221592
 --- !u!114 &3647431242455224827
 MonoBehaviour:
   m_ObjectHideFlags: 0

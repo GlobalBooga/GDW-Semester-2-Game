@@ -59,6 +59,10 @@ public class Enemy : MonoBehaviour
     internal HPComponent hp;
     private Vector3 originalPos;
     private Quaternion originalRot;
+    public Animator animator;
+
+
+
 
 
     public Vector3 PlayerDirection => playerLoc.position - transform.position;
@@ -85,7 +89,11 @@ public class Enemy : MonoBehaviour
         //cc = GetComponent<CircleCollider2D>();
         playerLoc = GameObject.Find("Player").transform;
         // set the ondied func
-        if (TryGetComponent(out hp)) hp.OnHPZero = OnDied;
+        if (TryGetComponent(out hp)) 
+        {
+            hp.OnHPZero = OnDied;
+            hp.OnHit.Add(Hit);
+        }
     }
 
     internal virtual void Start()
@@ -592,4 +600,9 @@ public class Enemy : MonoBehaviour
 
         isAlerted = false;
     }    
+
+    internal virtual void Hit()
+    {
+        
+    }
 }

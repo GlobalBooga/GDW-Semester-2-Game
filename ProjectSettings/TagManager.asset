@@ -26,7 +26,7 @@ TagManager:
   - Explosives
   - SpecialBreakableObject
   - IgnoreWalls
-  - 
+  - EnergyOrb
   - 
   - 
   - 
@@ -45,9 +45,12 @@ TagManager:
   - name: Background
     uniqueID: 2076337807
     locked: 0
-  - name: Walls
-    uniqueID: 2471996601
-    locked: 0
   - name: Outdoors
     uniqueID: 501292755
+    locked: 0
+  - name: IndoorWalls
+    uniqueID: 308344455
+    locked: 0
+  - name: Walls
+    uniqueID: 2471996601
     locked: 0

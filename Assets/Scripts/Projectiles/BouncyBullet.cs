@@ -8,6 +8,7 @@ public class BouncyBullet : Bullet
     int bounces;
 
     Vector2 lastVelocity;
+    Quaternion lastRotation;
 
     internal override void Awake()
     {
@@ -17,12 +18,25 @@ public class BouncyBullet : Bullet
 
     private void Update()
     {
+        if (lastVelocity.magnitude == 0f && rb.velocity.magnitude == 0f && lastRotation == transform.rotation)
+        {
+            Destroy(gameObject);
+        }
+
         lastVelocity = rb.velocity;
+        lastRotation = transform.rotation;
     }
 
     internal override void OnCollisionEnter2D(Collision2D collision)
     {
-        if (StaticHelpers.ApplyDamage(collision.gameObject, damage))
+        if (collision.gameObject.layer == StaticHelpers.SpecialBreakableObjectLayer)
+        {
+            if (specialObjectDamageMultiplier > 0)
+            {
+                StaticHelpers.ApplyDamage(collision.gameObject, damage * specialObjectDamageMultiplier);
+            }
+        }
+        else if (StaticHelpers.ApplyDamage(collision.gameObject, damage))
         {
             Destroy(gameObject);
         }

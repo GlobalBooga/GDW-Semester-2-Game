@@ -7,6 +7,7 @@ public class Melee : Enemy
 {
     
     private MeleeScriptableObject mso;
+    const string HIT_MELEE = "MeleeHit";
 
     internal override void Awake()
     {
@@ -55,5 +56,12 @@ public class Melee : Enemy
         ResetAttack();
     }
 
-    
+    internal override void Hit()
+    {
+        if (animator.isActiveAndEnabled)
+        {
+            animator.Play(HIT_MELEE);
+        }
+    }
+
 }

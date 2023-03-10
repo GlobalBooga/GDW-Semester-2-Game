@@ -24,16 +24,6 @@ public class Gun : Weapon
         time = Time.time - alertInterval;
     }
 
-    internal override void OnValidate()
-    {
-        base.OnValidate();
-    }
-
-    internal override void ResetUse()
-    {
-        base.ResetUse();
-    }
-
     public override void Use()
     {
         if (!readyToUse) return;
@@ -78,16 +68,4 @@ public class Gun : Weapon
         if (cooldown > 0) Invoke(nameof(ResetUse), cooldown);
         else ResetUse();
     }    
-
-
-    public override void Drop(Vector2 forwards)
-    {
-        base.Drop(forwards);
-
-    }
-
-    public override void Pickup(Transform parentTo, Weapon weapon)
-    {
-        base.Pickup(parentTo, weapon);
-    }
 }

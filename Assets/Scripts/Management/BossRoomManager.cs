@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BossRoomManager : SceneManager
 {
-    [SerializeField] private BossBar bossBarScript;
-    [SerializeField] private LargeRoomCameraController largeRoomCamera;
+    [SerializeField] internal BossBar bossBarScript;
+    [SerializeField] internal LargeRoomCameraController largeRoomCamera;
 
     private void Update()
     {
@@ -14,17 +14,12 @@ public class BossRoomManager : SceneManager
             LevelManager.instance.startBossBattle = false;
             if (bossBarScript)
             {
+                bossBarScript.SetDarkTheme();
                 bossBarScript.bossName = LevelManager.instance.bossTitle;
-
                 bossBarScript.gameObject.SetActive(true);
             }
             if (largeRoomCamera) largeRoomCamera.enabled = true;
         }
-    }
-
-    public override void SetScene()
-    {
-        base.SetScene();
     }
 
     public override void ForceSetScene()
@@ -46,16 +41,6 @@ public class BossRoomManager : SceneManager
         if (largeRoomCamera) largeRoomCamera.enabled = false;
 
         CameraShake.instance.restoreCamPosAfterShake = true;
-    }
-
-    public override void EnableScene()
-    {
-        base.EnableScene();
-    }
-
-    public override void ProgressKillAllEnemies()
-    {
-        base.ProgressKillAllEnemies();
     }
 
     public LargeRoomCameraController GetLargeRoomCameraController()

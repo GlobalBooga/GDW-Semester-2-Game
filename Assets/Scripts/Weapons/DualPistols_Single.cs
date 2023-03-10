@@ -9,26 +9,6 @@ public class DualPistols_Single : Gun
     [HideInInspector] public float abilityShots;
     private float temp;
 
-    internal override void Awake()
-    {
-        base.Awake();
-    }
-
-    internal override void OnValidate()
-    {
-        base.OnValidate();
-    }
-
-    internal override void ResetUse()
-    {
-        base.ResetUse();
-    }
-
-    public override void Use()
-    {
-        base.Use();
-    }
-
     public override void EndAbility()
     {
         base.EndAbility();

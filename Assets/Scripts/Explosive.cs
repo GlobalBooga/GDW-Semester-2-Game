@@ -9,8 +9,11 @@ public class Explosive : MonoBehaviour
     [SerializeField] float cameraShakeTime;
     [SerializeField] GameObject explosionObj;
     [SerializeField] LayerMask whatTakesDamage;
+    [SerializeField] float playerDamageMultiplier;
+    [SerializeField] float specialObjectDamageMultiplier;
 
     private bool isQuitting;
+    private bool cancelExplosion;
 
     void Start()
     {       
@@ -18,14 +21,9 @@ public class Explosive : MonoBehaviour
         blastRadius.enabled = false;
     }
 
-    private void OnApplicationQuit()
-    {
-        isQuitting = true;   
-    }
-
     private void OnDestroy()
     {
-        if (!isQuitting) Explode();
+        if (!LevelManager.instance.IsQuitting() && !cancelExplosion) Explode();
     }
 
     private void Explode()
@@ -36,19 +34,31 @@ public class Explosive : MonoBehaviour
         g.transform.parent = null;
         Destroy(g, 1f);
 
-        Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, blastRadius.radius, whatTakesDamage);
+        Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, blastRadius.radius * transform.parent.localScale.x, whatTakesDamage);
         if (cols.Length > 0)
         {
             foreach (var obj in cols)
             {
                 if (obj.gameObject.layer == StaticHelpers.SpecialBreakableObjectLayer)
-                    StaticHelpers.ApplyDamage(obj.gameObject, damage * 0.25f);
-                else if (obj.transform.parent)
-                    StaticHelpers.ApplyDamage(obj.transform.parent.gameObject, damage);
+                    StaticHelpers.ApplyDamage(obj.gameObject, damage * specialObjectDamageMultiplier);
+                else if (obj.gameObject.layer == StaticHelpers.PlayerLayer)
+                    StaticHelpers.ApplyDamage(obj.gameObject, damage * playerDamageMultiplier);
                 else
-                    StaticHelpers.ApplyDamage(obj.gameObject, damage);
+                {
+                    GameObject testObj = obj.gameObject;
+                    while (!StaticHelpers.ApplyDamage(testObj, damage))
+                    {
+                        if (!testObj.gameObject.transform.parent) break;
+                        testObj = testObj.transform.parent.gameObject;
+                    }
+                }
             }
         }
+    }
+
+    public void Disarm()
+    {
+        cancelExplosion = true;
     }
 }
 

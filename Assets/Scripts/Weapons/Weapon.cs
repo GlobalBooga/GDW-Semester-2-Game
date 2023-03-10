@@ -1,28 +1,43 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
     [Header("Properties"), Space(5f)]
     public float damage;
     public float cooldown;
-    public float range;
     [HideInInspector] public bool readyToUse = true;
     public bool isAutoUse;
     public ParticleSystem pickupIndicator;
+    public Sprite holdingSprite;
+    public Sprite iconSprite;
 
+    public float abilityCooldown = 6f;
+    internal bool canUseAbility = true;
+    internal bool usingAbility;
+
+    private Image weaponAbilityCooldown;
     private CircleCollider2D cc;
     private Rigidbody2D rb;
+    public SpriteRenderer sr;
 
     private const float startDelay = 0.25f;
+
+    public Action OnAbilityEnded;
+
 
     internal virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<CircleCollider2D>();
+    }
 
-
+    private void Start()
+    {
+        weaponAbilityCooldown = Hud.instance.abilityCooldown;
+        
     }
 
     internal virtual void OnValidate()
@@ -38,9 +53,19 @@ public class Weapon : MonoBehaviour
 
     }
 
+    public virtual void UseAbility()
+    {
+        if (weaponAbilityCooldown) weaponAbilityCooldown.fillAmount = 0f;
+    }
+
+    public virtual void EndAbility()
+    {
+        
+    }
+
     internal virtual void ResetUse()
     {
-        readyToUse = true;
+        if (!usingAbility) readyToUse = true;
     }
 
     public void Drop()
@@ -55,6 +80,8 @@ public class Weapon : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.AddForce(forwards * 2.5f, ForceMode2D.Impulse);
         Invoke(nameof(SetPickupable), startDelay);
+        
+        if (sr) sr.enabled = true;
     }
 
     public virtual void Pickup(Transform parentTo, Weapon weapon)
@@ -64,6 +91,11 @@ public class Weapon : MonoBehaviour
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         SetHeld();
+
+        if (sr) sr.enabled = false;
+        if (holdingSprite) LevelManager.instance.SetPlayerSprite(holdingSprite);
+        if (iconSprite) Hud.instance.SetWeaponIconImage(iconSprite);
+        else LevelManager.instance.SetPlayerSprite(null);
     }
 
     private void SetPickupable()
@@ -76,5 +108,27 @@ public class Weapon : MonoBehaviour
     {
         rb.simulated = cc.enabled = false;
         pickupIndicator.gameObject.SetActive(false);
+    }
+
+    public IEnumerator CooldownAbility()
+    {
+        EndAbility();
+
+        // cooldown
+        float time = 0f;
+        if (weaponAbilityCooldown)
+        {
+            while (time < abilityCooldown)
+            {
+                if (time > 0) weaponAbilityCooldown.fillAmount = time / abilityCooldown;
+                time += Time.deltaTime;
+                yield return null;
+            }
+        }
+        else yield return new WaitForSeconds(abilityCooldown);
+
+
+        // end of cooldown
+        canUseAbility = true;
     }
 }

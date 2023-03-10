@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7527923035042227798}
   - component: {fileID: 7527923035042227792}
   - component: {fileID: 7527923035042227793}
+  - component: {fileID: 4612466656649084921}
+  - component: {fileID: 615583265}
   m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
@@ -71,8 +73,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 2076337807
-  m_SortingLayer: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 712696460, guid: 2eeb006bbcc294a48ae1fcacf2675df4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -101,6 +103,61 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.2}
   serializedVersion: 2
   m_Radius: 0.65
+--- !u!95 &4612466656649084921
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7527923035042227799}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 06f7439dbaf2e7745a1fcacd370cf09b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &615583265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7527923035042227799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 000000008f66c27bb9ac5793d3984995
+  m_ShapePath:
+  - {x: -0.6930847, y: -0.21346855, z: 0}
+  - {x: -0.71437836, y: 0.084992886, z: 0}
+  - {x: -0.49375916, y: 0.22117424, z: 0}
+  - {x: -0.21797943, y: 0.2815838, z: 0}
+  - {x: 0.19947815, y: 0.2808447, z: 0}
+  - {x: 0.4585228, y: 0.20747232, z: 0}
+  - {x: 0.6229477, y: 0.08415556, z: 0}
+  - {x: 0.5985718, y: -0.20075893, z: 0}
+  - {x: 0.42024994, y: -0.3076043, z: 0}
+  - {x: 0.12282562, y: -0.41596413, z: 0}
+  - {x: -0.19595718, y: -0.39656305, z: 0}
+  - {x: -0.459507, y: -0.32005072, z: 0}
+  m_ShapePathHash: -1585464843
+  m_Mesh: {fileID: 0}
+  m_InstanceId: 29258
 --- !u!1 &7527923035675034280
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,7 +184,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7527923035675034280}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.685215, y: -11.512804, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -153,7 +210,7 @@ Rigidbody2D:
   m_LinearDrag: 1
   m_AngularDrag: 0.05
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bc4cdd13509011b4fb8f7cac22c0ecf4, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -170,6 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 210c911c80c096542a7c4b0b86970cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sliderHpBar: {fileID: 0}
   hpBars:
   - {fileID: 3212986208244338667}
   - {fileID: 5278304134304959627}
@@ -178,6 +236,7 @@ MonoBehaviour:
   fullHpColor: {r: 0.208916, g: 0.6792453, b: 0.1762193, a: 1}
   midHpColor: {r: 0.735849, g: 0.7018685, b: 0.1423104, a: 1}
   lowHpColor: {r: 1, g: 0, b: 0, a: 1}
+  postDamageInvincibilityTime: 0
   isInvincible: 0
   maxHealth: 100
 --- !u!114 &7527923035675034278
@@ -192,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33d8912e44424a4eb6b92438f303c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebugStuff: 0
+  showDebugStuff: 1
   showForwards: 1
   eso: {fileID: 11400000, guid: 7be67767ee55e7040afdb05151d34fe7, type: 2}
   body: {fileID: 7527923035042227798}

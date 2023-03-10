@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(HPComponent))]
@@ -13,16 +14,14 @@ public class Enemy : MonoBehaviour
     internal bool lockedOnPlayer;
     internal float lookSpeed = 0.01f;
     internal float rotationTime;
-    private float fov;
-    private bool foundPlayer;
-    private Queue<Vector3> playerPoses = new();
-    private Queue<Vector3> playerPosesHidden = new();
+    internal float fov;
+    internal bool foundPlayer;
+    internal Queue<Vector3> playerPoses = new();
     private float timeSinceLastPos = 0;
-    private float totalTravelDist;
-    private float lerpStartTime;
-    private Vector3 lerpStart;
-    private Vector3 nextPos;
-    //private bool saveOneMorePos;
+    internal float totalTravelDist;
+    internal float lerpStartTime;
+    internal Vector3 lerpStart;
+    internal Vector3 nextPos;
     private int frames;
     private int detectionRate = 50; // the average
     private bool isInspecting;
@@ -30,9 +29,16 @@ public class Enemy : MonoBehaviour
     private Vector3 sightMax;
     private Vector3 sightMin;
 
+    internal float retreatSpeed;
+    internal float attackMovementSpeed;
+    internal float runSpeed;
+    internal float walkSpeed;
     private float moveSpeed;
-   
-    private float attackDistance;
+
+    internal float minAttackDistance;
+    internal float maxAttackDistance;
+    internal float comfortableAttackDist;
+    internal float attackDistance;
     internal bool canAttack = false; // are we in the right position to attack
     internal bool attackReady = true; // cooldowns?
     internal bool isAttacking;
@@ -48,16 +54,127 @@ public class Enemy : MonoBehaviour
     public Transform body;
 
     private SpriteRenderer sr;
-    private Rigidbody2D rb;
+    internal Rigidbody2D rb;
     internal Transform playerLoc;
     internal HPComponent hp;
     private Vector3 originalPos;
     private Quaternion originalRot;
+    public Animator animator;
+
+
+
 
 
     public Vector3 PlayerDirection => playerLoc.position - transform.position;
     public float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
 
+
+    internal virtual void OnDisable()
+    {
+        transform.position = originalPos;
+        body.rotation = originalRot;
+        foundPlayer = false;
+        lockedOnPlayer = false;
+        canAttack = false;
+        ResetAttack();
+        SetDefaultBehaviour();
+        playerPoses.Clear();
+        //Debug.Log("resetting");
+
+    }
+
+    internal virtual void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        //cc = GetComponent<CircleCollider2D>();
+        playerLoc = GameObject.Find("Player").transform;
+        // set the ondied func
+        if (TryGetComponent(out hp)) 
+        {
+            hp.OnHPZero = OnDied;
+            hp.OnHit.Add(Hit);
+        }
+    }
+
+    internal virtual void Start()
+    {
+        originalPos = transform.position;
+        originalRot = body.rotation;
+
+        SetDefaultBehaviour();
+
+        NewDetectionRate();
+        NewAttackDistance();
+    }
+
+    internal void SetDefaultBehaviour()
+    {
+        rb.drag = eso.defaultDeccelerationDrag;
+        fov = eso.normalFOV;
+        comfortableAttackDist = eso.defaultComfortableAttackDist;
+        minAttackDistance = eso.defaultMinAttackDistance;
+        maxAttackDistance = eso.defaultMaxAttackDistance;
+        runSpeed = eso.defaultRunSpeed;
+        walkSpeed = eso.defualtWalkSpeed;
+        retreatSpeed = eso.defaultRetreatSpeed;
+        attackMovementSpeed = eso.defaultAttackMovementSpeed;
+        eso.chasePlayer = true;
+        lockRotation = false;
+    }
+
+    internal virtual void Update()
+    {
+        UpdateDetection();
+
+        // base attack logic
+        if (canAttack && attackReady)
+        {
+            attackReady = false;
+            Attack();
+        }
+    }
+
+    internal void UpdateDetection()
+    {
+        if (showDebugStuff) CalculateEnemyView();
+        if (showForwards) Debug.DrawLine(transform.position, transform.position + body.up, Color.red, Time.deltaTime);
+
+        HandleSight();
+
+        if (eso.chasePlayer)
+        {
+            RecordPlayerPosition();
+
+            // If we are chasing the player, look at the last known point
+            if (!eso.canSeeThroughWalls && !foundPlayer && !isAlerted && playerPoses.Count > 0f) LookAt(playerPoses.Last());
+        }
+    }
+
+    internal virtual void FixedUpdate()
+    {
+        // Standard chase player
+        if (eso.chasePlayer && lockedOnPlayer && PlayerDistance > attackDistance)
+        {
+            ChasePlayer();
+        }
+        // if player is getting too close
+        else if (lockedOnPlayer && PlayerDistance < comfortableAttackDist)
+        {
+            Retreat();   
+        }
+        // if we are in the comfortable attack zone
+        // or if we just havent discovered the player yet
+        else
+        {
+            Stay();
+        }
+
+        // if we lost the player and is following their tacks
+        if (eso.chasePlayer && !foundPlayer && playerPoses.Count > 0f)
+        {
+            SearchForPlayer();
+        }
+    }
 
     private void QueuePlayerPos()
     {
@@ -74,148 +191,90 @@ public class Enemy : MonoBehaviour
         playerPoses.Enqueue(playerLoc.position);
     }
 
-    internal virtual void OnDisable()
+    internal virtual void RecordPlayerPosition()
     {
-        transform.position = originalPos;
-        body.rotation = originalRot;
-        foundPlayer = false;
-        lockedOnPlayer = false;
-        canAttack = false;
-        ResetAttack();
-        fov = eso.normalFOV;
-        playerPoses.Clear();
-        //Debug.Log("resetting");
-
-    }
-
-    internal virtual void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        //cc = GetComponent<CircleCollider2D>();
-        playerLoc = GameObject.Find("Player").transform;
-        // set the ondied func
-        if (TryGetComponent(out hp)) hp.OnHPZero = OnDied;
-        originalPos = transform.position;
-        originalRot = body.rotation;
-    }
-
-    internal virtual void Start()
-    {
-        NewDetectionRate();
-        NewAttackDistance();
-        moveSpeed = eso.walkSpeed;
-        rb.drag = eso.deccelerationDrag;
-        fov = eso.normalFOV;
-    }
-
-    internal virtual void Update()
-    {
-        if (showDebugStuff) CalculateEnemyView();
-        if (showForwards) Debug.DrawLine(transform.position,transform.position + body.up, Color.red, Time.deltaTime);
-
-        HandleSight();
-
-
-        if (eso.chasePlayer)
+        // Player position recorder
+        if (timeSinceLastPos >= eso.secondsBetweenPoses)
         {
-            // Player position recorder
-            if (timeSinceLastPos >= eso.secondsBetweenPoses)
+            timeSinceLastPos = 0f;
+            QueuePlayerPos();
+        }
+    }
+
+    internal void ChasePlayer()
+    {
+        moveSpeed = isAttacking ? attackMovementSpeed : runSpeed;
+        bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > moveSpeed;
+        if (!isTooFast) Move();
+
+        // dont attack if chasing - calls once at a time
+        if (canAttack)
+        {
+            canAttack = false;
+            NewAttackDistance();
+        }
+    }
+
+    internal void Retreat()
+    {
+        moveSpeed = -retreatSpeed;
+        bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > Mathf.Abs(moveSpeed);
+        if (!isTooFast) Move();
+    }
+
+    internal void Stay()
+    {
+        rb.drag = eso.defaultDeccelerationDrag;
+
+        if (lockedOnPlayer && !canAttack)
+        {
+            canAttack = true;
+        }
+    }
+
+    internal void SearchForPlayer()
+    {
+        float distCovered = (Time.time - lerpStartTime) * runSpeed;
+        if (totalTravelDist > 0) transform.position = Vector3.Lerp(lerpStart, nextPos, eso.test.Evaluate(distCovered / totalTravelDist));
+
+        if (Vector3.Distance(transform.position, nextPos) < 0.05f)
+        {
+            eso.test = AnimationCurve.Linear(0, 0, 1, 1);
+            // dispose of the last pos
+            playerPoses.Dequeue();
+
+            // check for the next one
+            if (playerPoses.TryPeek(out nextPos))
             {
-                timeSinceLastPos = 0f;
-                QueuePlayerPos();
+                totalTravelDist = Vector3.Distance(transform.position, nextPos);
+                lerpStartTime = Time.time;
+                lerpStart = transform.position;
+                rotationTime = 0f;
             }
 
-            // If we are chasing the player, look at the last known point
-            if (!eso.canSeeThroughWalls && !foundPlayer && !isAlerted && playerPoses.Count > 0f) LookAt(playerPoses.Last());
-        }
-
-        // base attack logic
-        if (canAttack && attackReady)
-        {
-            attackReady = false;
-            Attack();
-        }
-    }
-
-    internal virtual void FixedUpdate()
-    {
-        // Standard chase player
-        if (eso.chasePlayer && lockedOnPlayer && PlayerDistance > attackDistance)
-        {
-            moveSpeed = isAttacking ? eso.attackMovementSpeed : eso.runSpeed;
-            bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > moveSpeed;
-            if (!isTooFast) Move();
-
-            // dont attack if chasing - calls once at a time
-            if (canAttack)
+            // when we arrive at the last pos
+            else if (eso.viewDistance > 0)
             {
-                canAttack = false;
-                NewAttackDistance();
-            }
-        }
-        // if player is getting too close
-        else if (lockedOnPlayer && PlayerDistance < eso.comfortableAttackDist)
-        {
-            moveSpeed = -eso.retreatSpeed;
-            bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > Mathf.Abs(moveSpeed);
-            if (!isTooFast) Move();
-        }
-        // if we are in the comfortable attack zone
-        // or if we just havent discovered the player yet
-        else
-        {
-            rb.drag = eso.deccelerationDrag;
-
-            if (lockedOnPlayer && !canAttack)
-            {
-                canAttack = true;
-            }
-        }
-
-
-        // if we lost the player and is following their tacks
-        if (eso.chasePlayer && !foundPlayer && playerPoses.Count > 0f)
-        {
-            float distCovered = (Time.time - lerpStartTime) * eso.runSpeed;
-            transform.position = Vector3.Lerp(lerpStart, nextPos, eso.test.Evaluate(distCovered / totalTravelDist));
-
-            if (Vector3.Distance(transform.position, nextPos) < 0.05f)
-            {
-                eso.test = AnimationCurve.Linear(0,0,1,1);
-                // dispose of the last pos
-                playerPoses.Dequeue();
-
-                // check for the next one
-                if (playerPoses.TryPeek(out nextPos))
-                {
-                    totalTravelDist = Vector3.Distance(transform.position, nextPos);
-                    lerpStartTime = Time.time;
-                    lerpStart = transform.position;
-                    rotationTime = 0f;
-                }
-                
-                // when we arrive at the last pos
-                else
-                {
-                    StartCoroutine(nameof(InspectSurroundings));
-                }
+                StartCoroutine(nameof(InspectSurroundings));
             }
         }
     }
 
-    internal virtual void HandleSight()
+    internal void HandleSight()
     {
-        // Perform detection in intervals for performance
+        if (eso.viewDistance == 0) return;
+
+        // ***********************  vv  *****************
+        // Perform detection in INTERVALS for performance
         if (frames >= detectionRate)
         {
             frames = 0;
 
             // if the player is too close and we havent see them yet - called once
-            if (PlayerDistance <= eso.instantDetectDist && !lockedOnPlayer)
+            if (!lockedOnPlayer && CanSeePlayer(360f, eso.instantDetectDist))
             {
                 lockedOnPlayer = true;
                 rotationTime = 0f;
-                Debug.Log("too close");
             }
 
             // basic can see player check
@@ -224,116 +283,23 @@ public class Enemy : MonoBehaviour
                 // if its the first time we see the player - called once
                 if (!foundPlayer)
                 {
-                    // Immediately store the player's position
-                    if (eso.chasePlayer)
-                    {
-                        playerPoses.Clear();
-                        QueuePlayerPos();
-                    }
-                    
-                    foundPlayer = true;
-                    rotationTime = 0f;
-                    //fov = normalFOV;
-
-                    Invoke(nameof(OnPlayerDiscovered), eso.reactionTime);
-                    Debug.Log("found player");
+                    OnPlayerFound();
                 }
             }
             // if we can't see the player anymore - called once
             else if (foundPlayer)
             {
-                // cancel any ongoing inspeciton
-                if (isInspecting) StopAllCoroutines();
-
-                // increase the detection rate
-                if (eso.chasePlayer) NewDetectionRate(1/eso.searchDetectionRateMult);
-
-                // for children to add their functionalities
                 OnLostSightOfPlayer();
 
-                eso.test = AnimationCurve.EaseInOut(0,0,1,1);
-
-                Debug.Log("lost player");
-                // Change some detection related properties
-                foundPlayer = false;
-
-                if (!eso.canSeeThroughWalls) lockedOnPlayer = false;
-                rotationTime = 0f;
-                moveSpeed = eso.walkSpeed;
-                if (eso.chasePlayer) fov = eso.searchFOV;
-                
                 if (playerPoses.Count > 0 && eso.chasePlayer)
                 {
-                    // finding the quickest route
-                    Queue<Vector3> tempQ = new();
-                    Stack<Vector3> tempStk = new();
-                    Vector3 shortcut = Vector3.zero;
-
-                    // Scan our recorded player poses from first to last
-                    foreach (Vector3 pos in playerPoses.Reverse())
-                    {
-                        bool clear = false;
-                        RaycastHit2D hit = Physics2D.Raycast(transform.position, (pos - transform.position).normalized, eso.viewDistance, eso.whatIsWall);
-                        if (showDebugStuff) Debug.DrawLine(transform.position, pos, Color.blue, 2f);                                                                        // <--- debug.drawline
-                        if (hit)
-                        {
-                            float hitDist = Vector2.Distance(hit.point, (Vector2)transform.position);
-                            float posDist = Vector3.Distance(pos, transform.position);
-
-                            // check if we have a clear path to the position we are checking
-                            if (hitDist > posDist) clear = true;
-                            else clear = false;
-                        }
-
-                        if (clear)
-                        {
-                            shortcut = pos;
-                            break;
-                        }
-                        else
-                        {
-                            // if we can't get to it
-                            tempStk.Push(pos);
-                        }
-                    }
-
-                    // check if we got stuff
-                    if (shortcut != Vector3.zero)
-                    {
-                        tempQ.Enqueue(shortcut);
-                        if (showDebugStuff) Debug.DrawLine(transform.position, shortcut, Color.yellow, 5f);                                                                     // <--- debug.drawline
-
-                        int len = tempStk.Count;
-                        for (int i = 0; i < len; i++)
-                        {
-                            tempQ.Enqueue(tempStk.Pop());
-                        }
-                        if (tempQ.Count > 0) playerPoses = tempQ;
-                    }
-
-                    //saveOneMorePos = true;
-
-                    nextPos = playerPoses.Peek();
-
-                    // set the next position to go to
-                    totalTravelDist = Vector3.Distance(transform.position, nextPos);
-                    lerpStartTime = Time.time;
-                    lerpStart = transform.position;
-                    rotationTime = 0f;
-
-                    // for debugging
-                    if (showDebugStuff)
-                    {
-                        foreach (Vector3 item in playerPoses)
-                        {
-                            DrawDebugCross(item);
-                        }
-                    }
+                    StartPlayerSearch();
                 }
             }
         }
 
-        // if we are already looking at player - called every frame
+        // *******************************************  vv  *******
+        // if we are already looking at player - called EVERY FRAME
         if (lockedOnPlayer)
         {
             //if (LookAt(playerLoc.position)) rotationTime = 0f;
@@ -344,13 +310,17 @@ public class Enemy : MonoBehaviour
         frames++;
     }
 
-    // lerped rotation for smoothness. Must be called from Update(). Returns true when completed
-    internal virtual bool LookAt(Vector3 point) 
+    /// <summary>
+    /// lerped rotation for smoothness. Must be called from Update(). 
+    /// </summary>
+    /// <param name="point">the point to rotate towards</param>
+    /// <returns>True when rotation is completed</returns>
+    internal virtual bool LookAt(Vector2 point) 
     {
         if (lockRotation) return true;
 
         rotationTime++;
-        Vector3 thing = point - transform.position;
+        Vector2 thing = point - (Vector2)transform.position;
         Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(thing, Vector3.up, Vector3.back));
         body.rotation = Quaternion.Lerp(body.rotation, newQuat, eso.rotationCurve.Evaluate(rotationTime * lookSpeed));
         return rotationTime * lookSpeed > 1f;
@@ -383,19 +353,129 @@ public class Enemy : MonoBehaviour
         isInspecting = false;
     }
 
-    internal virtual void OnPlayerDiscovered()
+    internal virtual void OnPlayerFound()
+    {
+        // Immediately store the player's position
+        if (eso.chasePlayer)
+        {
+            playerPoses.Clear();
+            QueuePlayerPos();
+        }
+
+        foundPlayer = true;
+        rotationTime = 0f;
+        //fov = normalFOV;
+
+        Invoke(nameof(OnPlayerFoundDelayed), eso.defaultReactionTime);
+        //Debug.Log("found player");
+    }
+
+    /// <summary>
+    /// OnPlayerFound after reaction time
+    /// </summary>
+    internal virtual void OnPlayerFoundDelayed()
     {
         if (!foundPlayer) return;
 
         // lock on to player
         lockedOnPlayer = true;
-        moveSpeed = eso.runSpeed;
+        moveSpeed = eso.defaultRunSpeed;
         NewAttackDistance();
     }
 
     internal virtual void OnLostSightOfPlayer()
     {
+        // cancel any ongoing inspeciton
+        if (isInspecting) StopAllCoroutines();
+
+        // increase the detection rate
+        if (eso.chasePlayer) NewDetectionRate(1 / eso.searchDetectionRateMult);
+
+        eso.test = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+        //Debug.Log("lost player");
+
+        // Change some detection related properties
+        foundPlayer = false;
+        if (!eso.canSeeThroughWalls) lockedOnPlayer = false;
+        rotationTime = 0f;
+        moveSpeed = walkSpeed;
+        if (eso.chasePlayer) fov = eso.searchFOV;
+
+        // prevent attacking
         canAttack = false;
+    }
+
+    /// <summary>
+    /// Start following the stored player positions
+    /// </summary>
+    internal virtual void StartPlayerSearch()
+    {
+        // finding the quickest route
+        Queue<Vector3> tempQ = new();
+        Stack<Vector3> tempStk = new();
+        Vector3 shortcut = Vector3.zero;
+
+        // Scan our recorded player poses from first to last
+        foreach (Vector3 pos in playerPoses.Reverse())
+        {
+            bool clear = false;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, (pos - transform.position).normalized, eso.viewDistance, eso.whatIsWall);
+            if (showDebugStuff) Debug.DrawLine(transform.position, pos, Color.blue, 2f);                                                                        // <--- debug.drawline
+            if (hit)
+            {
+                float hitDist = Vector2.Distance(hit.point, (Vector2)transform.position);
+                float posDist = Vector3.Distance(pos, transform.position);
+
+                // check if we have a clear path to the position we are checking
+                if (hitDist > posDist) clear = true;
+                else clear = false;
+            }
+
+            if (clear)
+            {
+                shortcut = pos;
+                break;
+            }
+            else
+            {
+                // if we can't get to it
+                tempStk.Push(pos);
+            }
+        }
+
+        // check if we got stuff
+        if (shortcut != Vector3.zero)
+        {
+            tempQ.Enqueue(shortcut);
+            if (showDebugStuff) Debug.DrawLine(transform.position, shortcut, Color.yellow, 5f);                                                                     // <--- debug.drawline
+
+            int len = tempStk.Count;
+            for (int i = 0; i < len; i++)
+            {
+                tempQ.Enqueue(tempStk.Pop());
+            }
+            if (tempQ.Count > 0) playerPoses = tempQ;
+        }
+
+        //saveOneMorePos = true;
+
+        nextPos = playerPoses.Peek();
+
+        // set the next position to go to
+        totalTravelDist = Vector3.Distance(transform.position, nextPos);
+        lerpStartTime = Time.time;
+        lerpStart = transform.position;
+        rotationTime = 0f;
+
+        // for debugging
+        if (showDebugStuff)
+        {
+            foreach (Vector3 item in playerPoses)
+            {
+                DrawDebugCross(item);
+            }
+        }
     }
 
     internal virtual void NewDetectionRate(float multiplier = 1f)
@@ -403,11 +483,17 @@ public class Enemy : MonoBehaviour
         detectionRate = Mathf.RoundToInt(Random.Range(detectionRate + 10, detectionRate - 10) * multiplier);
     }
 
+    /// <summary>
+    /// Set the attack distance to a random new variable between the max and min attack distance
+    /// </summary>
     internal virtual void NewAttackDistance()
     {
-        attackDistance = Random.Range(eso.minAttackDistance, eso.maxAttackDistance);
+        attackDistance = Random.Range(minAttackDistance, maxAttackDistance);
     }
 
+    /// <summary>
+    /// For debug purposes. Draws lines that show the enemy's view
+    /// </summary>
     internal virtual void CalculateEnemyView()
     {
         // "cone" angle debug lines
@@ -419,19 +505,22 @@ public class Enemy : MonoBehaviour
         sightMin = new Vector2((Mathf.Cos(rads2) * x) - (Mathf.Sin(rads2) * y), (Mathf.Sin(rads2) * x) + (Mathf.Cos(rads2) * y));
 
         Debug.DrawLine(transform.position, transform.position + sightMax * eso.viewDistance, Color.red, Time.deltaTime);
-
         Debug.DrawLine(transform.position, transform.position + body.up, Color.red, Time.deltaTime);
-        
         Debug.DrawLine(transform.position, transform.position + sightMin * eso.viewDistance, Color.red, Time.deltaTime);
     }
 
     public bool CanSeePlayer()
     {
-        if (PlayerDistance <= eso.viewDistance)
+        return CanSeePlayer(fov, eso.viewDistance);
+    }
+
+    public bool CanSeePlayer(float scanAngle, float scanDist)
+    {
+        if (PlayerDistance <= scanDist)
         {
-            if (Vector3.Angle(body.up, playerLoc.position - transform.position) <= fov * 0.5f)
+            if (Vector3.Angle(body.up, playerLoc.position - transform.position) <= scanAngle * 0.5f)
             {
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, (playerLoc.position - transform.position).normalized, eso.viewDistance, eso.whatBlocksSight);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, (playerLoc.position - transform.position).normalized, scanDist, eso.whatBlocksSight);
                 if (hit)
                 {
                     if (hit.transform.gameObject.name == "Player")
@@ -447,11 +536,24 @@ public class Enemy : MonoBehaviour
 
     internal virtual void Move()
     {
-        rb.drag = eso.accelerationDrag;
-        if (moveSpeed > 0) rb.AddForce(body.up * eso.moveForce * rb.mass, ForceMode2D.Force);
-        else rb.AddForce(body.up * -eso.moveForce * rb.mass, ForceMode2D.Force);
+        rb.drag = eso.defaultAccelerationDrag;
+        if (moveSpeed > 0)
+        {
+            Vector2 currentdir = rb.velocity;
+            Vector2 desireddir = body.up;
+            Vector3 correction = desireddir - currentdir;
+            rb.AddForce((body.up * eso.defaultMoveForce * rb.mass) + (correction * eso.snappyness), ForceMode2D.Force);
+            Debug.DrawLine(body.position, body.position + (body.up * eso.defaultMoveForce * rb.mass) + (correction * eso.snappyness), Color.green, Time.fixedDeltaTime);
+        }
+        else rb.AddForce(body.up * -eso.defaultMoveForce * rb.mass, ForceMode2D.Force);
     }
 
+    /// <summary>
+    /// for debug purposes
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <param name="duration"></param>
+    /// <param name="segmentLength"></param>
     internal virtual void DrawDebugCross(Vector3 pos, float duration = 1f, float segmentLength = 0.3f)
     {
         Debug.DrawLine(pos, pos + Vector3.up * segmentLength, Color.green, duration);
@@ -473,7 +575,7 @@ public class Enemy : MonoBehaviour
 
     public virtual void OnDied()
     {
-        LevelManager.EnemyDied();
+        LevelManager.instance.EnemyDied();
         gameObject.SetActive(false);
         //Debug.Log("doed");
     }
@@ -498,4 +600,9 @@ public class Enemy : MonoBehaviour
 
         isAlerted = false;
     }    
+
+    internal virtual void Hit()
+    {
+        
+    }
 }

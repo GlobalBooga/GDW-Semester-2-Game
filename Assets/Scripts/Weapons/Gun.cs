@@ -7,6 +7,8 @@ public class Gun : Weapon
     public bool alertsEnemies = true;
     public float bulletSpread;
     public float bulletSpeed;
+    public float cameraShakeIntensity;
+    public float cameraShakeTime;
     public GameObject muzzleFlash;
     public GameObject bullet;
     public Transform bulletSpawn;
@@ -22,31 +24,28 @@ public class Gun : Weapon
         time = Time.time - alertInterval;
     }
 
-    internal override void OnValidate()
-    {
-        base.OnValidate();
-    }
-
-    internal override void ResetUse()
-    {
-        base.ResetUse();
-    }
-
     public override void Use()
     {
         if (!readyToUse) return;
         readyToUse = false;
 
+        Fire();
+    }
+
+    public virtual void Fire()
+    {
         if (muzzleFlash)
         {
             muzzleFlash.SetActive(true);
         }
 
+        CameraShake.instance.ShakeCamera(cameraShakeIntensity, cameraShakeTime);
+
         // Alert enemies
         if (Time.time - time >= alertInterval)
         {
             time = Time.time;
-            LevelManager.AlertAllEnemiesInCurrentScene(transform.position);
+            LevelManager.instance.AlertAllEnemiesInCurrentScene(transform.position);
         }
 
 
@@ -63,20 +62,10 @@ public class Gun : Weapon
             b.transform.Rotate(0f, 0f, Vector2.SignedAngle(transform.up, bulletDir));
             b.gameObject.layer = StaticHelpers.PlayerProjectileLayer;
             b.Fly(bulletDir, bulletSpeed, damage);
+            b.specialObjectDamageMultiplier = 0f;
         }
 
         if (cooldown > 0) Invoke(nameof(ResetUse), cooldown);
         else ResetUse();
-    }
-
-
-    public override void Drop(Vector2 forwards)
-    {
-        base.Drop(forwards);
-    }
-
-    public override void Pickup(Transform parentTo, Weapon weapon)
-    {
-        base.Pickup(parentTo, weapon);
-    }
+    }    
 }

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public float moveForce = 15f;
     public float accelerationDrag = 1f;
     public float deccelerationDrag = 5f;
+    private bool rotationEnabled = true;
 
     [Space(10f)]
 
@@ -36,6 +37,7 @@ public class Player : MonoBehaviour
     [Space(10f)]
 
     [Header("Objects"), Space(5f)]
+    public Sprite defaultSprite;
     private Rigidbody2D rb;
     private CircleCollider2D cc;
     private HPComponent hpcomp;
@@ -45,6 +47,8 @@ public class Player : MonoBehaviour
     private GameObject pickupable;
     public Animator screenOverlayAnimator;
     public List<Slider> staminaBars;
+    private SpriteRenderer sr;
+    public GameObject flashlight;
 
     // for animations
     public const string PLAYER_HIT_INDICATOR = "PlayerDamageTaken";
@@ -89,6 +93,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         cc = gameObject.GetComponent<CircleCollider2D>();
         hpcomp = gameObject.GetComponent<HPComponent>();
+        sr = GetComponent<SpriteRenderer>();
 
         if (hpcomp)
         {
@@ -114,11 +119,10 @@ public class Player : MonoBehaviour
         // If we are still holding down attack button, continue attacking
         if (weapon)
         {
-            if (weapon.readyToUse && weapon.isAutoUse && controls.General.Attack.IsPressed()) 
-                weapon.Use();
+            if (weapon.readyToUse && weapon.isAutoUse && controls.General.Attack.IsPressed()) weapon.Use();
         }
 
-        transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(MouseDirection, Vector3.up, Vector3.back));
+        if (rotationEnabled) transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(MouseDirection, Vector3.up, Vector3.back));
         Debug.DrawLine(transform.position, transform.position + (Vector3)MouseDirection * 1.5f, Color.red, Time.deltaTime);
     }
 
@@ -182,8 +186,6 @@ public class Player : MonoBehaviour
         };
 
         controls.General.Attack.started += ctx => { if (weapon) weapon.Use(); };
-
-        controls.General.Reload.started += ctx => { };
 
         controls.General.MovementAbility.started += ctx =>
         {
@@ -250,9 +252,26 @@ public class Player : MonoBehaviour
             
         };
         
-        controls.General.Ultimate.started += ctx => { };
-        
-        controls.General.WeaponAbility.started += ctx => { };
+        controls.General.WeaponAbility.started += ctx =>
+        {
+            if (weapon)
+            {
+                if (weapon.canUseAbility)
+                {
+                    weapon.UseAbility();
+                }
+            }
+        };
+    }
+
+    public void DisableGeneralControls()
+    {
+        controls.General.Disable();
+    }
+
+    public void EnableGeneralControls()
+    {
+        controls.General.Enable();
     }
 
     private void EndDodge()
@@ -309,5 +328,31 @@ public class Player : MonoBehaviour
         }
 
         if (rechargingDodge) rechargingDodge = false;
+    }
+
+    public void DisableRotation()
+    {
+        rotationEnabled = false;
+    }
+
+    public void EnableRotation()
+    {
+        rotationEnabled = true;
+    }
+
+    public void SetSprite(Sprite sprite)
+    {
+        if (sprite) sr.sprite = sprite;
+        else sr.sprite = defaultSprite;
+    }
+
+    public void FlashlightOn()
+    {
+        flashlight.SetActive(true);
+    }
+
+    public void FlashlightOff()
+    {
+        flashlight.SetActive(false);
     }
 }

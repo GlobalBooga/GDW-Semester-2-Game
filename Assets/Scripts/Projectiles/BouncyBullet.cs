@@ -8,6 +8,7 @@ public class BouncyBullet : Bullet
     int bounces;
 
     Vector2 lastVelocity;
+    Quaternion lastRotation;
 
     internal override void Awake()
     {
@@ -17,35 +18,38 @@ public class BouncyBullet : Bullet
 
     private void Update()
     {
-        lastVelocity = rb.velocity;
-    }
-
-    internal override void OnCollisionEnter2D(Collision2D collision)
-    {
-        // play hit effect
-
-
-        if (StaticHelpers.ApplyDamage(collision.gameObject, damage))
+        if (lastVelocity.magnitude == 0f && rb.velocity.magnitude == 0f && lastRotation == transform.rotation)
         {
             Destroy(gameObject);
         }
 
+        lastVelocity = rb.velocity;
+        lastRotation = transform.rotation;
+    }
+
+    internal override void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == StaticHelpers.SpecialBreakableObjectLayer)
+        {
+            if (specialObjectDamageMultiplier > 0)
+            {
+                StaticHelpers.ApplyDamage(collision.gameObject, damage * specialObjectDamageMultiplier);
+            }
+        }
+        else if (StaticHelpers.ApplyDamage(collision.gameObject, damage))
+        {
+            Destroy(gameObject);
+        }
 
         if (bounces < maxBounces)
         {
+            bounces++;
             Vector2 d = lastVelocity.normalized;
             Vector2 n = collision.GetContact(0).normal;
             Vector2 r = d - 2 * Vector2.Dot(d, n) * n;
             rb.velocity = Vector2.zero;
             rb.AddForce(r*lastVelocity.magnitude,ForceMode2D.Impulse);
-
             transform.Rotate(0f, 0f, Vector2.SignedAngle(d, r));
-
-            //Debug.DrawLine(collision.GetContact(0).point, collision.GetContact(0).point+ n, Color.green, 5f); // normal
-            //Debug.DrawLine(transform.position, (Vector2)transform.position + d, Color.yellow, 5f); // direction
-            //Debug.DrawLine(collision.GetContact(0).point, collision.GetContact(0).point+r, Color.red, 5f); // reflection
-            //Debug.Log("bouce");
-            bounces++;
         }
         else
         {

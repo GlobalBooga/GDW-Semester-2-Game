@@ -1,27 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(DualPistols))]
-public class DualPistolsEditor : Editor
+[CustomEditor(typeof(DualPistols_Single))]
+public class DualPistolsSingleEditor : Editor
 {
-    SerializedProperty rightGun;
-    SerializedProperty leftGun;
-    SerializedProperty pickupIndicator;
+    SerializedProperty muzzleFlash;
+    SerializedProperty bullet;
+    SerializedProperty bulletSpawn;
+    SerializedProperty sr;
+
 
     public override void OnInspectorGUI()
     {
-        DualPistols dp = (DualPistols)target;
+        DualPistols_Single dp = (DualPistols_Single)target;
 
-        rightGun = serializedObject.FindProperty("rightPistol");
-        leftGun = serializedObject.FindProperty("leftPistol");
-        pickupIndicator = serializedObject.FindProperty("pickupIndicator");
-
-        EditorGUILayout.PropertyField(rightGun, new GUIContent("Right Gun"));
-        EditorGUILayout.PropertyField(leftGun, new GUIContent("Left Gun"));
-        EditorGUILayout.PropertyField(pickupIndicator, new GUIContent("Pickup Particles"));
-
+        muzzleFlash = serializedObject.FindProperty("muzzleFlash");
+        bullet = serializedObject.FindProperty("bullet");
+        bulletSpawn = serializedObject.FindProperty("bulletSpawn");
+        sr = serializedObject.FindProperty("sr");
+        
+        EditorGUILayout.PropertyField(muzzleFlash, new GUIContent("Muzzle Flash"));
+        EditorGUILayout.PropertyField(bullet, new GUIContent("Bullet"));
+        EditorGUILayout.PropertyField(bulletSpawn, new GUIContent("Bullet Spawn"));
+        EditorGUILayout.PropertyField(sr, new GUIContent("Sprite Renderer"));
+        
         serializedObject.ApplyModifiedProperties();
     }
 }

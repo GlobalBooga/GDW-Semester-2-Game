@@ -7,7 +7,7 @@ public class Sniper : Enemy
 
     public Transform laserStart;
     public LineRenderer lineRenderer;
-    public Animator animator;
+    public Animator laserAnimator;
 
     private bool isLaserOn;
     private const string LASER_SHOT_ANIM = "SniperLaserShot";
@@ -94,22 +94,19 @@ public class Sniper : Enemy
         }
 
         // alert everyone
-        LevelManager.AlertAllEnemiesInCurrentScene(transform.position);
+        LevelManager.instance.AlertAllEnemiesInCurrentScene(transform.position);
 
         // Play animation
-        if (animator) animator.Play(LASER_SHOT_ANIM);
+        if (laserAnimator) laserAnimator.Play(LASER_SHOT_ANIM);
         yield return new WaitForSeconds(sso.animationLenght);
 
         TurnOff();
 
         lockRotation = false;
         yield return new WaitForSeconds(sso.delayBetweenShots);
-        if (animator) animator.Play(EMPTY);
+        if (laserAnimator) laserAnimator.Play(EMPTY);
         ResetAttack();
     }
-
-
-
 
     // call in update
     void ShootLaser()

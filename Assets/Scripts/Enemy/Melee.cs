@@ -7,6 +7,7 @@ public class Melee : Enemy
 {
     
     private MeleeScriptableObject mso;
+    const string HIT_MELEE = "MeleeHit";
 
     internal override void Awake()
     {
@@ -44,7 +45,7 @@ public class Melee : Enemy
         yield return new WaitForSeconds(mso.applyDmgDelay);
 
         // if we hit
-        if (PlayerDistance <= eso.maxAttackDistance)
+        if (PlayerDistance <= eso.defaultMaxAttackDistance)
         {
             //Invoke(nameof(ApplyDamage), applyDmgDelay);
             StaticHelpers.ApplyDamage(playerLoc.gameObject, mso.damage);
@@ -55,5 +56,12 @@ public class Melee : Enemy
         ResetAttack();
     }
 
-    
+    internal override void Hit()
+    {
+        if (animator.isActiveAndEnabled)
+        {
+            animator.Play(HIT_MELEE);
+        }
+    }
+
 }

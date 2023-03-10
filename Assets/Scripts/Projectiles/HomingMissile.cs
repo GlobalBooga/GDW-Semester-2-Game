@@ -2,44 +2,38 @@ using UnityEngine;
 
 public class HomingMissile : Bullet
 {
-    private Transform target;
-    private float force;
-    private float maxSpeed;
-    private BoxCollider2D bc;
+    internal Transform target;
+    internal float force;
+    internal float maxSpeed;
     private HPComponent hp;
     public Transform body;
     public GameObject HPBars;
+    public Explosive explosive;
 
     internal override void Awake()
     {
-        base.Awake();
-        bc = GetComponent<BoxCollider2D>();
         if (TryGetComponent(out hp)) hp.OnHPZero = Explode;
+        base.Awake();
     }
 
-    /*private void Update()
-    {
-        if (hp && showHP && HPBars) HPBars.SetActive(true);
-        else if(hp && !showHP && HPBars) HPBars.SetActive(false);
-    }*/
-
-    public void Fly(Transform target, Vector2 initialDir, float initForce, float rotationForce, float maxSpeed, float damage = 0)
+    public virtual void Fly(Transform target, Vector2 initialDir, float rotationForce, float maxSpeed, float damage = 0)
     {
         transform.rotation = Quaternion.identity;
-        Fly(initialDir, initForce, damage);
+        Fly(initialDir, maxSpeed, damage);
         this.target = target;
         force = rotationForce;
         this.maxSpeed = maxSpeed;
+        if (explosive) explosive.damage = damage;
     }
 
-    private void Update()
+    internal virtual void Update()
     {
         Vector3 dir = target.position - body.position;
         Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(dir, Vector3.right, Vector3.back) - 90f);
         body.rotation = newQuat;
     }
 
-    void FixedUpdate()
+    internal virtual void FixedUpdate()
     {
         bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > maxSpeed;
 
@@ -61,8 +55,6 @@ public class HomingMissile : Bullet
 
     public void Explode()
     {
-        // calculate aoe dmg
-        // apply aoe damage
         Destroy(gameObject);
     }
 }

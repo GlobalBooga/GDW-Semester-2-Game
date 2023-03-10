@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
@@ -7,6 +5,7 @@ public class Bullet : MonoBehaviour
 {
     internal Rigidbody2D rb;
     internal float damage;
+    public float specialObjectDamageMultiplier;
 
     internal virtual void Awake()
     {
@@ -24,10 +23,18 @@ public class Bullet : MonoBehaviour
     internal virtual void OnCollisionEnter2D(Collision2D collision)
     {
         // play hit effect
-
-        StaticHelpers.ApplyDamage(collision.gameObject, damage);
+        if (collision.gameObject.layer == StaticHelpers.SpecialBreakableObjectLayer)
+        {
+            if (specialObjectDamageMultiplier > 0)
+            {
+                StaticHelpers.ApplyDamage(collision.gameObject, damage * specialObjectDamageMultiplier);
+            }
+        }
+        else
+        {
+            StaticHelpers.ApplyDamage(collision.gameObject, damage);
+        }
 
         Destroy(gameObject);
     }
-    
 }

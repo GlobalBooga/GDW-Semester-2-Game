@@ -12,7 +12,6 @@ public class Explosive : MonoBehaviour
     [SerializeField] float playerDamageMultiplier;
     [SerializeField] float specialObjectDamageMultiplier;
 
-    private bool isQuitting;
     private bool cancelExplosion;
 
     void Start()
@@ -59,6 +58,11 @@ public class Explosive : MonoBehaviour
     public void Disarm()
     {
         cancelExplosion = true;
+    }
+
+    public void SetWhatTakesDamage(LayerMask newWhatTakesDamage)
+    {
+        whatTakesDamage = newWhatTakesDamage;
     }
 }
 

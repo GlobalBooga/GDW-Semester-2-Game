@@ -7,6 +7,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 164047363424833836, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.97062767
+      objectReference: {fileID: 0}
+    - target: {fileID: 164047363424833836, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.24058662
+      objectReference: {fileID: 0}
+    - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
+      propertyPath: m_PointLightInnerRadius
+      value: 2.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
+      propertyPath: m_PointLightOuterRadius
+      value: 27.431652
+      objectReference: {fileID: 0}
     - target: {fileID: 5002369006622895712, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
       propertyPath: m_Name
       value: Explosive_Large

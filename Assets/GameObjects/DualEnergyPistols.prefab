@@ -197,7 +197,6 @@ MonoBehaviour:
   readyToUse: 1
   isAutoUse: 1
   pickupIndicator: {fileID: 8240660146182839386}
-  weaponAbilityCooldown: {fileID: 0}
   holdingSprite: {fileID: 21300000, guid: 0968cf2239c79fa41a82840f5b04dfee, type: 3}
   iconSprite: {fileID: 21300000, guid: d1026a2f7e42a11409df0330c431e646, type: 3}
   abilityCooldown: 5
@@ -206,14 +205,20 @@ MonoBehaviour:
   leftPistol: {fileID: 8240660145101886923}
   cameraShakeIntensity: 0
   cameraShakeTime: 0
-  bulletSpread: 20
+  bulletSpread: 15
   bulletSpeed: 25
   alertEnemies: 1
-  chargeTime: 3
+  chargeSpeed: 3
   maxOrbSize: 3
   orbSpeed: 5
   orbPrefab: {fileID: 6836793722401584787, guid: cf4b13a1d611b504fa4c415444f44d7f, type: 3}
   orbSpawn: {fileID: 3149549192080578772}
+  orbgrowcurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!50 &8240660144839520295
 Rigidbody2D:
   serializedVersion: 4
@@ -334,7 +339,6 @@ MonoBehaviour:
   readyToUse: 1
   isAutoUse: 0
   pickupIndicator: {fileID: 0}
-  weaponAbilityCooldown: {fileID: 0}
   holdingSprite: {fileID: 0}
   iconSprite: {fileID: 0}
   abilityCooldown: 6
@@ -484,7 +488,6 @@ MonoBehaviour:
   readyToUse: 1
   isAutoUse: 0
   pickupIndicator: {fileID: 0}
-  weaponAbilityCooldown: {fileID: 0}
   holdingSprite: {fileID: 0}
   iconSprite: {fileID: 0}
   abilityCooldown: 6

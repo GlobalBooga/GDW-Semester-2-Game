@@ -30,6 +30,12 @@ public class LevelManager : MonoBehaviour
 
     public static LevelManager instance;
 
+    [Header("Crosshair Settings")]
+    public Color color;
+    //public Sprite cursorSprite;
+    public GameObject cursorObject;
+    private SpriteRenderer cursorSpriteRenderer;
+
     [Header("General Scene Settings")]
     public AnimationCurve messageFade;
     public float hintTime = 5f;
@@ -69,11 +75,20 @@ public class LevelManager : MonoBehaviour
     {
         instance = this;
         player = GameObject.Find("Player").GetComponent<Player>();
-
+        if (cursorObject) cursorSpriteRenderer = cursorObject.GetComponent<SpriteRenderer>();
 
         weather = (Weather)UnityEngine.Random.Range(0, (int)Weather.max);
         SetGlobalLightAccordingToWeather();
         
+    }
+
+    private void Update()
+    {
+        if (cursorObject)
+        {
+            cursorObject.transform.position = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0f);
+            cursorSpriteRenderer.color = color;
+        }
     }
 
     private void OnApplicationQuit()
@@ -83,6 +98,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        Cursor.visible = false;
+
         // disable all scenes besides the first one
         for (int i = 0; i < orderedScenes.Count; i++)
         {
@@ -266,6 +283,7 @@ public class LevelManager : MonoBehaviour
 
     public void SetGlobalLightAccordingToWeather()
     {
+        Debug.Log(weather);
         switch (weather)
         {
             case Weather.day_clear:
@@ -290,4 +308,10 @@ public class LevelManager : MonoBehaviour
     }
 
     public bool IsQuitting() => isQuitting;
+
+
+    public void SetCursorColor(Color newColor)
+    {
+        color = newColor;
+    }
 }

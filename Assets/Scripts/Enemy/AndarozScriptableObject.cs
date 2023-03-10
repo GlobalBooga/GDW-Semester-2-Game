@@ -85,6 +85,7 @@ public class AndarozScriptableObject : EnemyScriptableObject
     public int shots_missiles = 10;
     public GameObject crosshairController;
     public GameObject missile;
+    public LayerMask whatTakesDamageFromMissiles;
     public bool fireSequentially = true;
     public float missile_maxAttackDistance = 40f;
     public float missile_minAttackDistance = 30f;

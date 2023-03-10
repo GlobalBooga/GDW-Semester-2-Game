@@ -163,6 +163,9 @@ MonoBehaviour:
   shots_missiles: 12
   crosshairController: {fileID: 1336308465829088357, guid: b57007077a03ec94682ae7906b103ac5, type: 3}
   missile: {fileID: 6545307244740321829, guid: 45f776f1fe02de74bad65ddb5ebb7239, type: 3}
+  whatTakesDamageFromMissiles:
+    serializedVersion: 2
+    m_Bits: 1376512
   fireSequentially: 1
   missile_maxAttackDistance: 40
   missile_minAttackDistance: 30
@@ -174,7 +177,7 @@ MonoBehaviour:
   missile_lockRotation: 0
   missile_lockRotDelay: 0.2
   missile_pillarDamageMultiplier: 0.4
-  missile_maxHpForUse: 0.7
+  missile_maxHpForUse: 1
   laser_damage: 200
   delayBeforeParticles: 2
   delayParticlesToLaser: 1.65
@@ -197,8 +200,8 @@ MonoBehaviour:
   laser_maxHpForUse: 0.5
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
-  enableSwipe: 1
-  enableSlam: 1
-  enableMachineGun: 1
+  enableSwipe: 0
+  enableSlam: 0
+  enableMachineGun: 0
   enableMissiles: 1
-  enableLaser: 1
+  enableLaser: 0

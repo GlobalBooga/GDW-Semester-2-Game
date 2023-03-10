@@ -379,6 +379,7 @@ public class Andaroz : Enemy
                 b.gameObject.layer = StaticHelpers.EnemyMissile;
                 b.Fly(playerLoc, missileDir, aso.missileRotForce, aso.missileMaxSpeed, aso.missile_damage);
                 b.specialObjectDamageMultiplier = aso.missile_pillarDamageMultiplier;
+                b.explosive.SetWhatTakesDamage(aso.whatTakesDamageFromMissiles);
                 //play muzzle effect
             }
             yield return new WaitForSeconds(aso.missile_delayBetweenShots);

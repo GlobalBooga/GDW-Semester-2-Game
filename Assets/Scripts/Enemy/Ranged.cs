@@ -14,22 +14,7 @@ public class Ranged : Enemy
         base.Awake();
         rso = (RangedScriptableObject)eso;
     }
-
-    internal override void Start()
-    {
-        base.Start();
-    }
-
-    internal override void Update()
-    {
-        base.Update();
-    }
-
-    internal override void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
-
+    
     internal override void Attack()
     {
         base.Attack();

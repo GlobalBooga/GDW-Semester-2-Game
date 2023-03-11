@@ -61,7 +61,7 @@ public class Andaroz : Enemy
         base.Awake();
     }
 
-    private void OnEnable()
+    internal void OnEnable()
     {
         Invoke(nameof(StartBossFight), 2f);
     }

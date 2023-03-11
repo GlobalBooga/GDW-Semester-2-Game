@@ -85,6 +85,8 @@ public class Enemy : MonoBehaviour
 
     internal virtual void Awake()
     {
+        originalPos = transform.position;
+        originalRot = transform.rotation;
         rb = GetComponent<Rigidbody2D>();
         //cc = GetComponent<CircleCollider2D>();
         playerLoc = GameObject.Find("Player").transform;

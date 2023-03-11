@@ -23,6 +23,26 @@ PrefabInstance:
       propertyPath: m_PointLightOuterRadius
       value: 27.431652
       objectReference: {fileID: 0}
+    - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.data[2]
+      value: 501292755
+      objectReference: {fileID: 0}
+    - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.data[3]
+      value: 308344455
+      objectReference: {fileID: 0}
+    - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.data[4]
+      value: -1822970695
+      objectReference: {fileID: 0}
+    - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.data[5]
+      value: 1897906131
+      objectReference: {fileID: 0}
     - target: {fileID: 5002369006622895712, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
       propertyPath: m_Name
       value: Explosive_Large

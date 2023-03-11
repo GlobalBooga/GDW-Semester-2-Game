@@ -37,7 +37,7 @@ public class HPComponent : MonoBehaviour
 
     }
 
-    private void OnDisable()
+    private void OnEnable()
     {
         //reset
         Start();       
@@ -48,8 +48,10 @@ public class HPComponent : MonoBehaviour
         if (isInvincible) return;
         if (postDamageInvincibilityTime > 0) isInvincible = true;
 
+        health = Mathf.Clamp(health - amount, 0, maxHealth);
+
         // DEAD
-        if ((health -= amount) <= 0f)
+        if (health == 0f)
         {
             if (OnHPZero != null) OnHPZero.Invoke();
 

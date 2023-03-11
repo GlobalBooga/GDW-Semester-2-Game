@@ -177,7 +177,7 @@ MonoBehaviour:
   missile_lockRotation: 0
   missile_lockRotDelay: 0.2
   missile_pillarDamageMultiplier: 0.4
-  missile_maxHpForUse: 1
+  missile_maxHpForUse: 0.7
   laser_damage: 200
   delayBeforeParticles: 2
   delayParticlesToLaser: 1.65
@@ -200,8 +200,8 @@ MonoBehaviour:
   laser_maxHpForUse: 0.5
   HpForStage2: 0.5
   deadMe: {fileID: 3404659771735495119, guid: 22364c8af2e2b4a4db45d6252c86f87f, type: 3}
-  enableSwipe: 0
-  enableSlam: 0
-  enableMachineGun: 0
+  enableSwipe: 1
+  enableSlam: 1
+  enableMachineGun: 1
   enableMissiles: 1
-  enableLaser: 0
+  enableLaser: 1

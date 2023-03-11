@@ -157,7 +157,7 @@ MonoBehaviour:
   - {x: -0.459507, y: -0.32005072, z: 0}
   m_ShapePathHash: -1585464843
   m_Mesh: {fileID: 0}
-  m_InstanceId: 29258
+  m_InstanceId: -40970
 --- !u!1 &7527923035675034280
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,6 +255,7 @@ MonoBehaviour:
   showForwards: 1
   eso: {fileID: 11400000, guid: 7be67767ee55e7040afdb05151d34fe7, type: 2}
   body: {fileID: 7527923035042227798}
+  animator: {fileID: 4612466656649084921}
 --- !u!1001 &7527923036335671002
 PrefabInstance:
   m_ObjectHideFlags: 0

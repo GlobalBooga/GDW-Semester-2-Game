@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2370b700a99b4041af6f54d10fe5eba, type: 3}
   m_Name: Sniper_Basic
   m_EditorClassIdentifier: 
-  reactionTime: 0
+  defaultReactionTime: 0
   viewDistance: 60
   instantDetectDist: 3
   normalFOV: 60
@@ -42,18 +42,18 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxStoredPoses: 4
-  loseSightOfPlayerDelay: 1
   secondsBetweenPoses: 1
   minDistanceBetweenPoses: 1
   searchDetectionRateMult: 1
-  canSeeThroughWalls: 0
-  walkSpeed: 3
-  runSpeed: 8
-  attackMovementSpeed: 3
-  retreatSpeed: 5
-  moveForce: 20
-  accelerationDrag: 1
-  deccelerationDrag: 15
+  canSeeThroughWalls: 1
+  defualtWalkSpeed: 3
+  defaultRunSpeed: 8
+  defaultAttackMovementSpeed: 3
+  defaultRetreatSpeed: 3
+  defaultMoveForce: 15
+  defaultAccelerationDrag: 1
+  defaultDeccelerationDrag: 5
+  snappyness: 0.5
   test:
     serializedVersion: 2
     m_Curve:
@@ -61,7 +61,7 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: 0
-      outSlope: 0
+      outSlope: 1
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
+      inSlope: 1
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
@@ -78,9 +78,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxAttackDistance: 30
-  minAttackDistance: 25
-  comfortableAttackDist: 10
+  defaultMaxAttackDistance: 50
+  defaultMinAttackDistance: 50
+  defaultComfortableAttackDist: 5
   chasePlayer: 0
   whatIsPlayer:
     serializedVersion: 2
@@ -93,8 +93,8 @@ MonoBehaviour:
     m_Bits: 16704
   whatTakesDamage:
     serializedVersion: 2
-    m_Bits: 256
-  damage: 70
+    m_Bits: 1245440
+  damage: 200
   delayBetweenShots: 1
   aimStartDelay: 0.5
   aimTime: 2

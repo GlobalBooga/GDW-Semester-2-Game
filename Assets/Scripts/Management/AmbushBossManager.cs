@@ -13,6 +13,7 @@ public class AmbushBossManager : BossRoomManager
     public AnimationCurve moveCurve;
     public Transform lightsContainer;
     private Light2D[] roomLights;
+    private HPComponent bossHp;
 
     const string OPEN_DOORS = "OpenDoors";
     const string CLOSE_DOORS = "CloseDoors";
@@ -28,20 +29,26 @@ public class AmbushBossManager : BossRoomManager
     {
         player = LevelManager.instance.GetPlayer();
         playerTransform = player.transform;
-        //moveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     }
 
     public override void ForceSetScene()
     {
         base.ForceSetScene();
 
+        // hide enemies
+        for (int i = 0; i < LevelManager.instance.CurrentScene.enemyContainer.transform.childCount; i++)
+        {
+            LevelManager.instance.CurrentScene.enemyContainer.transform.GetChild(i).gameObject.SetActive(false);
+        }
+
         StartCoroutine(nameof(StartCutscene));
+
+        bossHp = LevelManager.instance.CurrentScene.enemyContainer.GetComponent<HPComponent>();
+        bossHp.OnHPZero = EndBossFight;
     }
 
     private IEnumerator StartCutscene()
     {
-        //yield return new WaitForSeconds(0.1f); // wait for transition
-
         Vector3 start = LevelManager.instance.CurrentScene.playerEntrance.position;
         Vector3 end = Vector3.zero;
         if (walkToPoint) end = walkToPoint.position;
@@ -109,5 +116,47 @@ public class AmbushBossManager : BossRoomManager
 
         yield return new WaitForSeconds(0.5f);
         player.FlashlightOn();
+
+
+        // show enemies
+        for (int i = 0; i < LevelManager.instance.CurrentScene.enemyContainer.transform.childCount; i++)
+        {
+            LevelManager.instance.CurrentScene.enemyContainer.transform.GetChild(i).gameObject.SetActive(true);
+        }
+
+        CameraShake.instance.restoreCamPosAfterShake = true;
+    }
+
+    private void EndBossFight()
+    {
+        StartCoroutine(nameof(EndCutscene));
+    }
+
+    private IEnumerator EndCutscene()
+    {
+        yield return new WaitForSeconds(3f);
+
+        // turn on the lights
+        foreach (var item in roomLights)
+        {
+            if (item.lightType == Light2D.LightType.Point)
+            {
+                item.enabled = true;
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return new WaitForSeconds(1f);
+        player.FlashlightOff();
+        //yield return new WaitForSeconds(0.5f);
+
+
+        //LevelManager.instance.DisablePlayerInput();
+
+
+        // dialogue
+
+
+        // teleport
     }
 }

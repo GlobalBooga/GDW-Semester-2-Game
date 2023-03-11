@@ -33,8 +33,8 @@ public class LevelManager : MonoBehaviour
     [Header("Crosshair Settings")]
     public Color color;
     //public Sprite cursorSprite;
-    public GameObject cursorObject;
-    private SpriteRenderer cursorSpriteRenderer;
+    public Image cursor;
+    //private SpriteRenderer cursorSpriteRenderer;
 
     [Header("General Scene Settings")]
     public AnimationCurve messageFade;
@@ -75,7 +75,7 @@ public class LevelManager : MonoBehaviour
     {
         instance = this;
         player = GameObject.Find("Player").GetComponent<Player>();
-        if (cursorObject) cursorSpriteRenderer = cursorObject.GetComponent<SpriteRenderer>();
+        //if (cursor) cursorSpriteRenderer = cursorObject.GetComponent<SpriteRenderer>();
 
         weather = (Weather)UnityEngine.Random.Range(0, (int)Weather.max);
         SetGlobalLightAccordingToWeather();
@@ -84,10 +84,10 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
-        if (cursorObject)
+        if (cursor)
         {
-            cursorObject.transform.position = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0f);
-            cursorSpriteRenderer.color = color;
+            cursor.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f);
+            cursor.color = color;
         }
     }
 

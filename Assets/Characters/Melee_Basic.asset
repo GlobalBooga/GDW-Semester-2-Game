@@ -47,10 +47,10 @@ MonoBehaviour:
   searchDetectionRateMult: 1
   canSeeThroughWalls: 1
   defualtWalkSpeed: 3
-  defaultRunSpeed: 8
+  defaultRunSpeed: 20
   defaultAttackMovementSpeed: 0
   defaultRetreatSpeed: 0
-  defaultMoveForce: 50
+  defaultMoveForce: 80
   defaultAccelerationDrag: 1
   defaultDeccelerationDrag: 5
   snappyness: 80
@@ -94,6 +94,6 @@ MonoBehaviour:
   whatTakesDamage:
     serializedVersion: 2
     m_Bits: 256
-  damage: 25
+  damage: 50
   attackCooldown: 1
   applyDmgDelay: 0.7

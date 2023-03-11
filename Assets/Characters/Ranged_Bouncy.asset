@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 042a330cfb061fc4e83c33be7b3180b4, type: 3}
   m_Name: Ranged_Bouncy
   m_EditorClassIdentifier: 
-  reactionTime: 0
+  defaultReactionTime: 0
   viewDistance: 60
   instantDetectDist: 3
   normalFOV: 60
@@ -42,18 +42,18 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxStoredPoses: 8
-  loseSightOfPlayerDelay: 1
   secondsBetweenPoses: 0.5
   minDistanceBetweenPoses: 0.5
   searchDetectionRateMult: 1
   canSeeThroughWalls: 1
-  walkSpeed: 3
-  runSpeed: 8
-  attackMovementSpeed: 3
-  retreatSpeed: 3
-  moveForce: 30
-  accelerationDrag: 1
-  deccelerationDrag: 5
+  defualtWalkSpeed: 3
+  defaultRunSpeed: 8
+  defaultAttackMovementSpeed: 3
+  defaultRetreatSpeed: 3
+  defaultMoveForce: 15
+  defaultAccelerationDrag: 1
+  defaultDeccelerationDrag: 5
+  snappyness: 0.5
   test:
     serializedVersion: 2
     m_Curve:
@@ -78,9 +78,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxAttackDistance: 15
-  minAttackDistance: 10
-  comfortableAttackDist: 6
+  defaultMaxAttackDistance: 10
+  defaultMinAttackDistance: 6
+  defaultComfortableAttackDist: 0
   chasePlayer: 1
   whatIsPlayer:
     serializedVersion: 2
@@ -94,7 +94,7 @@ MonoBehaviour:
   whatTakesDamage:
     serializedVersion: 2
     m_Bits: 256
-  damage: 8
+  damage: 10
   delayBetweenShots: 0.5
   shootStartDelay: 0.3
   bulletSpeed: 25

@@ -119,5 +119,13 @@ public class TankBossScriptableObject : EnemyScriptableObject
     [Header("Stage 2"), Space(5f)]
     [Range(0f, 1f)] public float HpForStage2 = 0.5f;
     public GameObject deadMe;
+
+    [Space(10f)]
+    [Header("Debugging"), Space(5f)]
+    public bool enableTurrets;
+    public bool enableFlameThrower;
+    public bool enableMissles;
+    public bool enableArtillary;
+    public bool enableTroops;
 }
 

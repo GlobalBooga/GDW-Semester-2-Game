@@ -180,6 +180,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""5066a80b-5ccb-41f0-b2f6-83678f0aa180"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""d3be0929-d3dd-45b2-96f0-cc97c4c18609"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",

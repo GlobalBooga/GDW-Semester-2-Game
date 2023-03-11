@@ -14,17 +14,13 @@ public class TankBoss : MonoBehaviour
     public List<Transform> troopSpawn;
 
     public GameObject muzzleFlash;
-    private TankBossScriptableObject tso;
+    public TankBossScriptableObject tso;
 
     private int prev; // the previous index for sequential firing
     private List<string> allAttacks = new() { nameof(Turrets), nameof(FlameThrower), nameof(Missiles), nameof(Artillary), nameof(Troops) };
     private Queue<string> attackPattern = new();
 
-    [SerializeField] private bool enableTurrets;
-    [SerializeField] private bool enableFlameThrower;
-    [SerializeField] private bool enableMissles;
-    [SerializeField] private bool enableArtillary;
-    [SerializeField] private bool enableTroops;
+
 
     public Animator TankAnimator;
     public GameObject deathExplosive;
@@ -214,20 +210,20 @@ public class TankBoss : MonoBehaviour
     /// </summary>
     private void NextAttack()
     {
-        if (!enableTurrets && !enableFlameThrower && !enableMissles && !enableArtillary && !enableTroops)
+        if (!tso.enableTurrets && !tso.enableFlameThrower && !tso.enableMissles && !tso.enableArtillary && !tso.enableTroops)
         {
             Debug.LogWarning("No attacks enabled! Enabling attack 1");
-            enableTurrets = true;
+            tso.enableTurrets = true;
         }
 
         if (attackPattern.Count == 0) NewAttackOrder();
 
         // skip disabled attacks
-        if (attackPattern.Peek() == nameof(Turrets) && enableTurrets) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(FlameThrower) && enableFlameThrower) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(Missiles) && enableMissles) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(Artillary) && enableArtillary) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(Troops) && enableTroops) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Turrets) && tso.enableTurrets) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(FlameThrower) && tso.enableFlameThrower) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Missiles) && tso.enableMissles) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Artillary) && tso.enableArtillary) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Troops) && tso.enableTroops) { attackPattern.Dequeue(); NextAttack(); return; }
 
         // Start the attack coroutine
         StartCoroutine(attackPattern.Dequeue());

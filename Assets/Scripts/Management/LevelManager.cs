@@ -45,7 +45,7 @@ public class LevelManager : MonoBehaviour
     [Header("Weather Settings")]
     public float dayClearBrightness = 1f;
     public float daySnowBrightness = 0.8f;
-    public float nightClearBrightness = 0.25f;
+    public float nightClearBrightness = 0.3f;
     public float nightSnowBrightness = 0.1f;
     public Light2D globalLight;
     public GameObject snowPrefab;

@@ -29,12 +29,17 @@ public class TankBoss : MonoBehaviour
     public Animator TankAnimator;
     public GameObject deathExplosive;
     public List<Transform> deathExplosionTransforms;
-
+    public GameObject[] enemies; 
     private bool goToCenterOfRoom;
     private Vector3 centerOfRoom;
     private Transform playerLoc;
     private Rigidbody2D rb;
     private bool fight = false; 
+
+    public float maxXPos;
+    public float maxYPos; 
+    public float minXPos; 
+    public float minYPos; 
     // ANIMATION KEYWORDS
 
     private const string DEATH = "Tank_Death";
@@ -152,9 +157,36 @@ public class TankBoss : MonoBehaviour
     
     private IEnumerator Troops()
     {
-        yield return null;
+        int RandomSpawnNumber = Random.Range(1, 3); 
+        if(RandomSpawnNumber == 1)
+        {
+            InvokeRepeating("TroopSpawnBottom", 1f, 20f);
+        }
+        if(RandomSpawnNumber == 2)
+        {
+            InvokeRepeating("TroopSpawnSide", 1f, 20f);
+        }
+        
+        yield return new WaitForSeconds(tso.Troop_deployBeforeNextAttack);
     }
 
+    private void TroopSpawnBottom()
+    {
+        float RandomX = Random.Range(minXPos, maxXPos);
+        transform.position = new Vector3(RandomX, transform.position.y, transform.position.z);
+        int RandomEnemy = Random.Range(0, enemies.Length);
+
+        Instantiate(enemies[RandomEnemy], transform.position, Quaternion.identity);
+    }
+
+    private void TroopSpawnSide()
+    {
+        float RandomY = Random.Range(minYPos, maxYPos);
+        transform.position = new Vector3(transform.position.x, RandomY, transform.position.z);
+        int RandomEnemy = Random.Range(0, enemies.Length);
+
+        Instantiate(enemies[RandomEnemy], transform.position, Quaternion.identity);
+    }
     /// <summary>
     /// I copied this from the Andaroz script.
     /// It will make a random list of attacks and store it in the 'attackPattern' queue.

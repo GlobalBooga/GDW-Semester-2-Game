@@ -25,11 +25,14 @@ public class TrainBossScriptableObject : ScriptableObject
     [Space(10f)]
 
     [Header("Attack 2 - Flamethrower"), Space(5f)]
-    public GameObject flamethrower;
     public float flamethrower_dps;
     public float flamethrower_shootStartDelay = 0.3f;
     public float flamethrower_delayBeforeNextAttack = 6f;
     public int time_flamethrower = 5;
+    public bool aimForPlayer;
+    public float flamethrower_aimTime;
+    public float maxXmove;
+    public float moveSpeed;
     public float flamethrower_coverDamageMultiplier = 0;
     [Range(0f, 1f)] public float flamethrower_maxHpForUse = 0.8f;
 

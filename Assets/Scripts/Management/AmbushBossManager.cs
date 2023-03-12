@@ -14,6 +14,7 @@ public class AmbushBossManager : BossRoomManager
     public Transform lightsContainer;
     private Light2D[] roomLights;
     private HPComponent bossHp;
+    public string bossName = "THE SCREECHING VALKYRIE";
 
     const string OPEN_DOORS = "OpenDoors";
     const string CLOSE_DOORS = "CloseDoors";
@@ -107,7 +108,7 @@ public class AmbushBossManager : BossRoomManager
         // start
         if (bossBarScript)
         {
-            bossBarScript.bossName = "THE SCREECHING VALKYRIE";
+            bossBarScript.bossName = bossName;
             bossBarScript.SetLightTheme();
             bossBarScript.gameObject.SetActive(true);
         }

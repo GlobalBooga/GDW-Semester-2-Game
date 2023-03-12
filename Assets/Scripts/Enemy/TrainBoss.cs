@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using static TrainBossScriptableObject;
 
@@ -8,6 +9,7 @@ public class TrainBoss : MonoBehaviour
     public TrainBossScriptableObject tso;
     public List<MultiBarrelMissileLauncher> missileLaunchers;
     public List<MachineGunTurret> turrets;
+    public GameObject flamethrower;
 
     private List<string> allAttacks = new() { nameof(Turrets), nameof(Flamethrower), nameof(Missiles), nameof(Artillery), nameof(Troops) };
     private Queue<string> attackPattern = new();
@@ -17,13 +19,18 @@ public class TrainBoss : MonoBehaviour
     private bool turretattack;
     private Animator animator;
 
+    private float ogX;
+
     // animations
 
     const string TURRETS_EXTRACT = "TurretExtract";
     const string TURRETS_RETRACT = "TurretRetract";
     const string MISSILES_EXTRACT = "MissilesExtract";
     const string MISSILES_RETRACT = "MissilesRetract";
-
+    const string FLAMETHROWER_SHOOT = "FlamethrowerShoot";
+    const string FLAMETHROWER_END = "FlamethrowerEnd";
+    const string FLAMETHROWER_EXTRACT = "MissilesExtract";
+    const string FLAMETHROWER_RETRACT = "MissilesRetract";
 
     private void Start()
     {
@@ -34,6 +41,7 @@ public class TrainBoss : MonoBehaviour
         animator = GetComponent<Animator>();
 
         Invoke(nameof(NextAttack), 1);
+        ogX = transform.position.x;
     }
 
     private void Update()
@@ -132,12 +140,70 @@ public class TrainBoss : MonoBehaviour
             yield break;
         }
 
-        Debug.Log("flamethrower");
+
+        if (rb)
+        {
+            float time = 0;
+            if (tso.aimForPlayer)
+            {
+                rb.drag = 1f;
+                while (true)
+                {
+                    Vector3 playerDirection = (playerLoc.position - transform.position).normalized;
+                    
+                    if ((playerDirection.x < 0 && transform.position.x > (ogX - tso.maxXmove)) ||
+                     (playerDirection.x > 0 && transform.position.x < (ogX + tso.maxXmove)))
+                    {
+                        rb.AddForce(Vector2.right * playerDirection.x * tso.moveSpeed * rb.mass, ForceMode2D.Force);
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    if (Mathf.Abs(playerLoc.position.x - flamethrower.transform.position.x) < 5f)
+                    {
+                        break;
+                    }
+
+                    time += Time.deltaTime;
+                    yield return null;
+                }
+                rb.drag = 5f;
+            }
+            else
+            {
+                Vector3 playerDirection = (playerLoc.position - transform.position).normalized;
+                rb.drag = 1f;
+                while (true)
+                {
+                    if ((playerDirection.x < 0 && transform.position.x > (ogX - tso.maxXmove))||
+                     (playerDirection.x > 0 && transform.position.x < (ogX + tso.maxXmove)))
+                    {
+                        rb.AddForce(Vector2.right * playerDirection.x * tso.moveSpeed * rb.mass, ForceMode2D.Force);
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    yield return null;
+                }
+                rb.drag = 5f;
+            }
+        }
+
+        yield return new WaitForSeconds(tso.flamethrower_shootStartDelay);
+
+        animator.Play(FLAMETHROWER_SHOOT);
+
+        yield return new WaitForSeconds(tso.time_flamethrower);
+        animator.Play(FLAMETHROWER_END);
 
 
         // this line is only here because otherwise it will give an error
         // when you start coding, move it to where you need it
-        yield return null;
+        yield return new WaitForSeconds(tso.flamethrower_delayBeforeNextAttack);
         NextAttack();
     }
 

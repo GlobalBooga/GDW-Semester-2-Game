@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: TrainBoss
   m_EditorClassIdentifier: 
   bullet: {fileID: 6545307244740321829, guid: 0cc7b3e22e8da2c4aaa8a327dcc3d1ea, type: 3}
-  muzzleFlash: {fileID: 8056495817756034893, guid: e5cca85d035b20343bbe9bc39b5fb577, type: 3}
   turrets_damage: 0
-  turrets_delayBetweenShots: 0.5
-  turrets_shootStartDelay: 0.3
+  turrets_delayBetweenShots: 0.25
+  turrets_shootStartDelay: 1.5
   turrets_delayBeforeNextAttack: 3
-  bulletSpeed: 15
-  bulletSpread: 10
-  shots_Turrets: 50
+  bulletSpeed: 25
+  bulletSpread: 5
+  shots_Turrets: 30
+  rotationSpeed: 4
+  maxAngle: 60
+  moveSpeed: 3
+  extrudeDistance: 2
   turrets_coverDamageMultiplier: 0
   turrets_maxHpForUse: 1
   flamethrower: {fileID: 0}
@@ -33,13 +36,13 @@ MonoBehaviour:
   crosshairController: {fileID: 1336308465829088357, guid: b57007077a03ec94682ae7906b103ac5, type: 3}
   missile: {fileID: 6545307244740321829, guid: 45f776f1fe02de74bad65ddb5ebb7239, type: 3}
   missile_damage: 0
-  missile_delayBetweenShots: 0.5
+  missile_delayBetweenShots: 0.25
   missile_shootStartDelay: 1.65
-  missile_delayBeforeNextAttack: 6
+  missile_delayBeforeNextAttack: 4
   missileRotForce: 70
   missileMaxSpeed: 15
   missileSpread: 15
-  shots_missiles: 4
+  shots_missiles: 2
   whatTakesDamageFromMissiles:
     serializedVersion: 2
     m_Bits: 1310976
@@ -66,8 +69,8 @@ MonoBehaviour:
   troopDeploy_maxHpForUse: 0.9
   HpForStage2: 0.5
   HpForStage3: 0.15
-  enableTurrets: 0
+  enableTurrets: 1
   enableFlamethrower: 0
-  enableMissiles: 1
+  enableMissiles: 0
   enableArtillery: 0
   enableTroops: 0

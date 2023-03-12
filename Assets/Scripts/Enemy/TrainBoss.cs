@@ -7,14 +7,21 @@ public class TrainBoss : MonoBehaviour
 {
     public TrainBossScriptableObject tso;
     public List<MultiBarrelMissileLauncher> missileLaunchers;
+    public List<MachineGunTurret> turrets;
 
-
-    private int prev; // the previous index for sequential firing
-    private List<string> allAttacks = new() { nameof(Turrets), nameof(FlameThrower), nameof(Missiles), nameof(Artillery), nameof(Troops) };
+    private List<string> allAttacks = new() { nameof(Turrets), nameof(Flamethrower), nameof(Missiles), nameof(Artillery), nameof(Troops) };
     private Queue<string> attackPattern = new();
     private HPComponent hp;
     private Transform playerLoc;
     private Rigidbody2D rb;
+    private bool turretattack;
+    private Animator animator;
+
+    // animations
+
+    const string TURRETS_EXTRACT = "TurretExtract";
+    const string TURRETS_RETRACT = "TurretRetract";
+
 
     private void Start()
     {
@@ -22,22 +29,107 @@ public class TrainBoss : MonoBehaviour
         if (hp) hp.OnHPZero = OnDied;
         playerLoc = GameObject.Find("Player").transform;
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
 
-        Attack();
-    }
-
-    private void Attack()
-    {
         NextAttack();
     }
+
+    private void Update()
+    {
+        if (turretattack)
+        {
+            // aim at player
+            foreach (var item in turrets)
+            {
+                if (item.enabled)
+                {
+                    Vector2 target = playerLoc.position - item.mainUnit.position;
+                    float angle = Vector3.SignedAngle(target, -item.mainUnit.right, Vector3.back);
+
+                    item.mainUnit.rotation = Quaternion.Euler(0, 0, 
+                        Mathf.Clamp(item.mainUnit.rotation.eulerAngles.z + 
+                        (angle * Time.deltaTime * tso.rotationSpeed), 90-tso.maxAngle, 90+tso.maxAngle));
+                }
+            }
+        }
+    }
+
     private IEnumerator Turrets()
     {
-        yield return null;
+        if (!CanUseAttack(tso.turrets_maxHpForUse))
+        {
+            NextAttack();
+            yield break;
+        }
+
+        // expose
+        foreach (var item in turrets)
+        {
+            animator.Play(TURRETS_EXTRACT);
+        }
+
+
+        yield return new WaitForSeconds(tso.turrets_aimStartDelay);
+        turretattack = true;
+        yield return new WaitForSeconds(tso.turrets_shootStartDelay);
+
+        for (int i = 0; i < tso.shots_Turrets; i++)
+        {
+            foreach (var item in turrets)
+            {
+                item.Fire(tso.bullet, tso.turrets_damage, tso.bulletSpread, 
+                    tso.bulletSpeed, tso.turrets_coverDamageMultiplier);
+            }
+
+            yield return new WaitForSeconds(tso.turrets_delayBetweenShots);
+        }
+
+        turretattack = false;
+
+        // retract
+        int rotdone = 0;
+        bool retract =false;
+
+        while (rotdone <= turrets.Count)
+        {
+            foreach (var item in turrets)
+            {
+                Vector3 targetDir = -transform.up;
+                float angle = Vector3.SignedAngle(targetDir, -item.mainUnit.right, Vector3.back);
+                if (Mathf.Abs(angle) > 0.01f)
+                {
+                    item.mainUnit.Rotate(0, 0, angle * Time.deltaTime * tso.rotationSpeed);
+                }
+                else
+                {
+                    rotdone++;
+                    item.mainUnit.rotation = Quaternion.Euler(0, 0, 90f);
+                    Debug.Log(rotdone);
+                }
+
+                if (Mathf.Abs(angle) < 1f && !retract)
+                {
+                    retract = true;
+                    animator.Play(TURRETS_RETRACT);
+                }
+                
+            }
+            yield return null;
+        }
+
+
+        yield return new WaitForSeconds(tso.turrets_delayBeforeNextAttack);
         NextAttack();
     }
 
-    private IEnumerator FlameThrower()
+    private IEnumerator Flamethrower()
     {
+        if (!CanUseAttack(tso.flamethrower_maxHpForUse))
+        {
+            NextAttack();
+            yield break;
+        }
+
         // this line is only here because otherwise it will give an error
         // when you start coding, move it to where you need it
         yield return null;
@@ -46,6 +138,12 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Missiles()
     {
+        if (!CanUseAttack(tso.missile_maxHpForUse))
+        {
+            NextAttack();
+            yield break;
+        }
+
         // play lock on animation
         if (tso.crosshairController && tso.missileRotForce > 0)
         {
@@ -80,6 +178,12 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Artillery()
     {
+        if (!CanUseAttack(tso.Artillery_maxHpForUse))
+        {
+            NextAttack();
+            yield break;
+        }
+
         yield return new WaitForSeconds(tso.artillery_shootStartDelay);
 
         float maxOffset, xpos, ypos;
@@ -117,6 +221,12 @@ public class TrainBoss : MonoBehaviour
     
     private IEnumerator Troops()
     {
+        if (!CanUseAttack(tso.troopDeploy_maxHpForUse))
+        {
+            NextAttack();
+            yield break;
+        }
+
         yield return null;
     }
 
@@ -148,7 +258,7 @@ public class TrainBoss : MonoBehaviour
 
         // skip disabled attacks
         if (attackPattern.Peek() == nameof(Turrets) && !tso.enableTurrets) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(FlameThrower) && !tso.enableFlamethrower) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Flamethrower) && !tso.enableFlamethrower) { attackPattern.Dequeue(); NextAttack(); return; }
         if (attackPattern.Peek() == nameof(Missiles) && !tso.enableMissiles) { attackPattern.Dequeue(); NextAttack(); return; }
         if (attackPattern.Peek() == nameof(Artillery) && !tso.enableArtillery) { attackPattern.Dequeue(); NextAttack(); return; }
         if (attackPattern.Peek() == nameof(Troops) && !tso.enableTroops) { attackPattern.Dequeue(); NextAttack(); return; }
@@ -163,6 +273,12 @@ public class TrainBoss : MonoBehaviour
     public void OnDied()
     {
         StopAllCoroutines();
+    }
+
+    private bool CanUseAttack(float hpThreshold)
+    {
+        if (hp.GetHealth() == 0 || hp.GetHealth() > hp.maxHealth * hpThreshold) return false;
+        else return true;
     }
 
 }

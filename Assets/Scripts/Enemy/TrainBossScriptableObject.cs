@@ -9,15 +9,19 @@ public class TrainBossScriptableObject : ScriptableObject
     [Space(10f)]
     [Header("Attack 1 - Turrets"), Space(5f)]
     public GameObject bullet;
-    public GameObject muzzleFlash;
     public float turrets_damage;
     public float turrets_delayBetweenShots = 0.5f;
+    public float turrets_aimStartDelay = 0.3f;
     public float turrets_shootStartDelay = 0.3f;
     public float turrets_delayBeforeNextAttack = 3f;
     //public float turrets_delayBeforeIdle = 1f;
     public float bulletSpeed = 15f;
     public float bulletSpread = 10f;
     public int shots_Turrets = 50;
+    public float rotationSpeed = 1f;
+    public float maxAngle = 90f;
+    public float moveSpeed = 3f;
+    public float extrudeDistance = 2f;
     public float turrets_coverDamageMultiplier = 0;
     [Range(0f, 1f)] public float turrets_maxHpForUse = 1f;
     [Space(10f)]
@@ -106,9 +110,9 @@ public class TrainBossScriptableObject : ScriptableObject
             float spreadAngle = UnityEngine.Random.Range(-spread, spread);
             float rads = Mathf.Deg2Rad * ((spreadAngle > 0) ? spreadAngle : (360f + spreadAngle));
 
-            Vector3 playerDir = (target.position - mainUnit.position).normalized;
+            Vector3 targetDir = (target.position - mainUnit.position).normalized;
 
-            float x = playerDir.x, y = playerDir.y;
+            float x = targetDir.x, y = targetDir.y;
 
             Vector3 missileDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
@@ -131,7 +135,7 @@ public class TrainBossScriptableObject : ScriptableObject
                     m = Instantiate(missile, missileSpawns[barrelIndex++]).GetComponent<HomingMissile>();
                 }
 
-                m.transform.Rotate(0f, 0f, Vector2.SignedAngle(playerDir, missileDir));
+                m.transform.Rotate(0f, 0f, Vector2.SignedAngle(targetDir, missileDir));
                 m.gameObject.layer = StaticHelpers.EnemyMissile;
                 m.Fly(target, missileDir, rotForce, speed, damage);
                 m.specialObjectDamageMultiplier = coverDmgMult;
@@ -140,7 +144,38 @@ public class TrainBossScriptableObject : ScriptableObject
             
         }
     }
-    
 
+    [Serializable]
+    public struct MachineGunTurret
+    {
+        public bool enabled;
+        public Transform mainUnit;
+        public Transform bulletSpawn;
+        public GameObject muzzleFlash;
+
+        public void Fire(GameObject bullet, float damage, float spread, float speed, float coverDmgMult = 0)
+        {
+            if (!enabled) return;
+
+            // calculate spread
+            float spreadAngle = UnityEngine.Random.Range(-spread, spread);
+            float rads = Mathf.Deg2Rad * ((spreadAngle > 0) ? spreadAngle : (360f + spreadAngle));
+            float x = -mainUnit.right.x, y = -mainUnit.right.y;
+
+            Vector3 bulletDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
+
+            if (bullet && bulletSpawn)
+            {
+                Bullet b = Instantiate(bullet, bulletSpawn).GetComponent<Bullet>();
+                b.transform.Rotate(0f, 0f, Vector2.SignedAngle(-mainUnit.right, bulletDir));
+                b.gameObject.layer = StaticHelpers.EnemyProjectileLayer;
+                b.Fly(bulletDir, speed, damage);
+                b.specialObjectDamageMultiplier = coverDmgMult;
+
+                //play muzzle effect
+                if (muzzleFlash) muzzleFlash.SetActive(true);
+            }
+        }
+    }
 }
 

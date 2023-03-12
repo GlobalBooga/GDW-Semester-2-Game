@@ -24,13 +24,23 @@ public class HomingMissile : Bullet
         force = rotationForce;
         this.maxSpeed = maxSpeed;
         if (explosive) explosive.damage = damage;
+
+
+        if (rotationForce == 0)
+        {
+            Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(rb.velocity, Vector3.right, Vector3.back) - 90f);
+            body.rotation = newQuat;
+        }
     }
 
     internal virtual void Update()
     {
-        Vector3 dir = target.position - body.position;
-        Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(dir, Vector3.right, Vector3.back) - 90f);
-        body.rotation = newQuat;
+        if (force > 0)
+        {
+            Vector3 dir = target.position - body.position;
+            Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(dir, Vector3.right, Vector3.back) - 90f);
+            body.rotation = newQuat;
+        }
     }
 
     internal virtual void FixedUpdate()

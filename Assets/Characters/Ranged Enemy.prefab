@@ -97,6 +97,7 @@ MonoBehaviour:
   showForwards: 1
   eso: {fileID: 11400000, guid: 6dbcccce7f753d24cbe1418bf43f56ee, type: 2}
   body: {fileID: 2781084931920902490}
+  animator: {fileID: 8100914843955067681}
   bulletSpawn: {fileID: 2781084932886251274}
 --- !u!1 &2781084931920902491
 GameObject:
@@ -109,6 +110,7 @@ GameObject:
   - component: {fileID: 2781084931920902490}
   - component: {fileID: 2781084931920902436}
   - component: {fileID: 2781084931920902437}
+  - component: {fileID: 8100914843955067681}
   m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
@@ -200,6 +202,26 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.22}
   serializedVersion: 2
   m_Radius: 0.62
+--- !u!95 &8100914843955067681
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2781084931920902491}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 06f7439dbaf2e7745a1fcacd370cf09b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &2781084932886251275
 GameObject:
   m_ObjectHideFlags: 0

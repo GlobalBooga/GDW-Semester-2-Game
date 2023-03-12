@@ -15,22 +15,6 @@ public class Melee : Enemy
         mso = (MeleeScriptableObject)eso;
     }
 
-    internal override void Start()
-    {
-        base.Start();
-        //attackReach = eso.maxAttackDistance;
-    }
-
-    internal override void Update() 
-    {
-        base.Update();
-    }
-
-    internal override void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
-
     internal override void Attack()
     {
         base.Attack();

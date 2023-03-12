@@ -87,7 +87,7 @@ public class SceneManager : MonoBehaviour
             case SceneObjective.Boss:
             case SceneObjective.None:
             default:
-                Invoke(nameof(Unblock), 0.5f);
+                if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
                 LevelManager.instance.hintText.text = "";
                 break;
         }

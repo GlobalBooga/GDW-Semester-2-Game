@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class Ranged : Enemy
@@ -8,6 +7,7 @@ public class Ranged : Enemy
     
     public Transform bulletSpawn;
     private RangedScriptableObject rso;
+    const string HIT_RANGED = "RangedHit";
 
     internal override void Awake()
     {
@@ -70,5 +70,13 @@ public class Ranged : Enemy
         base.OnLostSightOfPlayer();
         StopCoroutine(nameof(Shoot));
         base.ResetAttack();
+    }
+
+    internal override void Hit()
+    {
+        if (animator.isActiveAndEnabled)
+        {
+            animator.Play(HIT_RANGED);
+        }
     }
 }

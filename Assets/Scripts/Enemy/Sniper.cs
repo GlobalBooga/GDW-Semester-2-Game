@@ -13,6 +13,7 @@ public class Sniper : Enemy
     private const string LASER_SHOT_ANIM = "SniperLaserShot";
     private const string EMPTY = "Empty";
     private SniperScriptableObject sso;
+    const string HIT_SNIPER = "SniperHit";
 
 
     internal override void Awake()
@@ -157,5 +158,14 @@ public class Sniper : Enemy
     {
         base.ResetAttack();
         if (isLaserOn) TurnOff();
+    }
+
+
+    internal override void Hit()
+    {
+        if (animator.isActiveAndEnabled)
+        {
+            animator.Play(HIT_SNIPER);
+        }
     }
 }

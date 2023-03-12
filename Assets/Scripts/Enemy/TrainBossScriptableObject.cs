@@ -14,13 +14,11 @@ public class TrainBossScriptableObject : ScriptableObject
     public float turrets_aimStartDelay = 0.3f;
     public float turrets_shootStartDelay = 0.3f;
     public float turrets_delayBeforeNextAttack = 3f;
-    //public float turrets_delayBeforeIdle = 1f;
     public float bulletSpeed = 15f;
     public float bulletSpread = 10f;
     public int shots_Turrets = 50;
     public float rotationSpeed = 1f;
     public float maxAngle = 90f;
-    public float moveSpeed = 3f;
     public float extrudeDistance = 2f;
     public float turrets_coverDamageMultiplier = 0;
     [Range(0f, 1f)] public float turrets_maxHpForUse = 1f;
@@ -31,7 +29,6 @@ public class TrainBossScriptableObject : ScriptableObject
     public float flamethrower_dps;
     public float flamethrower_shootStartDelay = 0.3f;
     public float flamethrower_delayBeforeNextAttack = 6f;
-    //public float flamethrower_delayBeforeIdle = 1f;
     public int time_flamethrower = 5;
     public float flamethrower_coverDamageMultiplier = 0;
     [Range(0f, 1f)] public float flamethrower_maxHpForUse = 0.8f;
@@ -42,10 +39,10 @@ public class TrainBossScriptableObject : ScriptableObject
     public GameObject missile;
     public float missile_damage;
     public float missile_delayBetweenShots = 0.5f;
+    public float missile_aimStartDelay = 0.3f;
     public float missile_shootStartDelay = 0.3f;
-    public float missile_delayBeforeNextAttack = 6f;
-    //public float missile_delayBeforeIdle = 1f;
-    //public float missileSpeed = 7f;
+    public float missile_delaybeforeRetract = 3f;
+    public float missile_delayBeforeNextAttack = 3f;
     public float missileRotForce = 10f;
     public float missileMaxSpeed = 7f;
     public float missileSpread = 10f;
@@ -66,7 +63,6 @@ public class TrainBossScriptableObject : ScriptableObject
     public float artillery_airTime = 3f;
     public float artillery_shootStartDelay = 0.3f;
     public float artillery_delayBeforeNextAttack = 6f;
-    //public float Artillery_delayBeforeIdle = 1f;
     public int artillery_shots = 3;
     //public bool fireSequentiallyArtillery = true;
     public float artillery_pillarDamageMultiplier = 0.75f;
@@ -76,7 +72,6 @@ public class TrainBossScriptableObject : ScriptableObject
     [Header("Attack 5 - Troop Deploy"), Space(5f)]
     public float troop_startDelay = 10f;
     public float troop_delayBeforeNextAttack = 6f;
-    //public float troop_deplyBeforeIdle = 1f; 
     public GameObject[] troop_types;
     public BoxCollider2D troop_spawnArea;
     public float troop_spawnAmount = 5;

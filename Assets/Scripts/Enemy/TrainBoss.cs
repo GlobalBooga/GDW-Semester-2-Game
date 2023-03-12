@@ -21,6 +21,8 @@ public class TrainBoss : MonoBehaviour
 
     const string TURRETS_EXTRACT = "TurretExtract";
     const string TURRETS_RETRACT = "TurretRetract";
+    const string MISSILES_EXTRACT = "MissilesExtract";
+    const string MISSILES_RETRACT = "MissilesRetract";
 
 
     private void Start()
@@ -31,7 +33,7 @@ public class TrainBoss : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
-        NextAttack();
+        Invoke(nameof(NextAttack), 1);
     }
 
     private void Update()
@@ -62,15 +64,15 @@ public class TrainBoss : MonoBehaviour
             yield break;
         }
 
+        Debug.Log("Turrets");
+
         // expose
-        foreach (var item in turrets)
-        {
-            animator.Play(TURRETS_EXTRACT);
-        }
+        animator.Play(TURRETS_EXTRACT);
 
 
         yield return new WaitForSeconds(tso.turrets_aimStartDelay);
         turretattack = true;
+
         yield return new WaitForSeconds(tso.turrets_shootStartDelay);
 
         for (int i = 0; i < tso.shots_Turrets; i++)
@@ -130,6 +132,9 @@ public class TrainBoss : MonoBehaviour
             yield break;
         }
 
+        Debug.Log("flamethrower");
+
+
         // this line is only here because otherwise it will give an error
         // when you start coding, move it to where you need it
         yield return null;
@@ -143,6 +148,14 @@ public class TrainBoss : MonoBehaviour
             NextAttack();
             yield break;
         }
+
+        Debug.Log("missiles");
+
+
+        // make launchers come out
+        animator.Play(MISSILES_EXTRACT);
+
+        yield return new WaitForSeconds(tso.missile_aimStartDelay);
 
         // play lock on animation
         if (tso.crosshairController && tso.missileRotForce > 0)
@@ -171,6 +184,11 @@ public class TrainBoss : MonoBehaviour
                 yield return new WaitForSeconds(tso.missile_delayBetweenShots);
             }
         }
+        yield return new WaitForSeconds(tso.missile_delaybeforeRetract);
+
+        // make launchers return
+        animator.Play(MISSILES_RETRACT);
+        
 
         yield return new WaitForSeconds(tso.missile_delayBeforeNextAttack);
         NextAttack();
@@ -183,6 +201,9 @@ public class TrainBoss : MonoBehaviour
             NextAttack();
             yield break;
         }
+
+        Debug.Log("artillery");
+
 
         yield return new WaitForSeconds(tso.artillery_shootStartDelay);
 

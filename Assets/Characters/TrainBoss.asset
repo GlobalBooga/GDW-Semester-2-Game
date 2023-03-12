@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 6545307244740321829, guid: 0cc7b3e22e8da2c4aaa8a327dcc3d1ea, type: 3}
   turrets_damage: 0
-  turrets_delayBetweenShots: 0.25
-  turrets_shootStartDelay: 1.5
+  turrets_delayBetweenShots: 0.22
+  turrets_aimStartDelay: 0.3
+  turrets_shootStartDelay: 0.7
   turrets_delayBeforeNextAttack: 3
   bulletSpeed: 25
   bulletSpread: 5
-  shots_Turrets: 30
+  shots_Turrets: 20
   rotationSpeed: 4
   maxAngle: 60
   moveSpeed: 3
@@ -37,8 +38,10 @@ MonoBehaviour:
   missile: {fileID: 6545307244740321829, guid: 45f776f1fe02de74bad65ddb5ebb7239, type: 3}
   missile_damage: 0
   missile_delayBetweenShots: 0.25
+  missile_aimStartDelay: 0.3
   missile_shootStartDelay: 1.65
-  missile_delayBeforeNextAttack: 4
+  missile_delaybeforeRetract: 3
+  missile_delayBeforeNextAttack: 1
   missileRotForce: 70
   missileMaxSpeed: 15
   missileSpread: 15

@@ -35,9 +35,9 @@ public class TrainBoss : MonoBehaviour
     const string FLAMETHROWER_EXTRACT = "FlamethrowerExtract";
     const string FLAMETHROWER_RETRACT = "FlamethrowerRetract";
 
+    const int LAYER_FLAMETHROWER = 0;
     const int LAYER_TURRETS = 1;
     const int LAYER_MISSILES = 2;
-    const int LAYER_FLAMETHROWER = 0;
 
 
     private void Start()
@@ -50,6 +50,12 @@ public class TrainBoss : MonoBehaviour
 
         Invoke(nameof(NextAttack), 1);
         ogX = transform.position.x;
+
+        if (!tso.enableTurrets && !turretattack) turretattack = true;
+        if (!tso.enableMissiles && !missileattack) missileattack = true;
+        if (!tso.enableArtillery && !artilleryattack) artilleryattack = true;
+        if (!tso.enableFlamethrower && !flamethrowerattack) flamethrowerattack = true;
+        //if (tso.enableFlamethrower && !flamethrowerattack) flamethrowerattack = true;
     }
 
     private void Update()
@@ -74,7 +80,7 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Turrets()
     {
-        if (!CanUseAttack(tso.turrets_maxHpForUse) && turretattack)
+        if (!CanUseAttack(tso.turrets_maxHpForUse))
         {
             NextAttack();
             yield break;
@@ -142,7 +148,7 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Flamethrower()
     {
-        if (!CanUseAttack(tso.flamethrower_maxHpForUse) && flamethrowerattack)
+        if (!CanUseAttack(tso.flamethrower_maxHpForUse))
         {
             NextAttack();
             yield break;
@@ -225,7 +231,7 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Missiles()
     {
-        if (!CanUseAttack(tso.missile_maxHpForUse) && missileattack)
+        if (!CanUseAttack(tso.missile_maxHpForUse))
         {
             NextAttack();
             yield break;
@@ -281,7 +287,7 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Artillery()
     {
-        if (!CanUseAttack(tso.Artillery_maxHpForUse) && artilleryattack)
+        if (!CanUseAttack(tso.Artillery_maxHpForUse))
         {
             NextAttack();
             yield break;
@@ -361,13 +367,20 @@ public class TrainBoss : MonoBehaviour
             tso.enableTurrets = true;
         }
 
+        if (flamethrowerattack && missileattack)
+        {
+            Debug.Log("overflow protection");
+            Invoke(nameof(NextAttack), 2f);
+            return;
+        }
+
         if (attackPattern.Count == 0) NewAttackOrder();
 
         // skip disabled attacks
-        if (attackPattern.Peek() == nameof(Turrets) && !tso.enableTurrets) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(Flamethrower) && !tso.enableFlamethrower) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(Missiles) && !tso.enableMissiles) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(Artillery) && !tso.enableArtillery) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Turrets) && (!tso.enableTurrets || turretattack)) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Flamethrower) && (!tso.enableFlamethrower || flamethrowerattack)) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Missiles) && (!tso.enableMissiles || missileattack)) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Artillery) && (!tso.enableArtillery || artilleryattack)) { attackPattern.Dequeue(); NextAttack(); return; }
         if (attackPattern.Peek() == nameof(Troops) && !tso.enableTroops) { attackPattern.Dequeue(); NextAttack(); return; }
 
         // Start the attack coroutine

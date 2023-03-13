@@ -43,6 +43,7 @@ public class LevelManager : MonoBehaviour
     public bool loop;
 
     [Header("Weather Settings")]
+    public bool enableWeather;
     public float dayClearBrightness = 1f;
     public float daySnowBrightness = 0.8f;
     public float nightClearBrightness = 0.3f;
@@ -283,7 +284,7 @@ public class LevelManager : MonoBehaviour
 
     public void SetGlobalLightAccordingToWeather()
     {
-        if (!globalLight) return;
+        if (!globalLight || !enableWeather) return;
 
         Debug.Log(weather);
         switch (weather)

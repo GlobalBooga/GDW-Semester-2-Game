@@ -75,8 +75,8 @@ MonoBehaviour:
   troopDeploy_maxHpForUse: 1
   HpForStage2: 0.5
   HpForStage3: 0.15
-  enableTurrets: 1
-  enableFlamethrower: 1
+  enableTurrets: 0
+  enableFlamethrower: 0
   enableMissiles: 1
-  enableArtillery: 1
+  enableArtillery: 0
   enableTroops: 0

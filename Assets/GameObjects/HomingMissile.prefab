@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: -1822970695
   m_SortingLayer: 4
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 2efa51e73d6eef44ca3ef47d63094469, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 410726b3247f0c04a992d17ca7ba58f3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -134,11 +134,11 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.696
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 10
+  m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 000000008f66c27bd31ee11d87f66012b9ac5793d3bf1f71
-  m_LightCookieSprite: {fileID: 21300000, guid: 2efa51e73d6eef44ca3ef47d63094469, type: 3}
+  m_LightCookieSprite: {fileID: 21300000, guid: 410726b3247f0c04a992d17ca7ba58f3, type: 3}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
   m_AlphaBlendOnOverlap: 0
@@ -151,16 +151,16 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_Vertices:
-  - position: {x: -0.5, y: 0.5, z: 0}
+  - position: {x: -0.5, y: 0.703125, z: 0}
     color: {r: 0, g: 0, b: 0, a: 1}
     uv: {x: 0, y: 1}
-  - position: {x: 0.5, y: 0.5, z: 0}
+  - position: {x: 0.5, y: 0.703125, z: 0}
     color: {r: 0, g: 0, b: 0, a: 1}
     uv: {x: 1, y: 1}
-  - position: {x: -0.5, y: -0.5, z: 0}
+  - position: {x: -0.5, y: -0.703125, z: 0}
     color: {r: 0, g: 0, b: 0, a: 1}
     uv: {x: 0, y: 0}
-  - position: {x: 0.5, y: -0.5, z: 0}
+  - position: {x: 0.5, y: -0.703125, z: 0}
     color: {r: 0, g: 0, b: 0, a: 1}
     uv: {x: 1, y: 0}
   - position: {x: 0, y: 0, z: 0}
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Triangles: 000001000200020001000300
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0.5, y: 0.5, z: 0}
+    m_Extent: {x: 0.5, y: 0.703125, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0

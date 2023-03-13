@@ -17,6 +17,9 @@ public class TrainBoss : MonoBehaviour
     private Transform playerLoc;
     private Rigidbody2D rb;
     private bool turretattack;
+    private bool flamethrowerattack;
+    private bool missileattack;
+    private bool artilleryattack;
     private Animator animator;
 
     private float ogX;
@@ -29,8 +32,13 @@ public class TrainBoss : MonoBehaviour
     const string MISSILES_RETRACT = "MissilesRetract";
     const string FLAMETHROWER_SHOOT = "FlamethrowerShoot";
     const string FLAMETHROWER_END = "FlamethrowerEnd";
-    const string FLAMETHROWER_EXTRACT = "MissilesExtract";
-    const string FLAMETHROWER_RETRACT = "MissilesRetract";
+    const string FLAMETHROWER_EXTRACT = "FlamethrowerExtract";
+    const string FLAMETHROWER_RETRACT = "FlamethrowerRetract";
+
+    const int LAYER_TURRETS = 1;
+    const int LAYER_MISSILES = 2;
+    const int LAYER_FLAMETHROWER = 0;
+
 
     private void Start()
     {
@@ -66,7 +74,7 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Turrets()
     {
-        if (!CanUseAttack(tso.turrets_maxHpForUse))
+        if (!CanUseAttack(tso.turrets_maxHpForUse) && turretattack)
         {
             NextAttack();
             yield break;
@@ -75,7 +83,7 @@ public class TrainBoss : MonoBehaviour
         Debug.Log("Turrets");
 
         // expose
-        animator.Play(TURRETS_EXTRACT);
+        animator.Play(TURRETS_EXTRACT, LAYER_TURRETS);
 
 
         yield return new WaitForSeconds(tso.turrets_aimStartDelay);
@@ -120,7 +128,7 @@ public class TrainBoss : MonoBehaviour
                 if (Mathf.Abs(angle) < 1f && !retract)
                 {
                     retract = true;
-                    animator.Play(TURRETS_RETRACT);
+                    animator.Play(TURRETS_RETRACT, LAYER_TURRETS);
                 }
                 
             }
@@ -134,12 +142,16 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Flamethrower()
     {
-        if (!CanUseAttack(tso.flamethrower_maxHpForUse))
+        if (!CanUseAttack(tso.flamethrower_maxHpForUse) && flamethrowerattack)
         {
             NextAttack();
             yield break;
         }
 
+        NextAttack();
+
+        flamethrowerattack = true;
+        animator.Play(FLAMETHROWER_EXTRACT, LAYER_FLAMETHROWER);
 
         if (rb)
         {
@@ -195,21 +207,25 @@ public class TrainBoss : MonoBehaviour
 
         yield return new WaitForSeconds(tso.flamethrower_shootStartDelay);
 
-        animator.Play(FLAMETHROWER_SHOOT);
+        animator.Play(FLAMETHROWER_SHOOT, LAYER_FLAMETHROWER);
 
         yield return new WaitForSeconds(tso.time_flamethrower);
-        animator.Play(FLAMETHROWER_END);
+        //animator.Play(FLAMETHROWER_END);
+
+        animator.Play(FLAMETHROWER_RETRACT, LAYER_FLAMETHROWER);
 
 
         // this line is only here because otherwise it will give an error
         // when you start coding, move it to where you need it
         yield return new WaitForSeconds(tso.flamethrower_delayBeforeNextAttack);
+        flamethrowerattack = false;
+
         NextAttack();
     }
 
     private IEnumerator Missiles()
     {
-        if (!CanUseAttack(tso.missile_maxHpForUse))
+        if (!CanUseAttack(tso.missile_maxHpForUse) && missileattack)
         {
             NextAttack();
             yield break;
@@ -217,9 +233,10 @@ public class TrainBoss : MonoBehaviour
 
         Debug.Log("missiles");
 
+        missileattack = true;
 
         // make launchers come out
-        animator.Play(MISSILES_EXTRACT);
+        animator.Play(MISSILES_EXTRACT, LAYER_MISSILES);
 
         yield return new WaitForSeconds(tso.missile_aimStartDelay);
 
@@ -253,16 +270,18 @@ public class TrainBoss : MonoBehaviour
         yield return new WaitForSeconds(tso.missile_delaybeforeRetract);
 
         // make launchers return
-        animator.Play(MISSILES_RETRACT);
+        animator.Play(MISSILES_RETRACT, LAYER_MISSILES);
         
 
         yield return new WaitForSeconds(tso.missile_delayBeforeNextAttack);
+        missileattack = false;
+
         NextAttack();
     }
 
     private IEnumerator Artillery()
     {
-        if (!CanUseAttack(tso.Artillery_maxHpForUse))
+        if (!CanUseAttack(tso.Artillery_maxHpForUse) && artilleryattack)
         {
             NextAttack();
             yield break;
@@ -270,6 +289,7 @@ public class TrainBoss : MonoBehaviour
 
         Debug.Log("artillery");
 
+        artilleryattack = true;
 
         yield return new WaitForSeconds(tso.artillery_shootStartDelay);
 
@@ -302,7 +322,7 @@ public class TrainBoss : MonoBehaviour
         }
 
         yield return new WaitForSeconds(tso.artillery_delayBeforeNextAttack);
-
+        artilleryattack = false;
         NextAttack();
     }
     

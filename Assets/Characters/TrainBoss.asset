@@ -29,7 +29,7 @@ MonoBehaviour:
   flamethrower_dps: 0
   flamethrower_shootStartDelay: 1
   flamethrower_delayBeforeNextAttack: 3
-  time_flamethrower: 5
+  time_flamethrower: 10
   aimForPlayer: 1
   flamethrower_aimTime: 5
   maxXmove: 12
@@ -74,7 +74,7 @@ MonoBehaviour:
   troopDeploy_maxHpForUse: 0.9
   HpForStage2: 0.5
   HpForStage3: 0.15
-  enableTurrets: 0
+  enableTurrets: 1
   enableFlamethrower: 1
   enableMissiles: 0
   enableArtillery: 0

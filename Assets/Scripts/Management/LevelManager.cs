@@ -283,6 +283,8 @@ public class LevelManager : MonoBehaviour
 
     public void SetGlobalLightAccordingToWeather()
     {
+        if (!globalLight) return;
+
         Debug.Log(weather);
         switch (weather)
         {

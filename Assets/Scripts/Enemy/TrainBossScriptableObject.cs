@@ -25,12 +25,12 @@ public class TrainBossScriptableObject : ScriptableObject
     [Space(10f)]
 
     [Header("Attack 2 - Flamethrower"), Space(5f)]
+    public bool flamethrower_useWithOtherAttacks;
     public float flamethrower_dps;
     public float flamethrower_shootStartDelay = 0.3f;
     public float flamethrower_delayBeforeNextAttack = 6f;
     public int time_flamethrower = 5;
     public bool aimForPlayer;
-    public float flamethrower_aimTime;
     public float maxXmove;
     public float moveSpeed;
     public float flamethrower_coverDamageMultiplier = 0;
@@ -56,6 +56,7 @@ public class TrainBossScriptableObject : ScriptableObject
 
     [Space(10f)]
     [Header("Attack 4 - Artillery Barrage"), Space(5f)]
+    public bool artillery_useWithOtherAttacks;
     public GameObject artilleryStrike;
     public float artillery_damage;
     public float artillery_accuracy = 0.3f;
@@ -174,6 +175,14 @@ public class TrainBossScriptableObject : ScriptableObject
                 if (muzzleFlash) muzzleFlash.SetActive(true);
             }
         }
+    }
+
+    [Serializable]
+    public struct Flamethrower
+    {
+        public GameObject flameZone;
+        public Transform mainUnit;
+
     }
 }
 

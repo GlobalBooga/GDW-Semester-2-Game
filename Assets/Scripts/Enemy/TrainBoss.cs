@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
 using static TrainBossScriptableObject;
 
@@ -9,7 +8,8 @@ public class TrainBoss : MonoBehaviour
     public TrainBossScriptableObject tso;
     public List<MultiBarrelMissileLauncher> missileLaunchers;
     public List<MachineGunTurret> turrets;
-    public GameObject flamethrower;
+    public List<Flamethrower> flamethrowers;
+    public GameObject fireZone;
 
     private List<string> allAttacks = new() { nameof(Turrets), nameof(Flamethrower), nameof(Missiles), nameof(Artillery), nameof(Troops) };
     private Queue<string> attackPattern = new();
@@ -44,6 +44,9 @@ public class TrainBoss : MonoBehaviour
     {
         hp = GetComponent<HPComponent>();
         if (hp) hp.OnHPZero = OnDied;
+
+        hp.OnHit.Add(WeaponDestroyed);
+
         playerLoc = GameObject.Find("Player").transform;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -51,10 +54,10 @@ public class TrainBoss : MonoBehaviour
         Invoke(nameof(NextAttack), 1);
         ogX = transform.position.x;
 
-        if (!tso.enableTurrets && !turretattack) turretattack = true;
-        if (!tso.enableMissiles && !missileattack) missileattack = true;
-        if (!tso.enableArtillery && !artilleryattack) artilleryattack = true;
-        if (!tso.enableFlamethrower && !flamethrowerattack) flamethrowerattack = true;
+        //if (!tso.enableTurrets && !turretattack) turretattack = true;
+        //if (!tso.enableMissiles && !missileattack) missileattack = true;
+        //if (!tso.enableArtillery && !artilleryattack) artilleryattack = true;
+        //if (!tso.enableFlamethrower && !flamethrowerattack) flamethrowerattack = true;
         //if (tso.enableFlamethrower && !flamethrowerattack) flamethrowerattack = true;
     }
 
@@ -86,11 +89,16 @@ public class TrainBoss : MonoBehaviour
             yield break;
         }
 
-        Debug.Log("Turrets");
+        //Debug.Log("Turrets");
 
         // expose
         animator.Play(TURRETS_EXTRACT, LAYER_TURRETS);
 
+        // show hpbars
+        foreach (var item in turrets)
+        {
+            item.mainUnit.GetComponent<TrainWeapon>().Expose();
+        }
 
         yield return new WaitForSeconds(tso.turrets_aimStartDelay);
         turretattack = true;
@@ -128,18 +136,25 @@ public class TrainBoss : MonoBehaviour
                 {
                     rotdone++;
                     item.mainUnit.rotation = Quaternion.Euler(0, 0, 90f);
-                    Debug.Log(rotdone);
                 }
 
                 if (Mathf.Abs(angle) < 1f && !retract)
                 {
                     retract = true;
                     animator.Play(TURRETS_RETRACT, LAYER_TURRETS);
+
+                    // hide hpbars
+                    foreach (var t in turrets)
+                    {
+                        t.mainUnit.GetComponent<TrainWeapon>().Hide();
+                    }
                 }
                 
             }
             yield return null;
         }
+
+
 
 
         yield return new WaitForSeconds(tso.turrets_delayBeforeNextAttack);
@@ -154,79 +169,88 @@ public class TrainBoss : MonoBehaviour
             yield break;
         }
 
-        NextAttack();
-
         flamethrowerattack = true;
         animator.Play(FLAMETHROWER_EXTRACT, LAYER_FLAMETHROWER);
 
-        if (rb)
+        // show hpbars
+        foreach (var item in flamethrowers)
         {
-            float time = 0;
-            if (tso.aimForPlayer)
-            {
-                rb.drag = 1f;
-                while (true)
-                {
-                    Vector3 playerDirection = (playerLoc.position - transform.position).normalized;
-                    
-                    if ((playerDirection.x < 0 && transform.position.x > (ogX - tso.maxXmove)) ||
-                     (playerDirection.x > 0 && transform.position.x < (ogX + tso.maxXmove)))
-                    {
-                        rb.AddForce(Vector2.right * playerDirection.x * tso.moveSpeed * rb.mass, ForceMode2D.Force);
-                    }
-                    else
-                    {
-                        break;
-                    }
+            item.mainUnit.GetComponent<TrainWeapon>().Expose();
+        }
 
-                    if (Mathf.Abs(playerLoc.position.x - flamethrower.transform.position.x) < 5f)
-                    {
-                        break;
-                    }
 
-                    time += Time.deltaTime;
-                    yield return null;
-                }
-                rb.drag = 5f;
-            }
-            else
+        float time = 0;
+        if (tso.aimForPlayer)
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezePositionY;
+            rb.freezeRotation = true;
+            rb.drag = 1f;
+            while (true)
             {
                 Vector3 playerDirection = (playerLoc.position - transform.position).normalized;
-                rb.drag = 1f;
-                while (true)
+                    
+                if ((playerDirection.x < 0 && transform.position.x > (ogX - tso.maxXmove)) ||
+                    (playerDirection.x > 0 && transform.position.x < (ogX + tso.maxXmove)))
                 {
-                    if ((playerDirection.x < 0 && transform.position.x > (ogX - tso.maxXmove))||
-                     (playerDirection.x > 0 && transform.position.x < (ogX + tso.maxXmove)))
-                    {
-                        rb.AddForce(Vector2.right * playerDirection.x * tso.moveSpeed * rb.mass, ForceMode2D.Force);
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                    yield return null;
+                    rb.AddForce(Vector2.right * playerDirection.x * tso.moveSpeed * rb.mass, ForceMode2D.Force);
                 }
-                rb.drag = 5f;
+                else
+                {
+                    break;
+                }
+
+                if (Mathf.Abs(playerLoc.position.x - fireZone.transform.position.x) < 5f)
+                {
+                    break;
+                }
+
+                time += Time.deltaTime;
+                yield return null;
             }
+            rb.drag = 5f;
+        }
+        else
+        {
+            Vector3 playerDirection = (playerLoc.position - transform.position).normalized;
+            rb.drag = 1f;
+            while (true)
+            {
+                if ((playerDirection.x < 0 && transform.position.x > (ogX - tso.maxXmove))||
+                    (playerDirection.x > 0 && transform.position.x < (ogX + tso.maxXmove)))
+                {
+                    rb.AddForce(Vector2.right * playerDirection.x * tso.moveSpeed * rb.mass, ForceMode2D.Force);
+                }
+                else
+                {
+                    break;
+                }
+
+                yield return null;
+            }
+            rb.drag = 5f;
         }
 
         yield return new WaitForSeconds(tso.flamethrower_shootStartDelay);
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
         animator.Play(FLAMETHROWER_SHOOT, LAYER_FLAMETHROWER);
 
+        if (tso.flamethrower_useWithOtherAttacks) NextAttack();
         yield return new WaitForSeconds(tso.time_flamethrower);
-        //animator.Play(FLAMETHROWER_END);
 
         animator.Play(FLAMETHROWER_RETRACT, LAYER_FLAMETHROWER);
 
+        // hide hpbars
+        foreach (var item in flamethrowers)
+        {
+            item.mainUnit.GetComponent<TrainWeapon>().Hide();
+        }
 
         // this line is only here because otherwise it will give an error
         // when you start coding, move it to where you need it
         yield return new WaitForSeconds(tso.flamethrower_delayBeforeNextAttack);
         flamethrowerattack = false;
-
-        NextAttack();
+        if (!tso.flamethrower_useWithOtherAttacks) NextAttack();
     }
 
     private IEnumerator Missiles()
@@ -237,12 +261,18 @@ public class TrainBoss : MonoBehaviour
             yield break;
         }
 
-        Debug.Log("missiles");
+        //Debug.Log("missiles");
 
         missileattack = true;
 
         // make launchers come out
         animator.Play(MISSILES_EXTRACT, LAYER_MISSILES);
+
+        // show hpbars
+        foreach (var item in missileLaunchers)
+        {
+            item.mainUnit.GetComponent<TrainWeapon>().Expose();
+        }
 
         yield return new WaitForSeconds(tso.missile_aimStartDelay);
 
@@ -277,7 +307,12 @@ public class TrainBoss : MonoBehaviour
 
         // make launchers return
         animator.Play(MISSILES_RETRACT, LAYER_MISSILES);
-        
+
+        // hide hpbars
+        foreach (var item in missileLaunchers)
+        {
+            item.mainUnit.GetComponent<TrainWeapon>().Hide();
+        }
 
         yield return new WaitForSeconds(tso.missile_delayBeforeNextAttack);
         missileattack = false;
@@ -293,11 +328,12 @@ public class TrainBoss : MonoBehaviour
             yield break;
         }
 
-        Debug.Log("artillery");
+        //Debug.Log("artillery");
 
         artilleryattack = true;
 
         yield return new WaitForSeconds(tso.artillery_shootStartDelay);
+        if (tso.artillery_useWithOtherAttacks) NextAttack();
 
         float maxOffset, xpos, ypos;
 
@@ -307,6 +343,7 @@ public class TrainBoss : MonoBehaviour
             CameraShake.instance.ShakeCamera(tso.artillery_cameraShakeIntensity, tso.artillery_cameraShakeTime);
             yield return new WaitForSeconds(tso.artillery_delayBetweenShots);
         }
+
 
         // delay before they land
         yield return new WaitForSeconds(tso.artillery_airTime);
@@ -329,7 +366,7 @@ public class TrainBoss : MonoBehaviour
 
         yield return new WaitForSeconds(tso.artillery_delayBeforeNextAttack);
         artilleryattack = false;
-        NextAttack();
+        if (!tso.artillery_useWithOtherAttacks) NextAttack();
     }
     
     private IEnumerator Troops()
@@ -340,7 +377,7 @@ public class TrainBoss : MonoBehaviour
             yield break;
         }
 
-        yield return null;
+        yield return new WaitForSeconds(tso.troop_delayBeforeNextAttack);
     }
 
     private void NewAttackOrder()
@@ -367,13 +404,6 @@ public class TrainBoss : MonoBehaviour
             tso.enableTurrets = true;
         }
 
-        if (flamethrowerattack && missileattack)
-        {
-            Debug.Log("overflow protection");
-            Invoke(nameof(NextAttack), 2f);
-            return;
-        }
-
         if (attackPattern.Count == 0) NewAttackOrder();
 
         // skip disabled attacks
@@ -397,8 +427,13 @@ public class TrainBoss : MonoBehaviour
 
     private bool CanUseAttack(float hpThreshold)
     {
-        if (hp.GetHealth() == 0 || hp.GetHealth() > hp.maxHealth * hpThreshold) return false;
-        else return true;
+        //if (hp.GetHealth() == 0 || hp.GetHealth() > hp.maxHealth * hpThreshold) return false;
+        //else return true;
+        return true;
     }
 
+    public void WeaponDestroyed()
+    {
+        Debug.Log("hgjdsagsda");
+    }
 }

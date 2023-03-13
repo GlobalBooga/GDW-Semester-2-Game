@@ -14,6 +14,8 @@ public class Bullet : MonoBehaviour
 
     public void Fly(Vector2 dir, float force, float damage = 0)
     {
+        if (!rb) return;
+
         rb.AddForce(dir * force, ForceMode2D.Impulse);
         this.damage = damage;
         transform.parent = null;
@@ -32,7 +34,7 @@ public class Bullet : MonoBehaviour
         }
         else
         {
-            StaticHelpers.ApplyDamage(collision.gameObject, damage);
+            StaticHelpers.ApplyDamage(collision.collider.gameObject, damage);
         }
 
         Destroy(gameObject);

@@ -11,6 +11,12 @@ public class SceneManager : MonoBehaviour
     }
 
 
+    [Header("Dialogue")]
+    public bool enableDialogue = false;
+    public DialogueController.DialoguePart[] sceneScript;
+
+
+    [Header("Scene Stuff")]
     public SceneObjective sceneObjective;
     public float cameraSize;
     private int enemyCount;
@@ -90,6 +96,13 @@ public class SceneManager : MonoBehaviour
                 if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
                 LevelManager.instance.hintText.text = "";
                 break;
+        }
+
+        if (enableDialogue)
+        {
+            LevelManager.instance.DisablePlayerInput();
+
+            LevelManager.instance.dialogueController.StartDialogue(sceneScript);
         }
     }
 

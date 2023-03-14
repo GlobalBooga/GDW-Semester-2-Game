@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(HPComponent))]
@@ -370,6 +369,11 @@ public class Enemy : MonoBehaviour
 
         Invoke(nameof(OnPlayerFoundDelayed), eso.defaultReactionTime);
         //Debug.Log("found player");
+
+        if (!LevelManager.instance.playerFound)
+        {
+            LevelManager.instance.playerFound = true;
+        }
     }
 
     /// <summary>

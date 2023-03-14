@@ -707,7 +707,7 @@ public class Andaroz : Enemy
         CameraShake.instance.LerpCameraSize(15f);
         CameraShake.instance.SetCameraFollow(Camera.main.transform);
 
-        CameraShake.instance.RestoreCamPos(new Vector2(0, Mathf.Clamp(playerLoc.position.y, LevelManager.instance.GetCurrentLargeRoomBounds().w, LevelManager.instance.GetCurrentLargeRoomBounds().z)));
+        CameraShake.instance.RestoreCamPos(new Vector2(0, Mathf.Clamp(playerLoc.position.y, LevelManager.instance.GetCurrentLargeRoomBounds().w, LevelManager.instance.GetCurrentLargeRoomBounds().z)), 1);
         yield return new WaitForSeconds(1f);
 
         // resume player input

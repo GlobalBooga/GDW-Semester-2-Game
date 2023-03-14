@@ -36,6 +36,10 @@ public class LevelManager : MonoBehaviour
     public Image cursor;
     //private SpriteRenderer cursorSpriteRenderer;
 
+    [Header("Dialogue")]
+    public DialogueController dialogueController;
+
+
     [Header("General Scene Settings")]
     public AnimationCurve messageFade;
     public float hintTime = 5f;
@@ -67,8 +71,13 @@ public class LevelManager : MonoBehaviour
     private int currentSceneIndex = 0;
     private bool showingHint;
     private bool isQuitting;
+    public bool playerFound { get; set; }
 
     private Player player;
+
+
+
+
 
     [HideInInspector] public bool startBossBattle;
 
@@ -80,7 +89,6 @@ public class LevelManager : MonoBehaviour
 
         weather = (Weather)UnityEngine.Random.Range(0, (int)Weather.max);
         SetGlobalLightAccordingToWeather();
-        
     }
 
     private void Update()
@@ -130,6 +138,8 @@ public class LevelManager : MonoBehaviour
 
     public void NextScene()
     {
+        playerFound = false;
+
         // close the current scene
         orderedScenes[currentSceneIndex].manager.DisableScene();
 
@@ -284,7 +294,12 @@ public class LevelManager : MonoBehaviour
 
     public void SetGlobalLightAccordingToWeather()
     {
-        if (!globalLight || !enableWeather) return;
+        if (!globalLight) return;
+        if (!enableWeather)
+        {
+            globalLight.intensity = 1f;
+            return;
+        }
 
         Debug.Log(weather);
         switch (weather)
@@ -312,9 +327,9 @@ public class LevelManager : MonoBehaviour
 
     public bool IsQuitting() => isQuitting;
 
-
     public void SetCursorColor(Color newColor)
     {
         color = newColor;
     }
+
 }

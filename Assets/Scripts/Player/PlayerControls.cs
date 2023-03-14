@@ -245,6 +245,65 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Menus"",
+            ""id"": ""e952ea7a-1f1a-4c79-a54c-104ef91c0830"",
+            ""actions"": [
+                {
+                    ""name"": ""Unpause"",
+                    ""type"": ""Button"",
+                    ""id"": ""c6728862-3eaa-409a-a339-b6a00f6b3462"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AdvanceDialogue"",
+                    ""type"": ""Button"",
+                    ""id"": ""de2955b2-53b3-4486-963a-c31d825ba717"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""537d8915-6d4b-412c-9a3c-da3773277ebb"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Unpause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d1fde013-0b76-4c7c-9d18-68788765b2c7"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Unpause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""22158d60-50ce-40cb-a326-10b755de2137"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AdvanceDialogue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -259,6 +318,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_General_MovementAbility = m_General.FindAction("MovementAbility", throwIfNotFound: true);
         m_General_Pickup = m_General.FindAction("Pickup", throwIfNotFound: true);
         m_General_Reload = m_General.FindAction("Reload", throwIfNotFound: true);
+        // Menus
+        m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
+        m_Menus_Unpause = m_Menus.FindAction("Unpause", throwIfNotFound: true);
+        m_Menus_AdvanceDialogue = m_Menus.FindAction("AdvanceDialogue", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -403,6 +466,47 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         }
     }
     public GeneralActions @General => new GeneralActions(this);
+
+    // Menus
+    private readonly InputActionMap m_Menus;
+    private IMenusActions m_MenusActionsCallbackInterface;
+    private readonly InputAction m_Menus_Unpause;
+    private readonly InputAction m_Menus_AdvanceDialogue;
+    public struct MenusActions
+    {
+        private @PlayerControls m_Wrapper;
+        public MenusActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Unpause => m_Wrapper.m_Menus_Unpause;
+        public InputAction @AdvanceDialogue => m_Wrapper.m_Menus_AdvanceDialogue;
+        public InputActionMap Get() { return m_Wrapper.m_Menus; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenusActions set) { return set.Get(); }
+        public void SetCallbacks(IMenusActions instance)
+        {
+            if (m_Wrapper.m_MenusActionsCallbackInterface != null)
+            {
+                @Unpause.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnUnpause;
+                @Unpause.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnUnpause;
+                @Unpause.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnUnpause;
+                @AdvanceDialogue.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnAdvanceDialogue;
+                @AdvanceDialogue.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnAdvanceDialogue;
+                @AdvanceDialogue.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnAdvanceDialogue;
+            }
+            m_Wrapper.m_MenusActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Unpause.started += instance.OnUnpause;
+                @Unpause.performed += instance.OnUnpause;
+                @Unpause.canceled += instance.OnUnpause;
+                @AdvanceDialogue.started += instance.OnAdvanceDialogue;
+                @AdvanceDialogue.performed += instance.OnAdvanceDialogue;
+                @AdvanceDialogue.canceled += instance.OnAdvanceDialogue;
+            }
+        }
+    }
+    public MenusActions @Menus => new MenusActions(this);
     public interface IGeneralActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -413,5 +517,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnMovementAbility(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+    }
+    public interface IMenusActions
+    {
+        void OnUnpause(InputAction.CallbackContext context);
+        void OnAdvanceDialogue(InputAction.CallbackContext context);
     }
 }

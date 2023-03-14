@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName ="Base",menuName = "Enemy/TrainBoss")]
@@ -21,12 +20,13 @@ public class TrainBossScriptableObject : ScriptableObject
     public float maxAngle = 90f;
     public float extrudeDistance = 2f;
     public float turrets_coverDamageMultiplier = 0;
-    [Range(0f, 1f)] public float turrets_maxHpForUse = 1f;
+    [Range(1, 7)] public int turrets_maxHpForUse = 1;
     [Space(10f)]
 
     [Header("Attack 2 - Flamethrower"), Space(5f)]
     public bool flamethrower_useWithOtherAttacks;
-    public float flamethrower_dps;
+    public float flamethrower_damage;
+    public float flamethrower_dmgInterval;
     public float flamethrower_shootStartDelay = 0.3f;
     public float flamethrower_timeBeforeRetract = 1.5f;
     public float flamethrower_delayBeforeNextAttack = 6f;
@@ -35,7 +35,7 @@ public class TrainBossScriptableObject : ScriptableObject
     public float maxXmove;
     public float moveSpeed;
     public float flamethrower_coverDamageMultiplier = 0;
-    [Range(0f, 1f)] public float flamethrower_maxHpForUse = 0.8f;
+    [Range(1, 7)] public int flamethrower_maxHpForUse = 2;
 
     [Space(10f)]
     [Header("Attack 3 - Missile Barrage"), Space(5f)]
@@ -53,7 +53,7 @@ public class TrainBossScriptableObject : ScriptableObject
     public int shots_missiles = 8;
     public LayerMask whatTakesDamageFromMissiles;
     public float missile_coverDamageMultiplier = 0.5f;
-    [Range(0f, 1f)] public float missile_maxHpForUse = 0.8f;
+    [Range(1, 7)] public int missile_maxHpForUse = 1;
 
     [Space(10f)]
     [Header("Attack 4 - Artillery Barrage"), Space(5f)]
@@ -71,21 +71,15 @@ public class TrainBossScriptableObject : ScriptableObject
     public int artillery_shots = 3;
     //public bool fireSequentiallyArtillery = true;
     public float artillery_pillarDamageMultiplier = 0.75f;
-    [Range(0f, 1f)] public float Artillery_maxHpForUse = 0.5f;
+    [Range(1, 7)] public int Artillery_maxHpForUse = 1;
 
     [Space(10f)]
     [Header("Attack 5 - Troop Deploy"), Space(5f)]
     public float troop_startDelay = 10f;
     public float troop_delayBeforeNextAttack = 6f;
     public GameObject[] troop_types;
-    public BoxCollider2D troop_spawnArea;
     public float troop_spawnAmount = 5;
-    [Range(0f, 1f)] public float troopDeploy_maxHpForUse = 0.9f;
-
-    [Space(10f)]
-    [Header("Stage 2"), Space(5f)]
-    [Range(0f, 1f)] public float HpForStage2 = 0.5f;
-    [Range(0f, 1f)] public float HpForStage3 = 0.15f;
+    [Range(1, 7)] public int troopDeploy_maxHpForUse = 3;
 
     [Space(10f)]
     [Header("Debugging"), Space(5f)]
@@ -94,7 +88,6 @@ public class TrainBossScriptableObject : ScriptableObject
     public bool enableMissiles;
     public bool enableArtillery;
     public bool enableTroops;
-
 
 
     [Serializable]
@@ -183,7 +176,7 @@ public class TrainBossScriptableObject : ScriptableObject
     {
         public GameObject flameZone;
         public Transform mainUnit;
-
+        public BoxCollider2D fireZone;
     }
 }
 

@@ -36,6 +36,9 @@ public class AmbushBossManager : BossRoomManager
     {
         base.ForceSetScene();
 
+        LevelManager.instance.DisablePlayerInput();
+        CameraShake.instance.restoreCamPosAfterShake = false;
+
         // hide enemies
         for (int i = 0; i < LevelManager.instance.CurrentScene.enemyContainer.transform.childCount; i++)
         {
@@ -135,7 +138,15 @@ public class AmbushBossManager : BossRoomManager
 
     private IEnumerator EndCutscene()
     {
+        // end
+        if (bossBarScript)
+        {
+            bossBarScript.Dissapear();
+        }
+
+
         yield return new WaitForSeconds(3f);
+
 
         // turn on the lights
         foreach (var item in roomLights)
@@ -149,7 +160,8 @@ public class AmbushBossManager : BossRoomManager
 
         yield return new WaitForSeconds(1f);
         player.FlashlightOff();
-        //yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.5f);
+
 
 
         //LevelManager.instance.DisablePlayerInput();

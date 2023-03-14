@@ -72,13 +72,13 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         controls.General.Enable();
-        //controls.Menus.Disable();
+        controls.Menus.Disable();
     }
 
     private void OnDisable()
     {
         controls.General.Disable();
-        //controls.Menus.Enable();
+        controls.Menus.Enable();
     }
 
 
@@ -262,15 +262,22 @@ public class Player : MonoBehaviour
                 }
             }
         };
+
+        controls.Menus.AdvanceDialogue.started += ctx =>
+        {
+            LevelManager.instance.dialogueController.NextSentence();
+        };
     }
 
     public void DisableGeneralControls()
     {
         controls.General.Disable();
+        controls.Menus.Enable();
     }
 
     public void EnableGeneralControls()
     {
+        controls.Menus.Disable();
         controls.General.Enable();
     }
 

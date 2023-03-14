@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: TrainBoss
   m_EditorClassIdentifier: 
   bullet: {fileID: 6545307244740321829, guid: 0cc7b3e22e8da2c4aaa8a327dcc3d1ea, type: 3}
-  turrets_damage: 0
-  turrets_delayBetweenShots: 0.22
+  turrets_damage: 25
+  turrets_delayBetweenShots: 0.25
   turrets_aimStartDelay: 0.7
   turrets_shootStartDelay: 0.5
-  turrets_delayBeforeNextAttack: 3
+  turrets_delayBeforeNextAttack: 0
   bulletSpeed: 25
   bulletSpread: 5
   shots_Turrets: 20
@@ -25,26 +25,27 @@ MonoBehaviour:
   maxAngle: 60
   extrudeDistance: 2
   turrets_coverDamageMultiplier: 0
-  turrets_maxHpForUse: 1
+  turrets_maxHpForUse: 7
   flamethrower_useWithOtherAttacks: 0
-  flamethrower_dps: 0
+  flamethrower_damage: 30
+  flamethrower_dmgInterval: 0.2
   flamethrower_shootStartDelay: 1
-  flamethrower_timeBeforeRetract: 1.5
-  flamethrower_delayBeforeNextAttack: 3
+  flamethrower_timeBeforeRetract: 2.5
+  flamethrower_delayBeforeNextAttack: 0
   flamethrower_timeBeforeEnd: 5
   aimForPlayer: 1
   maxXmove: 12
-  moveSpeed: 2
+  moveSpeed: 4
   flamethrower_coverDamageMultiplier: 0
-  flamethrower_maxHpForUse: 1
+  flamethrower_maxHpForUse: 5
   crosshairController: {fileID: 1336308465829088357, guid: b57007077a03ec94682ae7906b103ac5, type: 3}
   missile: {fileID: 6545307244740321829, guid: 45f776f1fe02de74bad65ddb5ebb7239, type: 3}
-  missile_damage: 0
+  missile_damage: 100
   missile_delayBetweenShots: 0.25
   missile_aimStartDelay: 1.3
   missile_shootStartDelay: 1.65
   missile_delaybeforeRetract: 2
-  missile_delayBeforeNextAttack: 1
+  missile_delayBeforeNextAttack: 0
   missileRotForce: 70
   missileMaxSpeed: 15
   missileSpread: 15
@@ -53,31 +54,32 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1310976
   missile_coverDamageMultiplier: 0.5
-  missile_maxHpForUse: 1
+  missile_maxHpForUse: 6
   artillery_useWithOtherAttacks: 0
   artilleryStrike: {fileID: 1254617435676122689, guid: ccc2e79fb78204c40a25a11782d3dd15, type: 3}
-  artillery_damage: 0
+  artillery_damage: 200
   artillery_accuracy: 0.3
-  artillery_imactDelay: 1
+  artillery_imactDelay: 1.2
   artillery_cameraShakeIntensity: 6
-  artillery_cameraShakeTime: 0.2
+  artillery_cameraShakeTime: 0.1
   artillery_delayBetweenShots: 0.3
   artillery_airTime: 0.5
   artillery_shootStartDelay: 1
-  artillery_delayBeforeNextAttack: 3
-  artillery_shots: 6
+  artillery_delayBeforeNextAttack: 0
+  artillery_shots: 10
   artillery_pillarDamageMultiplier: 0.75
-  Artillery_maxHpForUse: 1
+  Artillery_maxHpForUse: 7
   troop_startDelay: 10
   troop_delayBeforeNextAttack: 1
-  troop_types: []
-  troop_spawnArea: {fileID: 0}
+  troop_types:
+  - {fileID: 7527923035675034280, guid: 3496c5525e4af834eace9abd81235a54, type: 3}
+  - {fileID: 2781084931710897593, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
+  - {fileID: 1722265178022636069, guid: 41e82737a2bd85e45b0a9c37df700687, type: 3}
+  - {fileID: 6687974566634874365, guid: 7a3e3621607df39459e62b1423e9b10e, type: 3}
   troop_spawnAmount: 5
-  troopDeploy_maxHpForUse: 1
-  HpForStage2: 0.5
-  HpForStage3: 0.15
+  troopDeploy_maxHpForUse: 7
   enableTurrets: 0
-  enableFlamethrower: 1
+  enableFlamethrower: 0
   enableMissiles: 0
-  enableArtillery: 0
+  enableArtillery: 1
   enableTroops: 0

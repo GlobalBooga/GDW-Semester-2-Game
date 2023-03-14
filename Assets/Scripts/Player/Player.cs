@@ -265,7 +265,10 @@ public class Player : MonoBehaviour
 
         controls.Menus.AdvanceDialogue.started += ctx =>
         {
-            LevelManager.instance.dialogueController.NextSentence();
+            if (LevelManager.instance.dialogueController.isEnabled)
+            {
+                LevelManager.instance.dialogueController.NextSentence();
+            }
         };
     }
 

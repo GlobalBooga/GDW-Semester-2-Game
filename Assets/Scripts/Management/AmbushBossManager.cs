@@ -20,6 +20,14 @@ public class AmbushBossManager : BossRoomManager
     const string CLOSE_DOORS = "CloseDoors";
 
 
+    [Header("Dialogue")]
+    public bool enableDialogue = false;
+    public DialogueController.DialoguePart[] enterScript;
+    public DialogueController.DialoguePart[] doorsClosingScript;
+    public DialogueController.DialoguePart[] endScript;
+
+
+
     private void Awake()
     {
         roomAnimator = GetComponent<Animator>();
@@ -77,8 +85,16 @@ public class AmbushBossManager : BossRoomManager
         // dialogue
 
         yield return new WaitForSeconds(0.3f);
-        Debug.Log("Adana: \"oh shit dead end\"");
-        yield return new WaitForSeconds(2f);
+
+
+        if (enableDialogue)
+        {
+            LevelManager.instance.dialogueController.StartDialogue(enterScript);
+
+            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+        }
+
+        yield return new WaitForSeconds(0.2f);
 
 
         // close doors
@@ -86,7 +102,14 @@ public class AmbushBossManager : BossRoomManager
         roomAnimator.Play(CLOSE_DOORS);
 
         yield return new WaitForSeconds(0.7f);
-        Debug.Log("Room: \"its a trap lol get fucked\"");
+
+
+        if (enableDialogue)
+        {
+            LevelManager.instance.dialogueController.StartDialogue(enterScript);
+
+            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+        }
 
         // wait for doors to close
         while (roomAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1) yield return null;

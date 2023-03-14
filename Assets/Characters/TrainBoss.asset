@@ -26,11 +26,12 @@ MonoBehaviour:
   extrudeDistance: 2
   turrets_coverDamageMultiplier: 0
   turrets_maxHpForUse: 1
-  flamethrower_useWithOtherAttacks: 1
+  flamethrower_useWithOtherAttacks: 0
   flamethrower_dps: 0
   flamethrower_shootStartDelay: 1
+  flamethrower_timeBeforeRetract: 1.5
   flamethrower_delayBeforeNextAttack: 3
-  time_flamethrower: 10
+  flamethrower_timeBeforeEnd: 5
   aimForPlayer: 1
   maxXmove: 12
   moveSpeed: 2
@@ -53,7 +54,7 @@ MonoBehaviour:
     m_Bits: 1310976
   missile_coverDamageMultiplier: 0.5
   missile_maxHpForUse: 1
-  artillery_useWithOtherAttacks: 1
+  artillery_useWithOtherAttacks: 0
   artilleryStrike: {fileID: 1254617435676122689, guid: ccc2e79fb78204c40a25a11782d3dd15, type: 3}
   artillery_damage: 0
   artillery_accuracy: 0.3
@@ -76,7 +77,7 @@ MonoBehaviour:
   HpForStage2: 0.5
   HpForStage3: 0.15
   enableTurrets: 0
-  enableFlamethrower: 0
-  enableMissiles: 1
+  enableFlamethrower: 1
+  enableMissiles: 0
   enableArtillery: 0
   enableTroops: 0

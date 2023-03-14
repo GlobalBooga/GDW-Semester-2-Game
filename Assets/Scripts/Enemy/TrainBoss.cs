@@ -30,12 +30,16 @@ public class TrainBoss : MonoBehaviour
     const string TURRETS_RETRACT = "TurretRetract";
     const string MISSILES_EXTRACT = "MissilesExtract";
     const string MISSILES_RETRACT = "MissilesRetract";
-    const string FLAMETHROWER_SHOOT = "FlamethrowerShoot";
-    const string FLAMETHROWER_END = "FlamethrowerEnd";
+    const string FLAMETHROWER_SHOOT0 = "FlamethrowerShoot0";
+    const string FLAMETHROWER_END0 = "FlamethrowerEnd0";
+    const string FLAMETHROWER_SHOOT1 = "FlamethrowerShoot1";
+    const string FLAMETHROWER_END1 = "FlamethrowerEnd1";
     const string FLAMETHROWER_EXTRACT = "FlamethrowerExtract";
     const string FLAMETHROWER_RETRACT = "FlamethrowerRetract";
 
-    const int LAYER_FLAMETHROWER = 0;
+    const int LAYER_FLAMETHROWERS = 0;
+    const int LAYER_FIREZONE0 = 10;
+    const int LAYER_FIREZONE1 = 11;
     const int LAYER_TURRETS = 1;
     const int LAYER_MISSILES = 2;
 
@@ -170,7 +174,7 @@ public class TrainBoss : MonoBehaviour
         }
 
         flamethrowerattack = true;
-        animator.Play(FLAMETHROWER_EXTRACT, LAYER_FLAMETHROWER);
+        animator.Play(FLAMETHROWER_EXTRACT, LAYER_FLAMETHROWERS);
 
         // show hpbars
         foreach (var item in flamethrowers)
@@ -232,19 +236,32 @@ public class TrainBoss : MonoBehaviour
 
         yield return new WaitForSeconds(tso.flamethrower_shootStartDelay);
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        
 
-        animator.Play(FLAMETHROWER_SHOOT, LAYER_FLAMETHROWER);
-
+        // Shoot fire
+        animator.Play(FLAMETHROWER_SHOOT0, LAYER_FIREZONE0);
+        animator.Play(FLAMETHROWER_SHOOT1, LAYER_FIREZONE1);
         if (tso.flamethrower_useWithOtherAttacks) NextAttack();
-        yield return new WaitForSeconds(tso.time_flamethrower);
 
-        animator.Play(FLAMETHROWER_RETRACT, LAYER_FLAMETHROWER);
+
+        // Retract flamethrowers
+        yield return new WaitForSeconds(tso.flamethrower_timeBeforeRetract);
+        animator.Play(FLAMETHROWER_RETRACT, LAYER_FLAMETHROWERS);
+
 
         // hide hpbars
         foreach (var item in flamethrowers)
         {
             item.mainUnit.GetComponent<TrainWeapon>().Hide();
         }
+
+
+        // end fire
+        yield return new WaitForSeconds(tso.flamethrower_timeBeforeEnd);
+        animator.Play(FLAMETHROWER_END0, LAYER_FIREZONE0);
+        animator.Play(FLAMETHROWER_END1, LAYER_FIREZONE1);
+
+
 
         // this line is only here because otherwise it will give an error
         // when you start coding, move it to where you need it

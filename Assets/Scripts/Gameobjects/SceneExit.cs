@@ -1,4 +1,5 @@
 using UnityEngine;
+using static SceneManager;
 
 public class SceneExit : MonoBehaviour
 {
@@ -55,7 +56,7 @@ public class SceneExit : MonoBehaviour
         {
             //Debug.Log("must kill remaining enemies");
             willFailToDetectTriggerEnter = true;
-            LevelManager.instance.ShowHint();
+            if (!LevelManager.instance.hintController.IsShowing) LevelManager.instance.hintController.ShowHint();
         }
     }
 

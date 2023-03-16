@@ -48,6 +48,7 @@ GameObject:
   m_Component:
   - component: {fileID: 888335009760238881}
   - component: {fileID: 1670140985484177400}
+  - component: {fileID: 1514666771326131481}
   m_Layer: 5
   m_Name: Objective
   m_TagString: Untagged
@@ -97,6 +98,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &1514666771326131481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888335009760238882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e487651c554e974d9f51cbe7640d3d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1144356874654187459
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +189,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Kill all enemies
+  m_Text: objective
 --- !u!1 &1594587548963907238
 GameObject:
   m_ObjectHideFlags: 0

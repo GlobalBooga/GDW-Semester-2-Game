@@ -8,7 +8,6 @@ public class Objective : MonoBehaviour
     Animator animator;
     Text objectiveText;
 
-
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -20,9 +19,14 @@ public class Objective : MonoBehaviour
         objectiveText.text = text;
     }
 
-    public void SetCompleted()
+    public void Completed()
     {
         animator.Play("ObjectiveComplete");
         Destroy(gameObject, 2.5f);
+    }
+
+    public string GetObjective()
+    {
+        return objectiveText.text.ToLower();
     }
 }

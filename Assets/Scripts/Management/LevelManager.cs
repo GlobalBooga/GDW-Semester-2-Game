@@ -31,7 +31,7 @@ public class LevelManager : MonoBehaviour
     public static LevelManager instance;
 
     [Header("Crosshair Settings")]
-    public Color color;
+    public Color color = Color.yellow;
     //public Sprite cursorSprite;
     public Image cursor;
     //private SpriteRenderer cursorSpriteRenderer;
@@ -66,7 +66,10 @@ public class LevelManager : MonoBehaviour
 
     [Header("Scenes")]
     [SerializeField] private List<Scene> orderedScenes;
+
+
     public Scene CurrentScene => orderedScenes[currentSceneIndex];
+    
 
     private int currentSceneIndex = 0;
     private bool isQuitting;
@@ -108,6 +111,13 @@ public class LevelManager : MonoBehaviour
     {
         Cursor.visible = false;
 
+        if (!globalLight)
+        {
+            enableWeather = false;
+        }
+
+        if (orderedScenes.Count == 0) return;
+
         // disable all scenes besides the first one
         for (int i = 0; i < orderedScenes.Count; i++)
         {
@@ -117,10 +127,6 @@ public class LevelManager : MonoBehaviour
 
         orderedScenes[currentSceneIndex = 0].manager.SetScene();
 
-        if (!globalLight)
-        {
-            enableWeather = false;
-        }
     }
 
     public void AlertAllEnemiesInCurrentScene(Vector3 alertOrigin)
@@ -191,11 +197,6 @@ public class LevelManager : MonoBehaviour
     public void EnemyDied()
     {
         orderedScenes[currentSceneIndex].manager.ProgressKillAllEnemies();
-    }
-
-    public void KeyCollected()
-    {
-        orderedScenes[currentSceneIndex].manager.ProgressFindTheKey();
     }
 
     public void StartSceneTransition()

@@ -1,17 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    [Header("Attack"), Space(5f)]
-    public float interactRange = 1f;
-
-    [Space(10f)]
-
     [Header("Movement Values"), Space(5f)]
     public float runSpeed = 10f;
     public float moveForce = 15f;
@@ -66,6 +60,9 @@ public class Player : MonoBehaviour
     public Vector2 MouseDirection => (MousePosition - (Vector2)transform.position).normalized;
     public bool IsMoving => RawDirection != Vector2.zero;
 
+    public bool IsDodging => isUsingMoveAbility;
+
+    public bool IsAttacking { get; private set; } 
 
     #region Unity Messages
 
@@ -185,7 +182,13 @@ public class Player : MonoBehaviour
             }
         };
 
-        controls.General.Attack.started += ctx => { if (weapon) weapon.Use(); };
+        controls.General.Attack.started += ctx => 
+        {
+            IsAttacking = true;
+            if (weapon) weapon.Use(); 
+        };
+
+        controls.General.Attack.canceled += ctx => IsAttacking = false;
 
         controls.General.MovementAbility.started += ctx =>
         {
@@ -251,7 +254,7 @@ public class Player : MonoBehaviour
             Invoke(nameof(EndDodge), dodgeDuration);
             
         };
-        
+
         controls.General.WeaponAbility.started += ctx =>
         {
             if (weapon)

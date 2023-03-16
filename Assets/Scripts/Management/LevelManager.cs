@@ -117,6 +117,11 @@ public class LevelManager : MonoBehaviour
         }
 
         orderedScenes[currentSceneIndex = 0].manager.SetScene();
+
+        if (!globalLight)
+        {
+            enableWeather = false;
+        }
     }
 
     public void AlertAllEnemiesInCurrentScene(Vector3 alertOrigin)

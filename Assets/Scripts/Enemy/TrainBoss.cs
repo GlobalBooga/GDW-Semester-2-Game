@@ -23,14 +23,12 @@ public class TrainBoss : MonoBehaviour
     private Animator animator;
 
     private float ogX;
-    private int tempartilleryshots;
-    private bool tempartillerybool;
-    private float tempatkspeed;
-    private bool tempflamebool;
+    private int defartilleryshots = 3;
+    private bool defartillerybool = false;
+    private float defatkspeed = 1;
+    private bool defflamebool = true;
     private bool resettingpos;
     private bool posreset;
-
-    private bool started;
 
     // animations
     const string TURRETS_EXTRACT = "TurretExtract";
@@ -52,13 +50,6 @@ public class TrainBoss : MonoBehaviour
 
     private void Start()
     {
-        tempartilleryshots = tso.artillery_shots;
-        tempartillerybool = tso.artillery_useWithOtherAttacks;
-        tempatkspeed = tso.artillery_delayBeforeNextAttack;
-        tempflamebool = tso.flamethrower_useWithOtherAttacks;
-        //tempflamebool = tso.flamethrower_useWithOtherAttacks;
-
-        started = true;
         hp = GetComponent<HPComponent>();
         if (hp) hp.OnHPZero = OnDied;
 
@@ -126,30 +117,24 @@ public class TrainBoss : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (started)
-        {
-            tso.artillery_shots = tempartilleryshots;
-            tso.artillery_useWithOtherAttacks = tempartillerybool;
-            tso.artillery_delayBeforeNextAttack = tempatkspeed;
-            tso.flamethrower_delayBeforeNextAttack = tempatkspeed;
-            tso.missile_delayBeforeNextAttack = tempatkspeed;
-            tso.turrets_delayBeforeNextAttack = tempatkspeed;
-            tso.flamethrower_useWithOtherAttacks = tempflamebool;
-        }
+        tso.artillery_shots = defartilleryshots;
+        tso.artillery_useWithOtherAttacks = defartillerybool;
+        tso.artillery_delayBeforeNextAttack = defatkspeed;
+        tso.flamethrower_delayBeforeNextAttack = defatkspeed;
+        tso.missile_delayBeforeNextAttack = defatkspeed;
+        tso.turrets_delayBeforeNextAttack = defatkspeed;
+        tso.flamethrower_useWithOtherAttacks = defflamebool;
     }
 
     private void OnDisable()
     {
-        if (started)
-        {
-            tso.artillery_shots = tempartilleryshots;
-            tso.artillery_useWithOtherAttacks = tempartillerybool;
-            tso.artillery_delayBeforeNextAttack = tempatkspeed;
-            tso.flamethrower_delayBeforeNextAttack = tempatkspeed;
-            tso.missile_delayBeforeNextAttack = tempatkspeed;
-            tso.turrets_delayBeforeNextAttack = tempatkspeed;
-            tso.flamethrower_useWithOtherAttacks = tempflamebool;
-        }
+        tso.artillery_shots = defartilleryshots;
+        tso.artillery_useWithOtherAttacks = defartillerybool;
+        tso.artillery_delayBeforeNextAttack = defatkspeed;
+        tso.flamethrower_delayBeforeNextAttack = defatkspeed;
+        tso.missile_delayBeforeNextAttack = defatkspeed;
+        tso.turrets_delayBeforeNextAttack = defatkspeed;
+        tso.flamethrower_useWithOtherAttacks = defflamebool;
     }
 
     private IEnumerator Turrets()

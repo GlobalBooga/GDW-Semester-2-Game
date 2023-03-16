@@ -17,7 +17,7 @@ MonoBehaviour:
   turrets_delayBetweenShots: 0.25
   turrets_aimStartDelay: 0.7
   turrets_shootStartDelay: 0.5
-  turrets_delayBeforeNextAttack: 0
+  turrets_delayBeforeNextAttack: 1
   bulletSpeed: 25
   bulletSpread: 5
   shots_Turrets: 20
@@ -26,12 +26,12 @@ MonoBehaviour:
   extrudeDistance: 2
   turrets_coverDamageMultiplier: 0
   turrets_maxHpForUse: 7
-  flamethrower_useWithOtherAttacks: 0
+  flamethrower_useWithOtherAttacks: 1
   flamethrower_damage: 30
   flamethrower_dmgInterval: 0.2
   flamethrower_shootStartDelay: 1
   flamethrower_timeBeforeRetract: 2.5
-  flamethrower_delayBeforeNextAttack: 0
+  flamethrower_delayBeforeNextAttack: 1
   flamethrower_timeBeforeEnd: 5
   aimForPlayer: 1
   maxXmove: 12
@@ -45,7 +45,7 @@ MonoBehaviour:
   missile_aimStartDelay: 1.3
   missile_shootStartDelay: 1.65
   missile_delaybeforeRetract: 2
-  missile_delayBeforeNextAttack: 0
+  missile_delayBeforeNextAttack: 1
   missileRotForce: 70
   missileMaxSpeed: 15
   missileSpread: 15
@@ -65,8 +65,8 @@ MonoBehaviour:
   artillery_delayBetweenShots: 0.3
   artillery_airTime: 0.5
   artillery_shootStartDelay: 1
-  artillery_delayBeforeNextAttack: 0
-  artillery_shots: 10
+  artillery_delayBeforeNextAttack: 1
+  artillery_shots: 3
   artillery_pillarDamageMultiplier: 0.75
   Artillery_maxHpForUse: 7
   troop_startDelay: 10
@@ -78,8 +78,8 @@ MonoBehaviour:
   - {fileID: 6687974566634874365, guid: 7a3e3621607df39459e62b1423e9b10e, type: 3}
   troop_spawnAmount: 5
   troopDeploy_maxHpForUse: 7
-  enableTurrets: 0
-  enableFlamethrower: 0
-  enableMissiles: 0
+  enableTurrets: 1
+  enableFlamethrower: 1
+  enableMissiles: 1
   enableArtillery: 1
   enableTroops: 0

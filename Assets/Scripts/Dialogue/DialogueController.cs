@@ -9,10 +9,10 @@ public class DialogueController : MonoBehaviour
     [Serializable]
     public struct DialoguePart
     {
-        public bool leftSide;
         public string name;
-        public string[] sentences;
+        public bool rightSide;
         public Sprite speakerImage;
+        public string[] sentences;
     }
 
     // animations
@@ -39,12 +39,16 @@ public class DialogueController : MonoBehaviour
 
     const int NAME_INDEX = 0;
     const int DIALOGUE_INDEX = 1;
+    const int LEFTSPEAKERIMAGE = 3;
+    const int RIGHTSPEAKERIMAGE = 2;
 
     private void Awake()
     {
         DialogueAnimator = GetComponent<Animator>();
         DialogueText = transform.GetChild(DIALOGUE_INDEX).GetChild(0).GetComponent<Text>();
         NameText = transform.GetChild(NAME_INDEX).GetChild(0).GetComponent<Text>();
+        RightSpeakerImage = transform.GetChild(RIGHTSPEAKERIMAGE).GetComponent<Image>();
+        LeftSpeakerImage = transform.GetChild(LEFTSPEAKERIMAGE).GetComponent<Image>();
     }
 
     public void NextSentence()
@@ -95,17 +99,28 @@ public class DialogueController : MonoBehaviour
 
             NameText.text = currentPart.name;
 
-            if (currentPart.speakerImage && currentPart.leftSide)
+            if (currentPart.speakerImage && currentPart.rightSide)
             {
+                LeftSpeakerImage.gameObject.SetActive(true);
+                RightSpeakerImage.gameObject.SetActive(true);
+
                 LeftSpeakerImage.color = Color.white;
                 LeftSpeakerImage.sprite = currentPart.speakerImage;
                 RightSpeakerImage.color = notSpeaking;
             }
-            else if (currentPart.speakerImage && !currentPart.leftSide)
+            else if (currentPart.speakerImage && !currentPart.rightSide)
             {
+                LeftSpeakerImage.gameObject.SetActive(true);
+                RightSpeakerImage.gameObject.SetActive(true);
+
                 RightSpeakerImage.color = Color.white;
                 RightSpeakerImage.sprite = currentPart.speakerImage;
                 LeftSpeakerImage.color = notSpeaking;
+            }
+            else
+            {
+                LeftSpeakerImage.gameObject.SetActive(false);
+                RightSpeakerImage.gameObject.SetActive(false);
             }
 
             NextSentence();
@@ -136,6 +151,38 @@ public class DialogueController : MonoBehaviour
         }
         DialogueAnimator.Play(ENTER);
 
+        GetSpeakerPortraits();
+
         NextPart();
+    }
+
+    private void GetSpeakerPortraits()
+    {
+        if (script.Count == 0)
+        {
+            return;
+        }
+
+        Sprite speaker1 = null;
+        Sprite speaker2 = null;
+
+        foreach (var part in script)
+        {
+            if (part.speakerImage)
+            {
+                if (!speaker1)
+                {
+                    speaker1 = part.speakerImage;
+                    if (part.rightSide) LeftSpeakerImage.sprite = speaker1;
+                    else RightSpeakerImage.sprite = speaker1;
+                }
+                else if (!speaker2)
+                {
+                    speaker2 = part.speakerImage;
+                    if (part.rightSide) LeftSpeakerImage.sprite = speaker2;
+                    else RightSpeakerImage.sprite = speaker2;
+                }
+            }
+        }
     }
 }

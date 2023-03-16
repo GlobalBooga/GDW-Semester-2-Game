@@ -85,7 +85,7 @@ public class HPComponent : MonoBehaviour
 
     public void Add(float amount)
     {
-        Mathf.Clamp(health += amount, 0, maxHealth);
+        health = Mathf.Clamp(health + amount, 0, maxHealth);
         UpdateBars();
     }
 

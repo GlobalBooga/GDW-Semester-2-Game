@@ -60,9 +60,12 @@ public class Enemy : MonoBehaviour
     private Quaternion originalRot;
     public Animator animator;
 
+    [Space(10f)]
+    [Header("Tutorial"), Space(5f)]
+    public bool isDummy;
+    public float reviveDelay = 2f;
 
-
-
+    private bool reviving;
 
     public Vector3 PlayerDirection => playerLoc.position - transform.position;
     public float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
@@ -87,6 +90,7 @@ public class Enemy : MonoBehaviour
         originalPos = transform.position;
         originalRot = transform.rotation;
         rb = GetComponent<Rigidbody2D>();
+        sr = transform.GetChild(0).GetComponent<SpriteRenderer>();
         //cc = GetComponent<CircleCollider2D>();
         playerLoc = GameObject.Find("Player").transform;
         // set the ondied func
@@ -125,6 +129,8 @@ public class Enemy : MonoBehaviour
 
     internal virtual void Update()
     {
+        if (isDummy) return;
+
         UpdateDetection();
 
         // base attack logic
@@ -153,6 +159,8 @@ public class Enemy : MonoBehaviour
 
     internal virtual void FixedUpdate()
     {
+        if (isDummy) return;
+
         // Standard chase player
         if (eso.chasePlayer && lockedOnPlayer && PlayerDistance > attackDistance)
         {
@@ -581,9 +589,31 @@ public class Enemy : MonoBehaviour
 
     public virtual void OnDied()
     {
+        if (isDummy) 
+        {
+            rb.simulated = false;
+            sr.color = new Color(1,1,1,0.3f);
+            hp.isInvincible = true;
+            if (!reviving)
+            {
+                reviving = true;
+                Invoke(nameof(Revive), reviveDelay);
+            }
+            return;
+        }
+
         LevelManager.instance.EnemyDied();
         gameObject.SetActive(false);
         //Debug.Log("doed");
+    }
+
+    public void Revive()
+    {
+        rb.simulated = true;
+        hp.isInvincible = false;
+        sr.color = Color.white;
+        hp.Add(hp.maxHealth);
+        reviving = false;
     }
 
     public void Alert(Vector3 lookAt)

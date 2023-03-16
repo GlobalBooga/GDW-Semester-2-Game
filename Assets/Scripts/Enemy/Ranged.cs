@@ -14,7 +14,20 @@ public class Ranged : Enemy
         base.Awake();
         rso = (RangedScriptableObject)eso;
     }
-    
+
+    internal override void Update()
+    {
+        base.Update();
+        if (isDummy)
+        {
+            if (attackReady)
+            {
+                attackReady = false;
+                Attack();
+            }
+        }
+    }
+
     internal override void Attack()
     {
         base.Attack();
@@ -30,7 +43,7 @@ public class Ranged : Enemy
         float timeInterval = 1f;
         float time = Time.time - timeInterval;
 
-        while (CanSeePlayer())
+        while (CanSeePlayer() || isDummy)
         {
             // alert everyone
             if (Time.time - time >= timeInterval)

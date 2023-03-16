@@ -115,7 +115,22 @@ public class TrainBossManager : BossRoomManager
         if (bossBarScript)
         {
             bossBarScript.bossName = "CHOO CHOO TRAIN";
-            bossBarScript.SetLightTheme();
+            if (LevelManager.instance.enableWeather)
+            {
+                if (LevelManager.instance.globalLight.intensity > 0.6f)
+                { 
+                    bossBarScript.SetDarkTheme();
+
+                }
+                else
+                {
+                    bossBarScript.SetLightTheme();
+                }
+            }
+            else
+            {
+                bossBarScript.SetDarkTheme();
+            }
             bossBarScript.gameObject.SetActive(true);
         }
 

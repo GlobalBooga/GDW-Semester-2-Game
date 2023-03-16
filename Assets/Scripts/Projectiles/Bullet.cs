@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     internal virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        Destroy(gameObject, 10f);
     }
 
     public void Fly(Vector2 dir, float force, float damage = 0)
@@ -24,6 +25,7 @@ public class Bullet : MonoBehaviour
 
     internal virtual void OnCollisionEnter2D(Collision2D collision)
     {
+
         // play hit effect
         if (collision.gameObject.layer == StaticHelpers.SpecialBreakableObjectLayer)
         {
@@ -34,7 +36,10 @@ public class Bullet : MonoBehaviour
         }
         else
         {
-            StaticHelpers.ApplyDamage(collision.collider.gameObject, damage);
+            if (!StaticHelpers.ApplyDamage(collision.collider.gameObject, damage))
+            {
+                StaticHelpers.ApplyDamage(collision.gameObject, damage);
+            }
         }
 
         Destroy(gameObject);

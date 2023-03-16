@@ -7,7 +7,10 @@ public class SceneManager : MonoBehaviour
         None,
         Boss,
         KillAllEnemies,
-        FindTheKey
+        MovementTutorial,
+        WeaponsTutorial,
+        DestructibleObjectsTutorial,
+        EnemiesTutorial
     }
 
 
@@ -84,10 +87,6 @@ public class SceneManager : MonoBehaviour
                 LevelManager.instance.hintText.text = $"Kill All Enemies. {enemyCount} Still Remain!";
                 LevelManager.instance.CurrentScene.exit.Block();
                 break;
-            case SceneObjective.FindTheKey:
-                LevelManager.instance.hintText.text = "Find the Key.";
-                LevelManager.instance.CurrentScene.exit.Block();
-                break;
             case SceneObjective.Boss:
             case SceneObjective.None:
             default:
@@ -125,7 +124,7 @@ public class SceneManager : MonoBehaviour
 
     public virtual void ProgressFindTheKey()
     {
-        if (sceneObjective != SceneObjective.FindTheKey) return;
+        // we dont have this
     }
 
     public virtual void EnableScene()

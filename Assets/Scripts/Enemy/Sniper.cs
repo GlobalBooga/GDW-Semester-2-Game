@@ -33,6 +33,15 @@ public class Sniper : Enemy
         base.Update();
         if (isLaserOn) ShootLaser();
         //if (!isAttacking && isOn) TurnOff();
+
+        if (isDummy)
+        {
+            if (attackReady)
+            {
+                attackReady = false;
+                Attack();
+            }
+        }
     }
 
     internal override void FixedUpdate()

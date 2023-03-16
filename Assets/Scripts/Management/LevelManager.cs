@@ -41,10 +41,10 @@ public class LevelManager : MonoBehaviour
 
 
     [Header("General Scene Settings")]
-    public AnimationCurve messageFade;
-    public float hintTime = 5f;
-    public Text hintText;
     public bool loop;
+
+    [Header("General Scene Settings")]
+    public HintController hintController;
 
     [Header("Weather Settings")]
     public bool enableWeather;
@@ -69,7 +69,6 @@ public class LevelManager : MonoBehaviour
     public Scene CurrentScene => orderedScenes[currentSceneIndex];
 
     private int currentSceneIndex = 0;
-    private bool showingHint;
     private bool isQuitting;
     public bool playerFound { get; set; }
 
@@ -197,34 +196,6 @@ public class LevelManager : MonoBehaviour
     public void KeyCollected()
     {
         orderedScenes[currentSceneIndex].manager.ProgressFindTheKey();
-    }
-
-    public void ShowHint()
-    {
-        if (!hintText) return;
-
-        hintText.enabled = true;
-        hintText.color = new Color(1, 1, 1, 1);
-
-        if (showingHint) StopCoroutine(nameof(HideHint));
-
-        StartCoroutine(nameof(HideHint));
-    }
-
-    private IEnumerator HideHint()
-    {
-        showingHint = true;
-        yield return new WaitForSeconds(hintTime);
-
-        // make the hint fade away
-        float time = 0;
-        while (messageFade.Evaluate(time) < 1)
-        {
-            time += Time.deltaTime;
-            hintText.color = Color.Lerp(Color.white, Color.clear, messageFade.Evaluate(time));
-            yield return null;
-        }
-        hintText.enabled = false;
     }
 
     public void StartSceneTransition()

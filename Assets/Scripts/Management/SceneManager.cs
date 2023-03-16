@@ -84,7 +84,7 @@ public class SceneManager : MonoBehaviour
         switch (sceneObjective)
         {
             case SceneObjective.KillAllEnemies:
-                LevelManager.instance.hintText.text = $"Kill All Enemies. {enemyCount} Still Remain!";
+                LevelManager.instance.hintController.AddObjective("Kill All Enemies");
                 LevelManager.instance.CurrentScene.exit.Block();
                 break;
             case SceneObjective.Boss:

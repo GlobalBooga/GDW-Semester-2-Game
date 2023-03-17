@@ -139,6 +139,82 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4958676228662480888, guid: ebc77746229656e479739176af591b9b, type: 3}
   m_PrefabInstance: {fileID: 2971517817790524914}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &462713346
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 462713347}
+  - component: {fileID: 462713349}
+  - component: {fileID: 462713348}
+  m_Layer: 5
+  m_Name: Dollar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &462713347
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462713346}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5271853647923391721}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -80.39996, y: -79.62158}
+  m_SizeDelta: {x: 12.2475, y: 13.0435}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &462713348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462713346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19215688, g: 0.19215688, b: 0.19215688, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 44e13e0329dbb9b478f0fcf2e0b96ef6, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &462713349
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462713346}
+  m_CullTransparentMesh: 1
 --- !u!114 &910593963 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2614488996107973313, guid: 15ef59dd49fc16943a32d8934296de0e, type: 3}
@@ -684,7 +760,88 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4770469877047556191, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
   m_PrefabInstance: {fileID: 1663185660}
   m_PrefabAsset: {fileID: 0}
---- !u!43 &1688778605
+--- !u!1 &1826631088 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2614488996450585615, guid: 15ef59dd49fc16943a32d8934296de0e, type: 3}
+  m_PrefabInstance: {fileID: 2971517818807653285}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1920022006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1920022007}
+  - component: {fileID: 1920022009}
+  - component: {fileID: 1920022008}
+  m_Layer: 5
+  m_Name: Dollar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1920022007
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920022006}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4396818811337746521}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -80.4, y: -79.621506}
+  m_SizeDelta: {x: 12.2475, y: 13.0435}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1920022008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920022006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19215688, g: 0.19215688, b: 0.19215688, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 44e13e0329dbb9b478f0fcf2e0b96ef6, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1920022009
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920022006}
+  m_CullTransparentMesh: 1
+--- !u!43 &1930076022
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -848,11 +1005,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &1826631088 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2614488996450585615, guid: 15ef59dd49fc16943a32d8934296de0e, type: 3}
-  m_PrefabInstance: {fileID: 2971517818807653285}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1931974273 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2614488996450585615, guid: 15ef59dd49fc16943a32d8934296de0e, type: 3}
@@ -1433,7 +1585,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2548050652110028215}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1443,7 +1595,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000022888184, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &899065401114588701
@@ -1773,7 +1925,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1217816815618388580}
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -876.98, y: -627, z: 0}
+  m_LocalPosition: {x: -967.57, y: -540.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1900,8 +2052,8 @@ MonoBehaviour:
   - {x: -0.11016846, y: -0.19876456, z: 0}
   - {x: -0.186409, y: -0.17676282, z: 0}
   m_ShapePathHash: 743514181
-  m_Mesh: {fileID: 1688778605}
-  m_InstanceId: 552688
+  m_Mesh: {fileID: 1930076022}
+  m_InstanceId: 391616
 --- !u!95 &1218351397116128946
 Animator:
   serializedVersion: 5
@@ -2788,7 +2940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unselectedTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selected: 0
 --- !u!1 &2847085993957105701
@@ -4514,7 +4666,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 69b94fb5813ed8b449cd602e883537d3, type: 3}
-    m_FontSize: 10
+    m_FontSize: 15
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -4525,7 +4677,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Coming soon
+  m_Text: Accept
 --- !u!114 &3845012831444507937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4892,6 +5044,7 @@ RectTransform:
   - {fileID: 3346811191645807104}
   - {fileID: 8670713481500941625}
   - {fileID: 2998539753575107312}
+  - {fileID: 1920022007}
   m_Father: {fileID: 2971517817665772774}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5729,6 +5882,7 @@ RectTransform:
   - {fileID: 8285821346189712179}
   - {fileID: 3277109431681995400}
   - {fileID: 4625072885558214494}
+  - {fileID: 462713347}
   m_Father: {fileID: 2971517817665772774}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6183,7 +6337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unselectedTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selected: 1
 --- !u!114 &5678475213342871559
@@ -6493,7 +6647,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.5
-  m_Text: "-CONTRACT-\nDESTROY THIS \nTRAIN"
+  m_Text: '-CONTRACT-
+
+    ELIMINATE
+
+    Z-0 GLUTTONY MK1'
 --- !u!1 &5958951725211502924
 GameObject:
   m_ObjectHideFlags: 0
@@ -6599,7 +6757,7 @@ MonoBehaviour:
     m_LineSpacing: 1.5
   m_Text: '-REWARD-
 
-    $8''500''000'
+    18''000''000'
 --- !u!114 &6111558476382386884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6639,7 +6797,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 2805267221033285326}
   m_OnClick:
     m_PersistentCalls:
@@ -6759,7 +6917,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 84576f8d311d9f940b076c145c4ddd03, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fe094b95a3bd1924095350950ef5ccfd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7502,43 +7660,120 @@ MonoBehaviour:
   sceneObjectives: 08000000
   cameraSize: 5
   isIndoors: 0
-  enableDialogue: 0
+  enableDialogue: 1
   introScript:
   - name: Satchel
     rightSide: 1
     speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
     sentences:
-    - Ayo, u awake?
-    - We hoverin' over Zugil
-    - Aint that yo home planet?
+    - -NA! HEY ADANA!
   - name: Adana
     rightSide: 0
     speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
     sentences:
-    - It is.
-    - Brings back mem...
+    - Ugh stop yelling.
   - name: Satchel
     rightSide: 1
     speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
     sentences:
-    - Aight shut the fuck up and go pick a contract
+    - Haha sorry about that. You just seemed a bit spaced out again.
   - name: Adana
     rightSide: 0
     speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
     sentences:
-    - Bruh.
-  andarozContractScript:
-  - name: test
-    rightSide: 0
-    speakerImage: {fileID: 0}
+    - "Forget it, what\u2019s the job today?"
+  - name: Satchel
+    rightSide: 1
+    speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
     sentences:
-    - You picked a fight with Andaroz
-  trainContractScript:
-  - name: test
+    - Aww you embarrassed? I can see your heart rate going u-
+  - name: Adana
     rightSide: 0
-    speakerImage: {fileID: 0}
+    speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
     sentences:
-    - You picked a fight with a train
+    - "I\u2019m turning this thing off."
+  - name: Satchel
+    rightSide: 1
+    speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
+    sentences:
+    - WAIT WAIT! Ok I apologize for my breach of privacy.
+    - "We got our work cut out for us this time that\u2019s for sure. I\u2019ll give
+      you a run down of what we\u2019ve got."
+    - "Some nice folks from the Theocracy of Arzora gave us some big fish to catch
+      this time. We\u2019ve got a total of two bounties."
+  - name: Adana
+    rightSide: 0
+    speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
+    sentences:
+    - "Aren\u2019t they the ones who conducted experiments on you for years and aren\u2019t
+      they known for being more brutal than any dictatorship?"
+  - name: Satchel
+    rightSide: 1
+    speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
+    sentences:
+    - "Meh that\u2019s all in the past, plus once you see the prices they\u2019re
+      offering I don\u2019t think we\u2019ll have to worry about a bit of brutality."
+  - name: Adana
+    rightSide: 0
+    speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
+    sentences:
+    - ...
+  - name: Satchel
+    rightSide: 1
+    speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
+    sentences:
+    - My only worry are the targets themselves
+  - name: Adana
+    rightSide: 0
+    speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
+    sentences:
+    - "If they came to us then it can\u2019t be anything I can\u2019t handle."
+  - name: Satchel
+    rightSide: 1
+    speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
+    sentences:
+    - "It\u2019s not that I don\u2019t think you can handle it but\u2026 Just see
+      for yourself."
+    - Z-0 Gluttony mk1 is a new prototype weapon that is being developed for conquering
+      the whole of Zugil.
+  - name: Adana
+    rightSide: 0
+    speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
+    sentences:
+    - Wait Zugil-
+  - name: Satchel
+    rightSide: 1
+    speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
+    sentences:
+    - "That\u2019s right\u2026 The other bounty is on Andaroz\u2026 Your father\u2026"
+  - name: Adana
+    rightSide: 0
+    speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
+    sentences:
+    - ...
+  - name: Satchel
+    rightSide: 1
+    speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
+    sentences:
+    - You gonna be ok?
+  - name: Adana
+    rightSide: 0
+    speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
+    sentences:
+    - Ok? OK?!
+    - "I\u2019M SHAKING WITH EXCITEMENT!!!"
+  - name: Satchel
+    rightSide: 1
+    speakerImage: {fileID: 21300000, guid: bcec055340ce8cf448fd9ae7e21d4ff1, type: 3}
+    sentences:
+    - "Oh\u2026 Not what I was expecting."
+  - name: Adana
+    rightSide: 0
+    speakerImage: {fileID: 21300000, guid: 963c17d939b2dc14e942441d2e865176, type: 3}
+    sentences:
+    - "Let\u2019s get this show on the road! I can\u2019t wait to crush them!"
+  andarozContractScript: []
+  trainContractScript: []
   AdanasDualies: {fileID: 1498170505}
   EnergyDualies: {fileID: 1973340412}
   Bow: {fileID: 1532007762}
@@ -7826,7 +8061,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &7008191336069111816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7869,7 +8104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unselectedTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selected: 0
 --- !u!1 &7015348230661725285
@@ -8650,7 +8885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unselectedTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selected: 0
 --- !u!224 &8011408652348636691
@@ -8929,7 +9164,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6ecc73acf285da6499a61cfc6dc4cb31, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fe094b95a3bd1924095350950ef5ccfd, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

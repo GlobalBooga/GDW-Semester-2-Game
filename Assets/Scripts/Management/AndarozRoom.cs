@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class AndarozRoom : BossRoomManager
 {
+    public Animator forceFieldAnimator;
+
     [Header("Dialogue")]
     public bool enableDialogue = false;
     public DialogueController.DialoguePart[] enterScript;
     public DialogueController.DialoguePart[] stage2Script;
     public DialogueController.DialoguePart[] endScript;
+
 
     public override void ForceSetScene()
     {
@@ -51,6 +54,8 @@ public class AndarozRoom : BossRoomManager
     {
         LevelManager.instance.DisablePlayerInput();
         yield return new WaitForSeconds(1f);
+
+        if (forceFieldAnimator) forceFieldAnimator.Play("ForceFieldOn");
 
         // dialogue
         LevelManager.instance.dialogueController.StartDialogue(enterScript);

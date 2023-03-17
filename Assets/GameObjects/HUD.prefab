@@ -1803,7 +1803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unselectedTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selected: 0
 --- !u!1 &2484343707473671427
@@ -3838,7 +3838,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unselectedTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selected: 0
 --- !u!1 &5633570162105323369
@@ -5297,7 +5297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unselectedTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selected: 1
 --- !u!1 &7863405219375739158
@@ -6153,7 +6153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unselectedTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selectedTint: {r: 1, g: 1, b: 1, a: 1}
   _selected: 0
 --- !u!1 &9174866310108180913

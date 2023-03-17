@@ -29,6 +29,7 @@ public class TrainBoss : MonoBehaviour
     private bool defflamebool = true;
     private bool resettingpos;
     private bool posreset;
+    private int deftroopsamount = 5;
 
     // animations
     const string TURRETS_EXTRACT = "TurretExtract";
@@ -65,6 +66,8 @@ public class TrainBoss : MonoBehaviour
 
     private void Update()
     {
+        if (hp.GetHealth() == 0) return;
+
         if (turretattack)
         {
             // aim at player
@@ -124,6 +127,7 @@ public class TrainBoss : MonoBehaviour
         tso.missile_delayBeforeNextAttack = defatkspeed;
         tso.turrets_delayBeforeNextAttack = defatkspeed;
         tso.flamethrower_useWithOtherAttacks = defflamebool;
+        tso.troop_spawnAmount = deftroopsamount;
     }
 
     private void OnDisable()
@@ -135,6 +139,7 @@ public class TrainBoss : MonoBehaviour
         tso.missile_delayBeforeNextAttack = defatkspeed;
         tso.turrets_delayBeforeNextAttack = defatkspeed;
         tso.flamethrower_useWithOtherAttacks = defflamebool;
+        tso.troop_spawnAmount = deftroopsamount;
     }
 
     private IEnumerator Turrets()
@@ -454,15 +459,25 @@ public class TrainBoss : MonoBehaviour
         }
         yield return new WaitForSeconds(tso.troop_startDelay);
 
+        bool sniper = false;
+
         for (int i = 0; i < tso.troop_spawnAmount; i++)
         {
-            Transform t = Instantiate(tso.troop_types[Random.Range(0, tso.troop_types.Length)], transform).transform;
+            GameObject o = tso.troop_types[Random.Range(0, tso.troop_types.Length)];
+            while (o.name.Contains("sniper") && sniper) o = tso.troop_types[Random.Range(0, tso.troop_types.Length)];
+
+            Transform t = Instantiate(o, transform.parent).transform;
             t.position = new Vector3(
                 Random.Range(troopSpawn.bounds.min.x, troopSpawn.bounds.max.x),
                 Random.Range(troopSpawn.bounds.min.y, troopSpawn.bounds.max.y), 0f);
+            
+            if (o.name.Contains("sniper"))
+            {
+                sniper = true;
+            }
         }
 
-
+        LevelManager.instance.AlertAllEnemiesInCurrentScene(playerLoc.position);
 
 
         yield return new WaitForSeconds(tso.troop_delayBeforeNextAttack);
@@ -487,6 +502,8 @@ public class TrainBoss : MonoBehaviour
    
     private void NextAttack()
     {
+        if (hp.GetHealth() == 0) return;
+
         if (!tso.enableTurrets && !tso.enableFlamethrower && !tso.enableMissiles && !tso.enableArtillery && !tso.enableTroops)
         {
             Debug.LogWarning("No attacks enabled! Enabling attack 1");
@@ -511,7 +528,25 @@ public class TrainBoss : MonoBehaviour
     /// </summary>
     public void OnDied()
     {
-        //StopAllCoroutines();
+        tso.artillery_shots = 15;
+        if (!artilleryattack) StartCoroutine(Artillery());
+        if (!troopSpawn) tso.troop_spawnAmount = 10f;
+        StartCoroutine(Troops());
+
+        StartCoroutine(WaitForAttacksToFinish());
+    }
+
+    IEnumerator WaitForAttacksToFinish()
+    {
+        yield return new WaitForSeconds(3f);
+
+        while (transform.parent.childCount > 1 || artilleryattack)
+        {
+            yield return null;
+        }
+
+        TrainBossManager m = LevelManager.instance.CurrentScene.manager as TrainBossManager;
+        StartCoroutine(m.EndCutscene());
     }
 
     public void WeaponDestroyed() // AKA on hit

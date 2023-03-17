@@ -22,8 +22,7 @@ public class AmbushBossManager : BossRoomManager
 
     [Header("Dialogue")]
     public bool enableDialogue = false;
-    public DialogueController.DialoguePart[] enterScript;
-    public DialogueController.DialoguePart[] doorsClosingScript;
+    public DialogueController.DialoguePart[] doorsClosedScript;
     public DialogueController.DialoguePart[] endScript;
 
 
@@ -81,33 +80,17 @@ public class AmbushBossManager : BossRoomManager
 
         yield return new WaitForSeconds(1f);
 
-
-        // dialogue
-
-        yield return new WaitForSeconds(0.3f);
-
-
-        if (enableDialogue)
-        {
-            LevelManager.instance.dialogueController.StartDialogue(enterScript);
-
-            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
-        }
-
-        yield return new WaitForSeconds(0.2f);
-
-
         // close doors
 
         roomAnimator.Play(CLOSE_DOORS);
 
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.5f);
 
 
         if (enableDialogue)
         {
-            LevelManager.instance.dialogueController.StartDialogue(enterScript);
-
+            LevelManager.instance.dialogueController.StartDialogue(doorsClosedScript);
+        
             while (!LevelManager.instance.dialogueController.isFinished) yield return null;
         }
 
@@ -183,13 +166,13 @@ public class AmbushBossManager : BossRoomManager
 
         yield return new WaitForSeconds(1f);
         player.FlashlightOff();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         LevelManager.instance.DisablePlayerInput();
 
 
         // dialogue
-        LevelManager.instance.dialogueController.StartDialogue(enterScript);
+        LevelManager.instance.dialogueController.StartDialogue(doorsClosedScript);
         while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
         yield return new WaitForSeconds(1f);

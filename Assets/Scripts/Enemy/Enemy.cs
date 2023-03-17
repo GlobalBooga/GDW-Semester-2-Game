@@ -603,7 +603,7 @@ public class Enemy : MonoBehaviour
         }
 
         LevelManager.instance.EnemyDied();
-        gameObject.SetActive(false);
+        Destroy(gameObject);
         //Debug.Log("doed");
     }
 

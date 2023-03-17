@@ -16,6 +16,9 @@ public class TrainBossManager : BossRoomManager
     public bool skipCutscene;
 
     [Header("Dialogue")]
+    public DialogueController.DialoguePart[] enterScript;
+    public DialogueController.DialoguePart[] noticedScript;
+    public DialogueController.DialoguePart[] fightStartScript;
     public DialogueController.DialoguePart[] endScript;
 
     private bool startboss;
@@ -49,6 +52,8 @@ public class TrainBossManager : BossRoomManager
         yield return new WaitForSeconds(0.5f);
 
         // dialogue
+        LevelManager.instance.dialogueController.StartDialogue(enterScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
 
         yield return new WaitForSeconds(0.2f);
@@ -85,7 +90,8 @@ public class TrainBossManager : BossRoomManager
 
         yield return new WaitForSeconds(0.2f);
 
-        Debug.Log("oh shit start the trian");
+        LevelManager.instance.dialogueController.StartDialogue(noticedScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
         
         yield return new WaitForSeconds(0.2f);
 
@@ -115,10 +121,13 @@ public class TrainBossManager : BossRoomManager
         
         yield return new WaitForSeconds(3f);
 
+        LevelManager.instance.dialogueController.StartDialogue(fightStartScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+
         // start
         if (bossBarScript)
         {
-            bossBarScript.bossName = "CHOO CHOO TRAIN";
+            bossBarScript.bossName = LevelManager.instance.bossTitle;
             if (LevelManager.instance.enableWeather)
             {
                 if (LevelManager.instance.globalLight.intensity > 0.6f)
@@ -138,6 +147,12 @@ public class TrainBossManager : BossRoomManager
             bossBarScript.gameObject.SetActive(true);
         }
 
+        for (int i = LevelManager.instance.CurrentScene.enemyContainer.transform.childCount -1; i > 0; i--)
+        {
+            Transform child = LevelManager.instance.CurrentScene.enemyContainer.transform.GetChild(i);
+            Destroy(child.gameObject);
+        }
+
         LevelManager.instance.EnablePlayerInput();
         CameraShake.instance.restoreCamPosAfterShake = true;
 
@@ -145,16 +160,17 @@ public class TrainBossManager : BossRoomManager
     }
 
 
-    IEnumerator EndCutscene()
+    public IEnumerator EndCutscene()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
+
         LevelManager.instance.DisablePlayerInput();
 
         // dialogue
         LevelManager.instance.dialogueController.StartDialogue(endScript);
         while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         LevelManager.instance.NextScene();
     }
 

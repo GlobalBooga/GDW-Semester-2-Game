@@ -68,8 +68,6 @@ public class LevelManager : MonoBehaviour
     [Header("Scenes")]
     [SerializeField] private List<Scene> orderedScenes;
 
-
-
     public Scene CurrentScene => orderedScenes[currentSceneIndex];
     
 
@@ -275,6 +273,7 @@ public class LevelManager : MonoBehaviour
         if (!globalLight) return;
         if (!enableWeather)
         {
+            if (snowPrefab) snowPrefab.SetActive(false);
             globalLight.intensity = 1f;
             return;
         }
@@ -315,6 +314,12 @@ public class LevelManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 
+    public void ReturnToMainMenu()
+    {
+        isQuitting = true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
     public void Save(GameData playerData)
     {
         string data = JsonUtility.ToJson(playerData);
@@ -328,6 +333,11 @@ public class LevelManager : MonoBehaviour
         GameData data = JsonUtility.FromJson<GameData>(savedData);
         
         return data;
+    }
+
+    public Weather GetWeather()
+    {
+        return weather;
     }
 
 }

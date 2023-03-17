@@ -6,6 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/alex's test level.unity
+    path: Assets/Scenes/MainMenu.unity
+    guid: a39380da1166d6940b72d3a459515d56
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: 30afce51bd4061d46b143af4604ea6fa
+  - enabled: 1
+    path: Assets/Scenes/Hub.unity
+    guid: c76f1c840e8ec7340bfc1ba875a8270a
+  - enabled: 1
+    path: Assets/Scenes/alex's test levels/alex's test level.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/alex's test levels/alex's test level 1.unity
+    guid: 19db5ab0dcd6d82469b37b7542630bc6
+  - enabled: 1
+    path: Assets/Scenes/alex's test levels/alex's test level 2.unity
+    guid: bcb9edd27d1765448814b10c94688ba2
   m_configObjects: {}

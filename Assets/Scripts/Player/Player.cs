@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,6 +45,12 @@ public class Player : MonoBehaviour
     private SpriteRenderer sr;
     public GameObject flashlight;
 
+    [Header("All Weapons"), Space(5f)]
+    [SerializeField] private GameObject AdanasDualies;
+    [SerializeField] private GameObject EnergyDualies;
+    [SerializeField] private GameObject Bow;
+    [SerializeField] private GameObject AndarozGun;
+
     // for animations
     public const string PLAYER_HIT_INDICATOR = "PlayerDamageTaken";
 
@@ -52,6 +59,8 @@ public class Player : MonoBehaviour
     private Quaternion originalRot;
     private Vector3 originalPos;
     private Vector2 lastDirection;
+
+    GameData gameData;
 
 
     public Vector2 RawDirection => controls.General.Move.ReadValue<Vector2>();
@@ -99,16 +108,24 @@ public class Player : MonoBehaviour
         }
 
         SetupInputEvents();
+
     }
 
     void Start()
     {
+        gameData = LevelManager.instance.LoadGameData();
+
         originalPos = transform.position;
         originalRot = transform.rotation;
         rb.freezeRotation = true;
         rb.drag = accelerationDrag;
 
-        if (weapon) weapon.SetHeld(); 
+        if (weapon)
+        {
+            weapon.SetHeld();
+            gameData.weaponID = weapon.GetID();
+            LevelManager.instance.Save(gameData);
+        }
     }
 
     private void Update()
@@ -178,6 +195,9 @@ public class Player : MonoBehaviour
                 
                     newWeapon.Pickup(transform, weapon);
                     weapon = newWeapon;
+                    gameData.weaponID = newWeapon.GetID();
+                    if (newWeapon.GetID() == 4) gameData.foundAndarozGun = true;
+                    LevelManager.instance.Save(gameData);
                 }
             }
         };
@@ -193,7 +213,6 @@ public class Player : MonoBehaviour
         controls.General.MovementAbility.started += ctx =>
         {
             if (!canUseMoveAbility) return;
-            //if (rechargingDodge && mustDepleteAllDodgesBeforeRecharging) return;
 
             if (staminaBars.Count > 0)
             {
@@ -222,7 +241,6 @@ public class Player : MonoBehaviour
                 // 2 strikes mean we just used the last bar
                 
                 if (strikes == 3) return;
-                //if (strikes == 2 && !rechargingDodge) StartCoroutine(nameof(RechargeDodge), false);
                 else if (!mustDepleteAllDodgesBeforeRecharging)
                 {
                     StopCoroutine(nameof(RechargeDodge));
@@ -268,10 +286,20 @@ public class Player : MonoBehaviour
 
         controls.Menus.AdvanceDialogue.started += ctx =>
         {
-            if (LevelManager.instance.dialogueController.isEnabled)
+            if (LevelManager.instance.dialogueController.isEnabled && !controls.Menus.Unpause.IsPressed())
             {
                 LevelManager.instance.dialogueController.NextSentence();
             }
+        };
+
+        controls.Menus.Unpause.started += ctx =>
+        {
+            LevelManager.instance.pauseMenu.ResumeGame();
+        };
+
+        controls.General.Pause.started += ctx =>
+        {
+            LevelManager.instance.pauseMenu.PauseGame();
         };
     }
 
@@ -367,5 +395,32 @@ public class Player : MonoBehaviour
     public void FlashlightOff()
     {
         flashlight.SetActive(false);
+    }
+
+    public void DisableAttacks()
+    {
+        controls.General.Attack.Disable();
+        controls.General.WeaponAbility.Disable();
+    }
+
+    public void EnableAttacks()
+    {
+        controls.General.Attack.Enable();
+        controls.General.WeaponAbility.Enable();
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        Destroy(weapon.gameObject);
+        Weapon newWeapon = null;
+        int id = LevelManager.instance.LoadGameData().weaponID;
+
+        if (id == 1) newWeapon = Instantiate(AdanasDualies, transform).GetComponent<Weapon>();
+        else if (id == 2) newWeapon = Instantiate(EnergyDualies, transform).GetComponent<Weapon>();
+        else if (id == 3) newWeapon = Instantiate(Bow, transform).GetComponent<Weapon>();
+        else if (id == 4) newWeapon = Instantiate(AndarozGun, transform).GetComponent<Weapon>();
+
+        newWeapon.Pickup(transform, weapon);
+        weapon = newWeapon;
     }
 }

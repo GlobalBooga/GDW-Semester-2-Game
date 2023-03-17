@@ -13,9 +13,13 @@ public class TrainBossManager : BossRoomManager
     private Player player;
     private Transform playerTransform;
 
+    public bool skipCutscene;
+
+    [Header("Dialogue")]
+    public DialogueController.DialoguePart[] endScript;
+
     private bool startboss;
 
-    public bool skipCutscene;
 
     private void Start()
     {
@@ -138,6 +142,20 @@ public class TrainBossManager : BossRoomManager
         CameraShake.instance.restoreCamPosAfterShake = true;
 
         boss.enabled = true;
+    }
+
+
+    IEnumerator EndCutscene()
+    {
+        yield return new WaitForSeconds(1f);
+        LevelManager.instance.DisablePlayerInput();
+
+        // dialogue
+        LevelManager.instance.dialogueController.StartDialogue(endScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+
+        yield return new WaitForSeconds(1f);
+        LevelManager.instance.NextScene();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

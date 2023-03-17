@@ -24,6 +24,7 @@ public class Andaroz : Enemy
     private Queue<string> attackPattern = new();
     private Laser rightLaser;
     private Laser leftLaser;
+    private AndarozRoom roomManager;
 
     private bool goToCenterOfRoom;
 
@@ -59,11 +60,7 @@ public class Andaroz : Enemy
     internal override void Awake()
     {
         base.Awake();
-    }
-
-    internal void OnEnable()
-    {
-        Invoke(nameof(StartBossFight), 2f);
+        roomManager = transform.parent.GetComponent<AndarozRoom>();
     }
 
     internal override void OnDisable()
@@ -690,10 +687,17 @@ public class Andaroz : Enemy
         rotationTime = 0;
         while (!LookAt(playerLoc.position)) yield return null;
 
-        // pause player input for scripted event
         LevelManager.instance.DisablePlayerInput();
 
-        Debug.Log("lets end this..");
+        yield return new WaitForSeconds(0.5f);
+
+        if (roomManager.enableDialogue)
+        {
+            // pause player input for scripted event
+
+            LevelManager.instance.dialogueController.StartDialogue(roomManager.stage2Script);
+            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+        }
 
         yield return new WaitForSeconds(0.5f);
 
@@ -714,10 +718,9 @@ public class Andaroz : Enemy
         LevelManager.instance.EnablePlayerInput();
     }
 
-    private void StartBossFight()
+    public void StartBossFight()
     {
         fight = true;
-        LevelManager.instance.EnablePlayerInput();
         LevelManager.instance.startBossBattle = true;
     }
 
@@ -748,6 +751,9 @@ public class Andaroz : Enemy
         yield return new WaitForSeconds(0.5f / 2);
 
         base.OnDied();
+
+
+        roomManager.EndCutscene();
     }
 
     private void LockRotation()

@@ -12,7 +12,10 @@ public class AndarozBlaster : Gun
     private float temp;
     public ParticleSystem chargeParticles;
 
-
+    public override int GetID()
+    {
+        return 4;
+    }
     public override void UseAbility()
     {
         if (!canUseAbility) return;

@@ -43,17 +43,13 @@ public class TutorialObjectiveListener : MonoBehaviour
         }
         else if (t.gameObject.name == "Room 3" && !complete3)
         {
-            complete3 = true;
+            if (CameraShake.instance.GetIntensity() > 14f)
+            {
+                complete3 = true;
+                LevelManager.instance.hintController.ObjectiveComplete(SceneManager.DESTRUCTIBLE_OBJECTS_TUTORIAL);
+                TutorialManager tm = LevelManager.instance.CurrentScene.manager as TutorialManager;
+                tm.ExplosiveLabPart2Dialogue();
+            }
         }
-        else if (t.gameObject.name == "Room 4" && !complete4)
-        {
-            complete4 = true;
-            Invoke(nameof(CompleteRoom4), 3f);
-        }
-    }
-
-    void CompleteRoom4()
-    {
-        LevelManager.instance.hintController.ObjectiveComplete(SceneManager.ENEMIES_TUTORIAL);
     }
 }

@@ -183,16 +183,21 @@ public class AmbushBossManager : BossRoomManager
 
         yield return new WaitForSeconds(1f);
         player.FlashlightOff();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
 
-
-
-        //LevelManager.instance.DisablePlayerInput();
+        LevelManager.instance.DisablePlayerInput();
 
 
         // dialogue
+        LevelManager.instance.dialogueController.StartDialogue(enterScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
+        yield return new WaitForSeconds(1f);
 
-        // teleport
+        GameData gd = LevelManager.instance.LoadGameData();
+        gd.beatValkyrie = true;
+        LevelManager.instance.Save(gd);
+
+        LevelManager.instance.NextScene();
     }
 }

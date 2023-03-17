@@ -35,7 +35,6 @@ public class BossRoomManager : SceneManager
         CameraShake.instance.restoreCamPosAfterShake = true;
     }
 
-
     public LargeRoomCameraController GetLargeRoomCameraController()
     {
         return largeRoomCamera;

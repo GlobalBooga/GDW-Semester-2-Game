@@ -5,17 +5,18 @@ using UnityEngine.SceneManagement;
 
 public class Mainmenu : MonoBehaviour
 {
-    [SerializeField] GameObject mainMenu;
-
     public void PlayGame()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex - 1);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 
     public void QuitGame()
     {
         Application.Quit();
+    }
 
-        Debug.Log("Quit");
+    public void Tutorial()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 }

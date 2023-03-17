@@ -1,53 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public static bool isGamePaused = false;
-    [SerializeField] GameObject pauseMenu;
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (isGamePaused)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-            }
-        }
-    }
+    public GameObject optionsMenu;
+    private bool isPaused;
 
     public void ResumeGame()
     {
-        pauseMenu.SetActive(false);
+        if (!LevelManager.instance.dialogueController.isFinished && !isPaused)
+        {
+            PauseGame();
+            return;
+        }
+
+        optionsMenu.SetActive(false);
+        gameObject.SetActive(false);
+        isPaused = false;
+
+        if (LevelManager.instance.dialogueController.isFinished)
+        {
+            LevelManager.instance.EnablePlayerInput();
+        }
+        
+        LevelManager.instance.EnablePlayerRotation();
+
         Time.timeScale = 1f;
-        isGamePaused = false;
     }
 
     public void PauseGame()
     {
-        pauseMenu.SetActive(true);
+        isPaused = true;
+        gameObject.SetActive(true);
+        LevelManager.instance.DisablePlayerInput();
+        LevelManager.instance.DisablePlayerRotation();
         Time.timeScale = 0f;
-        isGamePaused = true;
     }
 
     public void LoadMenu()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         Time.timeScale = 1f;
     }
 
     public void QuitGame()
     {
         Application.Quit();
-
-        Debug.Log("Quit");
     }
 }

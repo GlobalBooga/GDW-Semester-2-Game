@@ -39,8 +39,8 @@ public class DialogueController : MonoBehaviour
 
     const int NAME_INDEX = 0;
     const int DIALOGUE_INDEX = 1;
-    const int LEFTSPEAKERIMAGE = 3;
-    const int RIGHTSPEAKERIMAGE = 2;
+    const int LEFTSPEAKERIMAGE = 5;
+    const int RIGHTSPEAKERIMAGE = 3;
 
     private void Awake()
     {

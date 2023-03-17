@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -30,20 +29,20 @@ public class LevelManager : MonoBehaviour
 
     public static LevelManager instance;
 
+    [Header("Menu")]
+    public PauseMenu pauseMenu;
+
     [Header("Crosshair Settings")]
     public Color color = Color.yellow;
-    //public Sprite cursorSprite;
     public Image cursor;
-    //private SpriteRenderer cursorSpriteRenderer;
 
     [Header("Dialogue")]
     public DialogueController dialogueController;
 
-
     [Header("General Scene Settings")]
     public bool loop;
 
-    [Header("General Scene Settings")]
+    [Header("Scene Objective")]
     public HintController hintController;
 
     [Header("Weather Settings")]
@@ -59,13 +58,16 @@ public class LevelManager : MonoBehaviour
     [Header("Scene Transition")]
     public Animator screenOverlayAnimator;
     public float transitionTime = 0.2f;
-    private const string TRANSITION_ANIM = "SceneTransition";
+    public const string TRANSITION_ANIM = "SceneTransition";
+    public const string TELEPORT_START = "TeleportStart";
+    public const string TELEPORT_END = "TeleportEnd";
 
     [Header("Boss")]
     public string bossTitle = "ANDAROZ THE GREEDY";
 
     [Header("Scenes")]
     [SerializeField] private List<Scene> orderedScenes;
+
 
 
     public Scene CurrentScene => orderedScenes[currentSceneIndex];
@@ -76,9 +78,6 @@ public class LevelManager : MonoBehaviour
     public bool playerFound { get; set; }
 
     private Player player;
-
-
-
 
 
     [HideInInspector] public bool startBossBattle;
@@ -126,7 +125,6 @@ public class LevelManager : MonoBehaviour
         }
 
         orderedScenes[currentSceneIndex = 0].manager.SetScene();
-
     }
 
     public void AlertAllEnemiesInCurrentScene(Vector3 alertOrigin)
@@ -154,12 +152,15 @@ public class LevelManager : MonoBehaviour
         orderedScenes[currentSceneIndex].manager.DisableScene();
 
         // if last scene in level and not a looping level
-        if (currentSceneIndex == orderedScenes.Count - 1 && !loop)
+        if (currentSceneIndex == orderedScenes.Count-1 && !loop)
         {
             // end level
-            Debug.Log("end level. Return to hub");
+            //Debug.Log("end level. Return to hub");
 
             // Return to hub
+            isQuitting = true;
+            screenOverlayAnimator.Play(TELEPORT_START);
+            Invoke(nameof(ReturnToHub), 0.25f);
 
             return;
         }
@@ -307,6 +308,26 @@ public class LevelManager : MonoBehaviour
     public void SetCursorColor(Color newColor)
     {
         color = newColor;
+    }
+
+    void ReturnToHub()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+    }
+
+    public void Save(GameData playerData)
+    {
+        string data = JsonUtility.ToJson(playerData);
+        System.IO.File.WriteAllText(Application.persistentDataPath + "/GameData.json", data);
+    }
+
+    public GameData LoadGameData()
+    {
+        string savedData = System.IO.File.ReadAllText(Application.persistentDataPath + "/GameData.json");
+
+        GameData data = JsonUtility.FromJson<GameData>(savedData);
+        
+        return data;
     }
 
 }

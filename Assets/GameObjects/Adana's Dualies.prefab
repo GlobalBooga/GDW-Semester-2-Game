@@ -5229,7 +5229,7 @@ MonoBehaviour:
   holdingSprite: {fileID: 0}
   iconSprite: {fileID: 0}
   abilityCooldown: 6
-  sr: {fileID: 0}
+  sr: {fileID: 6490480546456254543}
   alertsEnemies: 1
   bulletSpread: 5
   bulletSpeed: 25
@@ -5378,7 +5378,7 @@ MonoBehaviour:
   holdingSprite: {fileID: 0}
   iconSprite: {fileID: 0}
   abilityCooldown: 6
-  sr: {fileID: 0}
+  sr: {fileID: 6490480546542965960}
   alertsEnemies: 0
   bulletSpread: 5
   bulletSpeed: 25
@@ -5482,7 +5482,7 @@ MonoBehaviour:
   rightPistol: {fileID: 427184020557754138}
   leftPistol: {fileID: 4545878128774064441}
   cameraShakeIntensity: 0
-  cameraShakeTime: 0.1
+  cameraShakeTime: 0
   bulletSpread: 10
   bulletSpeed: 25
   alertEnemies: 1

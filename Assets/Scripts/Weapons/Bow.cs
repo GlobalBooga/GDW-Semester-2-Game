@@ -11,11 +11,11 @@ public class Bow : Gun
     public float arrowLifetime = 0.5f;
     public LayerMask whatIsEnemy;
 
-    internal override void Awake()
-    {
-        base.Awake();
-    }
 
+    public override int GetID()
+    {
+        return 3;
+    }
     internal override void OnValidate()
     {
         base.OnValidate();

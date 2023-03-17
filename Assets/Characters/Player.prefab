@@ -140,7 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1d617bd3bdeb6044831c38985513d2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactRange: 1
   runSpeed: 8
   moveForce: 40
   accelerationDrag: 5
@@ -160,6 +159,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   flashlight: {fileID: 6843829853753993103}
+  AdanasDualies: {fileID: 6490480546948791372, guid: 974554a4a1bbe504aa787306ebdb75eb, type: 3}
+  EnergyDualies: {fileID: 8240660144839520347, guid: ad2afb761895c754da99e23bae64e49d, type: 3}
+  Bow: {fileID: 282190699148034707, guid: 7aa59d43c7048b84a95013680154e831, type: 3}
+  AndarozGun: {fileID: 4770469877047556191, guid: 38647c16c96e5a34ea5d701c6ca76b01, type: 3}
 --- !u!114 &6518958586976302530
 MonoBehaviour:
   m_ObjectHideFlags: 0

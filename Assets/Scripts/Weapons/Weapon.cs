@@ -27,6 +27,11 @@ public class Weapon : MonoBehaviour
 
     public Action OnAbilityEnded;
 
+    public virtual int GetID()
+    {
+        return 0;
+    }
+
 
     internal virtual void Awake()
     {

@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class SceneManager : MonoBehaviour
@@ -109,7 +108,7 @@ public class SceneManager : MonoBehaviour
                         break;
                     case SceneObjective.PickAContract:
                         LevelManager.instance.hintController.AddObjective(PICK_A_CONTRACT_OBJECTIVE);
-                        if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
+                        //if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
                         break;
                     case SceneObjective.PickAWeapon:
                         LevelManager.instance.hintController.AddObjective(PICK_A_WEAPON);
@@ -142,8 +141,6 @@ public class SceneManager : MonoBehaviour
                         break;
                 }
             }
-
-            //if (sceneObjectives.Length > 0 && !LevelManager.instance.hintController.IsShowing) LevelManager.instance.hintController.ShowHint();
         }
     }
 
@@ -174,11 +171,6 @@ public class SceneManager : MonoBehaviour
                 return;
             }
         }
-    }
-
-    public virtual void ProgressFindTheKey()
-    {
-        // we dont have this
     }
 
     public virtual void EnableScene()

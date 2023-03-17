@@ -46,15 +46,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Menu"",
-                    ""type"": ""Button"",
-                    ""id"": ""dc2ebb37-e1bd-4222-81fa-2883f5fb5fda"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""WeaponAbility"",
                     ""type"": ""Button"",
                     ""id"": ""fbd1c8cc-c286-4263-9f57-747f550b4c50"",
@@ -94,6 +85,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""name"": ""Reload"",
                     ""type"": ""Button"",
                     ""id"": ""95d31c53-e25f-47c4-a2a6-96c3b16bf781"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""1f21f937-2a18-477f-8106-e191c97a22b2"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -169,28 +169,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""09c0398d-f646-4b6c-ad98-4dd46dbb63fe"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Menu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5066a80b-5ccb-41f0-b2f6-83678f0aa180"",
-                    ""path"": ""<Keyboard>/p"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Menu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""d3be0929-d3dd-45b2-96f0-cc97c4c18609"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
@@ -241,6 +219,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ac2004c-5b25-4b31-b8df-d8429289231d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""39cb20ea-39e3-4864-8648-a1787b64c393"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -312,12 +312,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_General = asset.FindActionMap("General", throwIfNotFound: true);
         m_General_Move = m_General.FindAction("Move", throwIfNotFound: true);
         m_General_Attack = m_General.FindAction("Attack", throwIfNotFound: true);
-        m_General_Menu = m_General.FindAction("Menu", throwIfNotFound: true);
         m_General_WeaponAbility = m_General.FindAction("WeaponAbility", throwIfNotFound: true);
         m_General_Ultimate = m_General.FindAction("Ultimate", throwIfNotFound: true);
         m_General_MovementAbility = m_General.FindAction("MovementAbility", throwIfNotFound: true);
         m_General_Pickup = m_General.FindAction("Pickup", throwIfNotFound: true);
         m_General_Reload = m_General.FindAction("Reload", throwIfNotFound: true);
+        m_General_Pause = m_General.FindAction("Pause", throwIfNotFound: true);
         // Menus
         m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
         m_Menus_Unpause = m_Menus.FindAction("Unpause", throwIfNotFound: true);
@@ -383,24 +383,24 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private IGeneralActions m_GeneralActionsCallbackInterface;
     private readonly InputAction m_General_Move;
     private readonly InputAction m_General_Attack;
-    private readonly InputAction m_General_Menu;
     private readonly InputAction m_General_WeaponAbility;
     private readonly InputAction m_General_Ultimate;
     private readonly InputAction m_General_MovementAbility;
     private readonly InputAction m_General_Pickup;
     private readonly InputAction m_General_Reload;
+    private readonly InputAction m_General_Pause;
     public struct GeneralActions
     {
         private @PlayerControls m_Wrapper;
         public GeneralActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_General_Move;
         public InputAction @Attack => m_Wrapper.m_General_Attack;
-        public InputAction @Menu => m_Wrapper.m_General_Menu;
         public InputAction @WeaponAbility => m_Wrapper.m_General_WeaponAbility;
         public InputAction @Ultimate => m_Wrapper.m_General_Ultimate;
         public InputAction @MovementAbility => m_Wrapper.m_General_MovementAbility;
         public InputAction @Pickup => m_Wrapper.m_General_Pickup;
         public InputAction @Reload => m_Wrapper.m_General_Reload;
+        public InputAction @Pause => m_Wrapper.m_General_Pause;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -416,9 +416,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Attack.started -= m_Wrapper.m_GeneralActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_GeneralActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_GeneralActionsCallbackInterface.OnAttack;
-                @Menu.started -= m_Wrapper.m_GeneralActionsCallbackInterface.OnMenu;
-                @Menu.performed -= m_Wrapper.m_GeneralActionsCallbackInterface.OnMenu;
-                @Menu.canceled -= m_Wrapper.m_GeneralActionsCallbackInterface.OnMenu;
                 @WeaponAbility.started -= m_Wrapper.m_GeneralActionsCallbackInterface.OnWeaponAbility;
                 @WeaponAbility.performed -= m_Wrapper.m_GeneralActionsCallbackInterface.OnWeaponAbility;
                 @WeaponAbility.canceled -= m_Wrapper.m_GeneralActionsCallbackInterface.OnWeaponAbility;
@@ -434,6 +431,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Reload.started -= m_Wrapper.m_GeneralActionsCallbackInterface.OnReload;
                 @Reload.performed -= m_Wrapper.m_GeneralActionsCallbackInterface.OnReload;
                 @Reload.canceled -= m_Wrapper.m_GeneralActionsCallbackInterface.OnReload;
+                @Pause.started -= m_Wrapper.m_GeneralActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_GeneralActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_GeneralActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_GeneralActionsCallbackInterface = instance;
             if (instance != null)
@@ -444,9 +444,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
-                @Menu.started += instance.OnMenu;
-                @Menu.performed += instance.OnMenu;
-                @Menu.canceled += instance.OnMenu;
                 @WeaponAbility.started += instance.OnWeaponAbility;
                 @WeaponAbility.performed += instance.OnWeaponAbility;
                 @WeaponAbility.canceled += instance.OnWeaponAbility;
@@ -462,6 +459,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Reload.started += instance.OnReload;
                 @Reload.performed += instance.OnReload;
                 @Reload.canceled += instance.OnReload;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -511,12 +511,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
-        void OnMenu(InputAction.CallbackContext context);
         void OnWeaponAbility(InputAction.CallbackContext context);
         void OnUltimate(InputAction.CallbackContext context);
         void OnMovementAbility(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IMenusActions
     {

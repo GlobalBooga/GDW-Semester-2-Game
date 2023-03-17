@@ -40,14 +40,14 @@ public class CameraShake : MonoBehaviour
 
     private void Update()
     {
-        if (!isLargePanningRoom)
+        if (!isLargePanningRoom && !(LevelManager.instance.IsQuitting()))
         {
             Camera.main.transform.position = new Vector3(
                 Mathf.Clamp(Camera.main.transform.position.x, LevelManager.instance.CurrentScene.manager.transform.position.x - 1.5f, LevelManager.instance.CurrentScene.manager.transform.position.x + 1.5f),
                 Mathf.Clamp(Camera.main.transform.position.y, LevelManager.instance.CurrentScene.manager.transform.position.y - 1.5f, LevelManager.instance.CurrentScene.manager.transform.position.y + 1.5f),
                 Camera.main.transform.position.z);
         }
-
+        
         if (restoreCameraPos)
         {
             float dist = (Time.time - startTime) * 8f;
@@ -158,6 +158,10 @@ public class CameraShake : MonoBehaviour
     private void ResetDamping()
     {
         virtualCamera.GetCinemachineComponent<CinemachineHardLockToTarget>().m_Damping = 0f;
+    }
 
+    public float GetIntensity()
+    {
+        return intensity;
     }
 }

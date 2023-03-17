@@ -13,7 +13,7 @@ public class HintController : MonoBehaviour
     private RectTransform content;
     private List<Objective> objectives = new();
 
-    private void Start()
+    private void Awake()
     {
         content = transform.GetChild(2).GetChild(0) as RectTransform;
         animator = GetComponent<Animator>();
@@ -30,8 +30,6 @@ public class HintController : MonoBehaviour
     {
         IsShowing = true;
         if (content.childCount == 0) return;
-
-        animator.StopPlayback();
 
         animator.Play("HintEnter");
         if (hintTime > 0) Invoke(nameof(HideHint), hintTime);
@@ -58,7 +56,7 @@ public class HintController : MonoBehaviour
         objectives.Remove(o);
 
 
-        if (objectives.Count == 0)
+        if (objectives.Count == 0 && IsShowing)
         {
             Invoke(nameof(HideHint), 2.75f);
         }
@@ -66,6 +64,8 @@ public class HintController : MonoBehaviour
 
     public void ClearObjectives()
     {
+        if (!content) return;
+
         for (int i = content.childCount-1; i >= 0; i--)
         {
             Destroy(content.GetChild(i).gameObject);

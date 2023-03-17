@@ -13,6 +13,8 @@ public class GameData
     public int weaponID = 1;
 
     // progress
+    public bool firstTimeInHub = true;
     public bool beatValkyrie = false;
     public bool foundAndarozGun = false;
+    public bool loopGame = false;
 }

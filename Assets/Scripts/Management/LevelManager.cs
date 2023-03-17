@@ -52,6 +52,7 @@ public class LevelManager : MonoBehaviour
     public float nightClearBrightness = 0.3f;
     public float nightSnowBrightness = 0.1f;
     public Light2D globalLight;
+    public GameObject lightsContainer;
     public GameObject snowPrefab;
     private Weather weather;
 
@@ -101,6 +102,7 @@ public class LevelManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        ResetProgress();
         isQuitting = true;
     }
 
@@ -316,6 +318,10 @@ public class LevelManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        GameData fg = LoadGameData();
+        fg.weaponID = 1;
+        Save(fg);
+
         isQuitting = true;
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
@@ -333,6 +339,15 @@ public class LevelManager : MonoBehaviour
         GameData data = JsonUtility.FromJson<GameData>(savedData);
         
         return data;
+    }
+
+    public void ResetProgress()
+    {
+        GameData fg = LoadGameData();
+        fg.foundAndarozGun = false;
+        fg.beatValkyrie = false;
+        fg.weaponID = 1;
+        Save(fg);
     }
 
     public Weather GetWeather()

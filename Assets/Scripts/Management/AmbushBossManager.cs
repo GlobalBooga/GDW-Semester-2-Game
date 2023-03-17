@@ -144,6 +144,8 @@ public class AmbushBossManager : BossRoomManager
 
     private IEnumerator EndCutscene()
     {
+        yield return new WaitForSeconds(0.5f);
+
         // end
         if (bossBarScript)
         {
@@ -172,7 +174,7 @@ public class AmbushBossManager : BossRoomManager
 
 
         // dialogue
-        LevelManager.instance.dialogueController.StartDialogue(doorsClosedScript);
+        LevelManager.instance.dialogueController.StartDialogue(endScript);
         while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
         yield return new WaitForSeconds(1f);

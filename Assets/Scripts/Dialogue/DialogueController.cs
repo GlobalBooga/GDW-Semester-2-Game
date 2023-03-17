@@ -38,9 +38,9 @@ public class DialogueController : MonoBehaviour
     DialoguePart currentPart;
 
     const int NAME_INDEX = 0;
-    const int DIALOGUE_INDEX = 1;
-    const int LEFTSPEAKERIMAGE = 5;
-    const int RIGHTSPEAKERIMAGE = 3;
+    const int DIALOGUE_INDEX = 2;
+    const int LEFTSPEAKERIMAGE = 6;
+    const int RIGHTSPEAKERIMAGE = 4;
 
     private void Awake()
     {
@@ -142,6 +142,9 @@ public class DialogueController : MonoBehaviour
 
     public void StartDialogue(DialoguePart[] script)
     {
+        if (script.Length == 0) return;
+        
+
         isFinished = false;
         isEnabled = true;
 

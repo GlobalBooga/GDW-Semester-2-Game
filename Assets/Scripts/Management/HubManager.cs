@@ -18,14 +18,14 @@ public class HubManager : SceneManager
 
     private GameData gameData;
 
-    private const int MIN_ANDAROZ_LEVEL_INDEX = 3;//1;
-    private const int MAX_ANDAROZ_LEVEL_INDEX = 3;//3;
+    private const int MIN_ANDAROZ_LEVEL_INDEX = 4;//1;
+    private const int MAX_ANDAROZ_LEVEL_INDEX = 4;//3;
 
-    private const int MIN_VALKYRIE_LEVEL_INDEX = 4;//4;
-    private const int MAX_VALKYRIE_LEVEL_INDEX = 4;//6;
+    private const int MIN_VALKYRIE_LEVEL_INDEX = 5;//4;
+    private const int MAX_VALKYRIE_LEVEL_INDEX = 5;//6;
 
-    private const int MIN_TRAIN_LEVEL_INDEX = 5;//7;
-    private const int MAX_TRAIN_LEVEL_INDEX = 5;//9;
+    private const int MIN_TRAIN_LEVEL_INDEX = 6;//7;
+    private const int MAX_TRAIN_LEVEL_INDEX = 6;//9;
 
 
     private void Start()

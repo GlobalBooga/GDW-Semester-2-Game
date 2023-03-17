@@ -69,8 +69,8 @@ MonoBehaviour:
   artillery_shots: 3
   artillery_pillarDamageMultiplier: 0.75
   Artillery_maxHpForUse: 7
-  troop_startDelay: 10
-  troop_delayBeforeNextAttack: 1
+  troop_startDelay: 1
+  troop_delayBeforeNextAttack: 5
   troop_types:
   - {fileID: 7527923035675034280, guid: 3496c5525e4af834eace9abd81235a54, type: 3}
   - {fileID: 2781084931710897593, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
@@ -78,8 +78,8 @@ MonoBehaviour:
   - {fileID: 6687974566634874365, guid: 7a3e3621607df39459e62b1423e9b10e, type: 3}
   troop_spawnAmount: 5
   troopDeploy_maxHpForUse: 7
-  enableTurrets: 1
-  enableFlamethrower: 1
-  enableMissiles: 1
-  enableArtillery: 1
-  enableTroops: 0
+  enableTurrets: 0
+  enableFlamethrower: 0
+  enableMissiles: 0
+  enableArtillery: 0
+  enableTroops: 1

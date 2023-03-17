@@ -456,7 +456,10 @@ public class TrainBoss : MonoBehaviour
 
         for (int i = 0; i < tso.troop_spawnAmount; i++)
         {
-            
+            Transform t = Instantiate(tso.troop_types[Random.Range(0, tso.troop_types.Length)], transform).transform;
+            t.position = new Vector3(
+                Random.Range(troopSpawn.bounds.min.x, troopSpawn.bounds.max.x),
+                Random.Range(troopSpawn.bounds.min.y, troopSpawn.bounds.max.y), 0f);
         }
 
 
@@ -598,7 +601,7 @@ public class TrainBoss : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("CenterofFireZone returned 0!");
-        return 0f;
+        //Debug.LogWarning("CenterofFireZone returned 0!");
+        return ogX;
     }
 }

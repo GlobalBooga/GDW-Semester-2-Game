@@ -1,5 +1,4 @@
 using UnityEngine;
-using static SceneManager;
 
 public class SceneExit : MonoBehaviour
 {

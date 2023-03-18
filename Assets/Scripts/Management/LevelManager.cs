@@ -102,7 +102,7 @@ public class LevelManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        ResetProgress();
+        ResetProgressFull();
         isQuitting = true;
     }
 
@@ -286,18 +286,22 @@ public class LevelManager : MonoBehaviour
             case Weather.day_clear:
                 globalLight.intensity = dayClearBrightness;
                 if (snowPrefab) snowPrefab.SetActive(false);
+                if (lightsContainer) lightsContainer.SetActive(false);
                 break;
             case Weather.day_snow:
                 globalLight.intensity = daySnowBrightness;
                 if (snowPrefab) snowPrefab.SetActive(true);
+                if (lightsContainer) lightsContainer.SetActive(false);
                 break;
             case Weather.night_clear:
                 globalLight.intensity = nightClearBrightness;
                 if (snowPrefab) snowPrefab.SetActive(false);
+                if (lightsContainer) lightsContainer.SetActive(true);
                 break;
             case Weather.night_snow:
                 globalLight.intensity = nightSnowBrightness;
                 if (snowPrefab) snowPrefab.SetActive(true);
+                if (lightsContainer) lightsContainer.SetActive(true);
                 break;
             default:
                 break;
@@ -341,11 +345,24 @@ public class LevelManager : MonoBehaviour
         return data;
     }
 
-    public void ResetProgress()
+    public void ResetLevelProgress()
     {
         GameData fg = LoadGameData();
-        fg.foundAndarozGun = false;
         fg.beatValkyrie = false;
+        fg.firstTimeInHub = true;
+        fg.beatGluttony = false;
+        fg.beatAndaroz = false;
+        Save(fg);
+    }
+
+    public void ResetProgressFull()
+    {
+        GameData fg = LoadGameData();
+        fg.beatValkyrie = false;
+        fg.firstTimeInHub = true;
+        fg.beatGluttony = false;
+        fg.beatAndaroz = false;
+        fg.foundAndarozGun = false;
         fg.weaponID = 1;
         Save(fg);
     }

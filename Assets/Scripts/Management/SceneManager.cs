@@ -65,22 +65,23 @@ public class SceneManager : MonoBehaviour
         if (isIndoors)
         {
             LevelManager.instance.globalLight.intensity = 0f;
-            if (LevelManager.instance.GetWeather() == LevelManager.Weather.day_snow &&
+            if (LevelManager.instance.GetWeather() == LevelManager.Weather.day_snow ||
                 LevelManager.instance.GetWeather() == LevelManager.Weather.night_snow)
             {
                 LevelManager.instance.snowPrefab.SetActive(false);
             }
         }
-        else
+        else if (LevelManager.instance.enableWeather)
         {
             LevelManager.instance.SetGlobalLightAccordingToWeather();
-            if (LevelManager.instance.GetWeather() == LevelManager.Weather.day_snow &&
+            if (LevelManager.instance.GetWeather() == LevelManager.Weather.day_snow ||
                 LevelManager.instance.GetWeather() == LevelManager.Weather.night_snow)
             {
                 LevelManager.instance.snowPrefab.SetActive(true);
                 LevelManager.instance.snowPrefab.transform.position = transform.position;
             }
         } 
+
         Camera.main.transform.position = transform.position + Vector3.back * 10f;
         if (CameraShake.instance) CameraShake.instance.SetCameraSize(cameraSize);
 

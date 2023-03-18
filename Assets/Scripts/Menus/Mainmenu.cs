@@ -26,7 +26,7 @@ public class Mainmenu : MonoBehaviour
 
     public void QuitGame()
     {
-        LevelManager.instance.ResetProgress();
+        LevelManager.instance.ResetProgressFull();
         Application.Quit();
     }
 

@@ -81,7 +81,7 @@ public class AndarozRoom : BossRoomManager
         yield return new WaitForSeconds(1f);
 
         GameData gd = LevelManager.instance.LoadGameData();
-        gd.beatValkyrie = false;
+        gd.beatAndaroz = true;
         LevelManager.instance.Save(gd);
 
         LevelManager.instance.NextScene();

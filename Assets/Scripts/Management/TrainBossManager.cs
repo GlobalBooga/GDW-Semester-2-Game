@@ -171,6 +171,11 @@ public class TrainBossManager : BossRoomManager
         while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
         yield return new WaitForSeconds(1.5f);
+
+        GameData gd = LevelManager.instance.LoadGameData();
+        gd.beatGluttony = true;
+        LevelManager.instance.Save(gd);
+
         LevelManager.instance.NextScene();
     }
 

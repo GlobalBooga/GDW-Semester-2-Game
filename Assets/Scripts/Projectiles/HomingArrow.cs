@@ -3,16 +3,20 @@ using UnityEngine;
 public class HomingArrow : HomingMissile
 {
     Animator animator;
+    BoxCollider2D bc;
 
     internal override void Awake()
     {
         base.Awake();
         animator = GetComponent<Animator>();
+        bc = GetComponent<BoxCollider2D>();
+        bc.enabled = false;
     }
 
     public override void Fly(Transform target, Vector2 initialDir, float rotationForce, float maxSpeed, float damage = 0)
     {
         base.Fly(target, initialDir, rotationForce, maxSpeed, damage);
+        bc.enabled = true;
     }
 
     internal override void Update()

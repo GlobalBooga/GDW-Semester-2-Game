@@ -231,7 +231,7 @@ MonoBehaviour:
   - {x: -0.186409, y: -0.17676282, z: 0}
   m_ShapePathHash: 743514181
   m_Mesh: {fileID: 0}
-  m_InstanceId: -2468
+  m_InstanceId: 545590
 --- !u!1 &6843829853753993103
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,9 +329,9 @@ MonoBehaviour:
   m_LocalBounds:
     m_Center: {x: 0, y: -0.00000011920929, z: 0}
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
-  m_PointLightInnerAngle: 17.71
-  m_PointLightOuterAngle: 37.99
-  m_PointLightInnerRadius: 43.383114
+  m_PointLightInnerAngle: 17.149998
+  m_PointLightOuterAngle: 50.09
+  m_PointLightInnerRadius: 39.94488
   m_PointLightOuterRadius: 51.990055
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0

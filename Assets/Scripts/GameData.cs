@@ -16,5 +16,6 @@ public class GameData
     public bool firstTimeInHub = true;
     public bool beatValkyrie = false;
     public bool foundAndarozGun = false;
-    public bool loopGame = false;
+    public bool beatGluttony = false;
+    public bool beatAndaroz = false;
 }

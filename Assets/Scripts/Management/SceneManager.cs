@@ -71,7 +71,7 @@ public class SceneManager : MonoBehaviour
                 LevelManager.instance.snowPrefab.SetActive(false);
             }
         }
-        else
+        else if (LevelManager.instance.enableWeather)
         {
             LevelManager.instance.SetGlobalLightAccordingToWeather();
             if (LevelManager.instance.GetWeather() == LevelManager.Weather.day_snow ||

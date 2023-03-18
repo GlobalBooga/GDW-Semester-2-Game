@@ -1,14 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static ContractSelector;
 
 public class HubManager : SceneManager
 {
+    [Header("Contracts")]
+    public GameObject[] contracts;
+
     [Header("Dialogue")]
     public bool enableDialogue = false;
     public DialogueController.DialoguePart[] introScript;
     public DialogueController.DialoguePart[] andarozContractScript;
     public DialogueController.DialoguePart[] trainContractScript;
+    public DialogueController.DialoguePart[] timeLordContractScript;
 
     [Header("Weapons")]
     public GameObject AdanasDualies;
@@ -40,6 +44,14 @@ public class HubManager : SceneManager
         if (gameData.weaponID != 4 && !gameData.foundAndarozGun) AndarozGun.SetActive(false);
 
         LevelManager.instance.screenOverlayAnimator.Play(LevelManager.TELEPORT_END);
+
+        foreach (var item in contracts)
+        {
+            ContractSelector cs = item.GetComponent<ContractSelector>();
+            if (gameData.beatAndaroz && cs.boss == Bosses.Andaroz) item.SetActive(false);
+            if (gameData.beatGluttony && cs.boss == Bosses.Gluttony) item.SetActive(false);
+            if (gameData.beatAndaroz && gameData.beatGluttony && cs.boss == Bosses.TimeLord) item.SetActive(true);
+        }
     }
 
     public override void ForceSetScene()
@@ -53,8 +65,9 @@ public class HubManager : SceneManager
         }
 
         // dialogue
-        if (LevelManager.instance.hintController)
-        StartCoroutine(IntroDialogue());
+        GameData gd = LevelManager.instance.LoadGameData();
+
+        if (LevelManager.instance.hintController && gd.firstTimeInHub) StartCoroutine(IntroDialogue());
     }
 
     private IEnumerator IntroDialogue()
@@ -84,19 +97,24 @@ public class HubManager : SceneManager
         StartCoroutine(StartLevel(1));
     }
 
+    public void PickedTimeLordContract()
+    {
+        LevelManager.instance.hintController.ObjectiveComplete(PICK_A_CONTRACT_OBJECTIVE);
+        StartCoroutine(LoopGame());
+    }
+
     private IEnumerator StartLevel(int contract)
     {
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.5f);
 
         LevelManager.instance.DisablePlayerInput();
 
+        //if (contract == 0) LevelManager.instance.dialogueController.StartDialogue(andarozContractScript);
+        //else if (contract == 1) LevelManager.instance.dialogueController.StartDialogue(trainContractScript);
 
-        if (contract == 0) LevelManager.instance.dialogueController.StartDialogue(andarozContractScript);
-        else if (contract == 1) LevelManager.instance.dialogueController.StartDialogue(trainContractScript);
+        //while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
-        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
-
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         LevelManager.instance.screenOverlayAnimator.Play(LevelManager.TELEPORT_START);
 
@@ -118,5 +136,21 @@ public class HubManager : SceneManager
             UnityEngine.SceneManagement.SceneManager.LoadScene(Random.Range(MIN_TRAIN_LEVEL_INDEX, MAX_TRAIN_LEVEL_INDEX + 1));
         }
 
+    }
+
+    private IEnumerator LoopGame()
+    {
+        LevelManager.instance.DisablePlayerInput();
+        yield return new WaitForSeconds(2f);
+
+        //LevelManager.instance.dialogueController.StartDialogue(timeLordContractScript);
+        //while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+
+        LevelManager.instance.screenOverlayAnimator.Play(LevelManager.TELEPORT_START);
+
+        yield return new WaitForSeconds(0.25f);
+
+        LevelManager.instance.ResetLevelProgress();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 }

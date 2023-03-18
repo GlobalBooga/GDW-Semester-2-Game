@@ -102,7 +102,7 @@ public class LevelManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        ResetProgress();
+        ResetProgressFull();
         isQuitting = true;
     }
 
@@ -345,11 +345,24 @@ public class LevelManager : MonoBehaviour
         return data;
     }
 
-    public void ResetProgress()
+    public void ResetLevelProgress()
     {
         GameData fg = LoadGameData();
-        fg.foundAndarozGun = false;
         fg.beatValkyrie = false;
+        fg.firstTimeInHub = true;
+        fg.beatGluttony = false;
+        fg.beatAndaroz = false;
+        Save(fg);
+    }
+
+    public void ResetProgressFull()
+    {
+        GameData fg = LoadGameData();
+        fg.beatValkyrie = false;
+        fg.firstTimeInHub = true;
+        fg.beatGluttony = false;
+        fg.beatAndaroz = false;
+        fg.foundAndarozGun = false;
         fg.weaponID = 1;
         Save(fg);
     }

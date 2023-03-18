@@ -286,18 +286,22 @@ public class LevelManager : MonoBehaviour
             case Weather.day_clear:
                 globalLight.intensity = dayClearBrightness;
                 if (snowPrefab) snowPrefab.SetActive(false);
+                if (lightsContainer) lightsContainer.SetActive(false);
                 break;
             case Weather.day_snow:
                 globalLight.intensity = daySnowBrightness;
                 if (snowPrefab) snowPrefab.SetActive(true);
+                if (lightsContainer) lightsContainer.SetActive(false);
                 break;
             case Weather.night_clear:
                 globalLight.intensity = nightClearBrightness;
                 if (snowPrefab) snowPrefab.SetActive(false);
+                if (lightsContainer) lightsContainer.SetActive(true);
                 break;
             case Weather.night_snow:
                 globalLight.intensity = nightSnowBrightness;
                 if (snowPrefab) snowPrefab.SetActive(true);
+                if (lightsContainer) lightsContainer.SetActive(true);
                 break;
             default:
                 break;

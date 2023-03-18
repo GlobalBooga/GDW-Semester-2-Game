@@ -121,7 +121,7 @@ public class Sniper : Enemy
     // call in update
     void ShootLaser()
     {
-        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, sso.maxDist, sso.whatBlocksSight);
+        RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, sso.maxDist, sso.whatBlocksLaser);
         if (hit)
         {
             DrawLaser(laserStart.position - transform.position, hit.point - (Vector2)transform.position);

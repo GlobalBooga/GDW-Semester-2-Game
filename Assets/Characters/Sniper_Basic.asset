@@ -90,7 +90,7 @@ MonoBehaviour:
     m_Bits: 64
   whatBlocksSight:
     serializedVersion: 2
-    m_Bits: 82240
+    m_Bits: 16704
   whatTakesDamage:
     serializedVersion: 2
     m_Bits: 1245440
@@ -102,4 +102,7 @@ MonoBehaviour:
   laserFlashOnTime: 0.1
   laserFlashOffTime: 0.1
   maxDist: 100
+  whatBlocksLaser:
+    serializedVersion: 2
+    m_Bits: 2572609
   animationLenght: 0.1

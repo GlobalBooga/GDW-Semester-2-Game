@@ -8,7 +8,6 @@ public class TutorialManager : SceneManager
     public bool enableDialogue = false;
     public DialogueController.DialoguePart[] script;
     public DialogueController.DialoguePart[] secondTimeArountScript;
-
     private int lap = 0;
 
     public override void ForceSetScene()
@@ -19,7 +18,7 @@ public class TutorialManager : SceneManager
 
         if (!enableDialogue) return;
 
-        if (script.Length > 0 && lap == 0)
+        if (lap == 0)
         {
             lap++;
             LevelManager.instance.DisablePlayerInput();

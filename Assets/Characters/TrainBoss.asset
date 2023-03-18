@@ -75,7 +75,6 @@ MonoBehaviour:
   - {fileID: 7527923035675034280, guid: 3496c5525e4af834eace9abd81235a54, type: 3}
   - {fileID: 2781084931710897593, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
   - {fileID: 1722265178022636069, guid: 41e82737a2bd85e45b0a9c37df700687, type: 3}
-  - {fileID: 6687974566634874365, guid: 7a3e3621607df39459e62b1423e9b10e, type: 3}
   troop_spawnAmount: 5
   troopDeploy_maxHpForUse: 6
   enableTurrets: 1

@@ -196,8 +196,20 @@ public class Player : MonoBehaviour
                     newWeapon.Pickup(transform, weapon);
                     weapon = newWeapon;
                     gameData.weaponID = newWeapon.GetID();
-                    if (newWeapon.GetID() == 4) gameData.foundAndarozGun = true;
-                    LevelManager.instance.Save(gameData);
+
+                    TutorialManager tm = LevelManager.instance.CurrentScene.manager as TutorialManager;
+                    if (!tm)
+                    {
+                        if (newWeapon.GetID() == 4)
+                        {
+                            gameData.foundAndarozGun = true;
+                        }
+                        LevelManager.instance.Save(gameData);
+                    }
+                    else
+                    {
+                        Debug.Log("was tutorial");
+                    }
                 }
             }
         };

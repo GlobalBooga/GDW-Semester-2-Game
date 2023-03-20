@@ -349,6 +349,7 @@ public class Player : MonoBehaviour
     {
         hpcomp.isInvincible = true;
         hpcomp.postDamageInvincibilityTime = 0;
+        cc.enabled = false;
         DisableGeneralControls();
         DisableRotation();
         LevelManager.instance.IDied();

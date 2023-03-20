@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BouncyBullet : Bullet
 {
-    const int maxBounces = 3;
+    const int maxBounces = 2;
     int bounces;
 
     Vector2 lastVelocity;

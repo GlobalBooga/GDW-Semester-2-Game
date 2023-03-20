@@ -12,5 +12,4 @@ public class RangedScriptableObject : EnemyScriptableObject
     public float bulletSpeed = 15f;
     public float bulletSpread = 10f;
     public GameObject bullet;
-    public GameObject muzzleFlash;
 }

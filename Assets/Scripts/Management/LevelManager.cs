@@ -32,6 +32,9 @@ public class LevelManager : MonoBehaviour
     [Header("Menu")]
     public PauseMenu pauseMenu;
 
+    [Header("DeadScreen")]
+    public DeadScreen deadScreen;
+
     [Header("Crosshair Settings")]
     public Color color = Color.yellow;
     public Image cursor;
@@ -104,6 +107,11 @@ public class LevelManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         ResetProgressFull();
+        isQuitting = true;
+    }
+
+    private void OnDisable()
+    {
         isQuitting = true;
     }
 
@@ -381,4 +389,9 @@ public class LevelManager : MonoBehaviour
         return weather;
     }
 
+
+    public void IDied()
+    {
+        deadScreen.gameObject.SetActive(true);
+    }
 }

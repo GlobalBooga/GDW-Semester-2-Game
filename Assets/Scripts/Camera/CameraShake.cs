@@ -38,6 +38,8 @@ public class CameraShake : MonoBehaviour
         curve = AnimationCurve.EaseInOut(0,0,1,1);
     }
 
+
+
     private void Update()
     {
         if (!isLargePanningRoom && !(LevelManager.instance.IsQuitting()))
@@ -71,7 +73,7 @@ public class CameraShake : MonoBehaviour
         this.time = time;
         
         if (isShaking) StopCoroutine(nameof(ShakeCameraRoutine));
-        StartCoroutine(nameof(ShakeCameraRoutine));
+        if (!LevelManager.instance.IsQuitting() || isActiveAndEnabled) StartCoroutine(nameof(ShakeCameraRoutine));
     }
 
     public IEnumerator ShakeCameraRoutine()

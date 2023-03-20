@@ -27,13 +27,13 @@ public class HomingArrow : HomingMissile
         }
         if (target)
         {
-            transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(rb.velocity, Vector3.up, Vector3.back)); ;
+            transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(rb.velocity, Vector3.up, Vector3.back));
         }
-        else if (!target && !transform.parent)
-        {
-            Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, 8f, StaticHelpers.EnemyLayer);
-            if (col.Length > 0) target = col[0].transform;
-        }
+        //else if (!target && !transform.parent)
+        //{
+        //    Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, 8f, StaticHelpers.EnemyLayer);
+        //    if (col.Length > 0) target = col[0].transform;
+        //}
     }
 
     internal override void FixedUpdate()

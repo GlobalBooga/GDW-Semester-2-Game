@@ -25,7 +25,7 @@ TagManager:
   - Breakable Objects
   - Explosives
   - SpecialBreakableObject
-  - IgnoreWalls
+  - HomingArrow
   - EnergyOrb
   - TrainWeapons
   - 

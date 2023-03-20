@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class Bow : Gun
@@ -9,6 +10,7 @@ public class Bow : Gun
     public float homingForce = 10f;
     public float arrowLifetime = 0.5f;
     public LayerMask whatIsEnemy;
+    public LayerMask whatBlocksSight;
 
     [Header("Ability"), Space(5f)]
     public Transform deg15Spawn;
@@ -36,16 +38,45 @@ public class Bow : Gun
 
         Transform target = null;
 
-        //lockon to a target
         Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, lockOnDistance, whatIsEnemy);
-        foreach (var item in col)
+
+        if (col.Length > 0)
         {
-            // check if we are facing this enemy
-            if (Vector3.Angle(transform.up, item.transform.position - transform.position) <= lockOnAngle * 0.5f)
+            col = col.OrderBy((d) => (d.transform.position - transform.position).sqrMagnitude).ToArray();
+        }
+
+        for (int n = 0; n < 2; n++)
+        {
+            if (target) break;
+
+            for (int i = 0; i < col.Length; i++)
             {
-                target = item.transform;
+                // check if we are facing this enemy
+                if (Vector3.Angle(transform.up, col[i].transform.position - transform.position) <= lockOnAngle * 0.5f)
+                {
+                    // operation 1: lockon to a visible target
+                    if (n == 0)
+                    {
+                        // is anything blocking the way
+                        RaycastHit2D hit = Physics2D.Raycast(transform.position, (col[i].transform.position - transform.position).normalized, lockOnDistance, whatBlocksSight);
+                        if (hit.transform.gameObject.layer == StaticHelpers.EnemyLayer ||
+                            hit.transform.gameObject.layer == StaticHelpers.EnemyMissileLayer ||
+                            hit.transform.gameObject.layer == StaticHelpers.TrainWeaponLayer)
+                        {
+                            target = col[i].transform;
+                            break;
+                        }
+                    }
+                    // operation 2 : lockon to target behind a wall
+                    else if (n == 1)
+                    {
+                        target = col[i].transform;
+                        break;
+                    }
+                }
             }
         }
+
 
         if (bullet && bulletSpawn)
         {
@@ -82,20 +113,50 @@ public class Bow : Gun
 
         //lockon to a target
         Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, lockOnDistance, whatIsEnemy);
-        for (int n = 0, i = 0; n < targets.Length; n++)
-        {
 
-            for (; i < col.Length; i++)
+        if (col.Length > 0)
+        {
+            col = col.OrderBy((d) => (d.transform.position - transform.position).sqrMagnitude).ToArray();
+        }
+
+        for (int o = 0; o < 2; o++)
+        {
+            // for every target
+            for (int t = 0, i = 0; t < targets.Length; t++)
             {
-                // check if we are facing this enemy
-                if (Vector3.Angle(transform.up, col[i].transform.position - transform.position) <= lockOnAngle * 0.5f)
+                // enemy selector
+                for (; i < col.Length; i++)
                 {
-                    targets[n] = col[i].transform;
-                    i++;
-                    break;
+                    // check if we are facing this enemy
+                    if (Vector3.Angle(transform.up, col[i].transform.position - transform.position) <= lockOnAngle * 0.5f)
+                    {
+                        if (targets.Length > col.Length || o == 1)
+                        {
+                            targets[t] = col[i].transform;
+                            i++;
+                            break;
+                        }
+                        else 
+                        {
+                            // is anything blocking the way
+                            RaycastHit2D hit = Physics2D.Raycast(transform.position, (col[i].transform.position - transform.position).normalized, lockOnDistance, whatBlocksSight);
+                            if (hit.transform.gameObject.layer == StaticHelpers.EnemyLayer ||
+                                hit.transform.gameObject.layer == StaticHelpers.EnemyMissileLayer ||
+                                hit.transform.gameObject.layer == StaticHelpers.TrainWeaponLayer)
+                            {
+                                targets[t] = col[i].transform;
+                                i++;
+                                break;
+                            }
+                        }
+                    }
                 }
+                if (i >= col.Length) i = 0;
             }
-            if (i >= col.Length) i = 0;
+
+            if (!targets.Last()) continue;
+
+            break;
         }
 
         HomingArrow[] arrows = new HomingArrow[5];
@@ -135,6 +196,4 @@ public class Bow : Gun
         readyToUse = true;
         usingAbility = false;
     }
-
-    
 }

@@ -160,7 +160,10 @@ MonoBehaviour:
   arrowLifetime: 1.5
   whatIsEnemy:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 2105856
+  whatBlocksSight:
+    serializedVersion: 2
+    m_Bits: 2564673
   deg15Spawn: {fileID: 3519350718699938743}
   deg30Spawn: {fileID: 4923465277717880698}
   neg15Spawn: {fileID: 5377846143457610857}

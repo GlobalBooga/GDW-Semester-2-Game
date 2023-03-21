@@ -52,10 +52,11 @@ public class AndarozRoom : BossRoomManager
 
     IEnumerator StartCutsceneRoutine()
     {
-        LevelManager.instance.DisablePlayerInput();
-        yield return new WaitForSeconds(1f);
-
+        yield return new WaitForSeconds(.4f);
         if (forceFieldAnimator) forceFieldAnimator.Play("ForceFieldOn");
+        LevelManager.instance.DisablePlayerInput();
+        yield return new WaitForSeconds(.4f);
+
 
         // dialogue
         LevelManager.instance.dialogueController.StartDialogue(enterScript);

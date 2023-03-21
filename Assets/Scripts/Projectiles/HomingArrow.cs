@@ -47,7 +47,12 @@ public class HomingArrow : HomingMissile
         {
             collision.gameObject.GetComponent<Enemy>().Alert(transform.position);
         }
-        StaticHelpers.ApplyDamage(collision.gameObject, damage);
+
+        if (!StaticHelpers.ApplyDamage(collision.collider.gameObject, damage))
+        {
+            StaticHelpers.ApplyDamage(collision.gameObject, damage);
+        }
+
         Destroy(gameObject);
     }
 }

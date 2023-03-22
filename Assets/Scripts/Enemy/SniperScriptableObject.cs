@@ -18,6 +18,7 @@ public class SniperScriptableObject : EnemyScriptableObject
 
     [Header("Laser"), Space(5f)]
     public float maxDist = 100f;
+    public LayerMask whatBlocksLaser;
     
     public float animationLenght = 0.1f;
 }

@@ -81,7 +81,7 @@ MonoBehaviour:
   defaultMaxAttackDistance: 20
   defaultMinAttackDistance: 15
   defaultComfortableAttackDist: 0
-  chasePlayer: 1
+  chasePlayer: 0
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 16640

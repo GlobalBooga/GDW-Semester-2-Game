@@ -22,14 +22,6 @@ public class BossRoomManager : SceneManager
         }
     }
 
-    public override void ForceSetScene()
-    {
-        base.ForceSetScene();
-
-        LevelManager.instance.DisablePlayerInput();
-        CameraShake.instance.restoreCamPosAfterShake = false;
-    }
-
     public override void DisableScene()
     {
         base.DisableScene();
@@ -40,7 +32,7 @@ public class BossRoomManager : SceneManager
         }
         if (largeRoomCamera) largeRoomCamera.enabled = false;
 
-        CameraShake.instance.restoreCamPosAfterShake = true;
+        //CameraShake.instance.restoreCamPosAfterShake = true;
     }
 
     public LargeRoomCameraController GetLargeRoomCameraController()

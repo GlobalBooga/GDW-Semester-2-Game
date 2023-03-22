@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: -1822970695
   m_SortingLayer: 4
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 2efa51e73d6eef44ca3ef47d63094469, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 410726b3247f0c04a992d17ca7ba58f3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -134,11 +134,11 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.696
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 10
+  m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 000000008f66c27bd31ee11d87f66012b9ac5793d3bf1f71
-  m_LightCookieSprite: {fileID: 21300000, guid: 2efa51e73d6eef44ca3ef47d63094469, type: 3}
+  m_LightCookieSprite: {fileID: 21300000, guid: 410726b3247f0c04a992d17ca7ba58f3, type: 3}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
   m_AlphaBlendOnOverlap: 0
@@ -151,16 +151,16 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_Vertices:
-  - position: {x: -0.5, y: 0.5, z: 0}
+  - position: {x: -0.5, y: 0.703125, z: 0}
     color: {r: 0, g: 0, b: 0, a: 1}
     uv: {x: 0, y: 1}
-  - position: {x: 0.5, y: 0.5, z: 0}
+  - position: {x: 0.5, y: 0.703125, z: 0}
     color: {r: 0, g: 0, b: 0, a: 1}
     uv: {x: 1, y: 1}
-  - position: {x: -0.5, y: -0.5, z: 0}
+  - position: {x: -0.5, y: -0.703125, z: 0}
     color: {r: 0, g: 0, b: 0, a: 1}
     uv: {x: 0, y: 0}
-  - position: {x: 0.5, y: -0.5, z: 0}
+  - position: {x: 0.5, y: -0.703125, z: 0}
     color: {r: 0, g: 0, b: 0, a: 1}
     uv: {x: 1, y: 0}
   - position: {x: 0, y: 0, z: 0}
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Triangles: 000001000200020001000300
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0.5, y: 0.5, z: 0}
+    m_Extent: {x: 0.5, y: 0.703125, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -200,8 +200,8 @@ GameObject:
   - component: {fileID: 1896939090538511046}
   - component: {fileID: -4186290192929349455}
   - component: {fileID: 2554821954583363593}
-  - component: {fileID: 5891864069383825557}
-  m_Layer: 0
+  - component: {fileID: -2159584466490027448}
+  m_Layer: 13
   m_Name: HomingMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,21 +313,26 @@ MonoBehaviour:
   postDamageInvincibilityTime: 0
   isInvincible: 0
   maxHealth: 10
---- !u!111 &5891864069383825557
-Animation:
+--- !u!95 &-2159584466490027448
+Animator:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6545307244740321829}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: df9a1e852887481418f98909767eb5b4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &6708755485232297682
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,13 +494,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5329789863531299260, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 5972767953269003667, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
       propertyPath: m_Name
       value: CenteredHPBar
       objectReference: {fileID: 0}
     - target: {fileID: 5972767953269003667, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 5972767953269003667, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7805887230765404100, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}

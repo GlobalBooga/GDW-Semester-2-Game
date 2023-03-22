@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using Cinemachine;
-using Unity.VisualScripting;
 
 public class CameraShake : MonoBehaviour
 {
@@ -22,10 +21,12 @@ public class CameraShake : MonoBehaviour
     Vector3 lerpStart;
     Vector3 lerpEnd;
     AnimationCurve curve;
+    private float lerpSpeed = 1;
 
     private float damping;
     [HideInInspector] public bool restoreCamPosAfterShake = true;
 
+    public bool isLargePanningRoom { get; set; }
 
     // Start is called before the first frame update
     void Start()
@@ -37,14 +38,24 @@ public class CameraShake : MonoBehaviour
         curve = AnimationCurve.EaseInOut(0,0,1,1);
     }
 
+
+
     private void Update()
     {
+        if (!isLargePanningRoom && !(LevelManager.instance.IsQuitting()))
+        {
+            Camera.main.transform.position = new Vector3(
+                Mathf.Clamp(Camera.main.transform.position.x, LevelManager.instance.CurrentScene.manager.transform.position.x - 1.5f, LevelManager.instance.CurrentScene.manager.transform.position.x + 1.5f),
+                Mathf.Clamp(Camera.main.transform.position.y, LevelManager.instance.CurrentScene.manager.transform.position.y - 1.5f, LevelManager.instance.CurrentScene.manager.transform.position.y + 1.5f),
+               Mathf.Clamp( Camera.main.transform.position.z, -12f, -8f));
+        }
+        
         if (restoreCameraPos)
         {
             float dist = (Time.time - startTime) * 8f;
             if (totalDist > 0)
             {
-                float alpha = dist / totalDist;
+                float alpha = dist / totalDist * dist;
                 Camera.main.transform.position = Vector3.Lerp(lerpStart, lerpEnd, curve.Evaluate(alpha));
                 if (alpha > 1)
                 {
@@ -56,14 +67,13 @@ public class CameraShake : MonoBehaviour
 
     public void ShakeCamera(float intensity, float time)
     {
-
         if (perlinThing.m_AmplitudeGain > intensity) return;
 
         this.intensity = intensity;
         this.time = time;
         
         if (isShaking) StopCoroutine(nameof(ShakeCameraRoutine));
-        StartCoroutine(nameof(ShakeCameraRoutine));
+        if (!LevelManager.instance.IsQuitting() || isActiveAndEnabled) StartCoroutine(nameof(ShakeCameraRoutine));
     }
 
     public IEnumerator ShakeCameraRoutine()
@@ -82,18 +92,19 @@ public class CameraShake : MonoBehaviour
         if (restoreCamPosAfterShake) RestoreCamPos();
     }
 
-    public void RestoreCamPos()
+    public void RestoreCamPos(float speed = 1)
     {
-        RestoreCamPos(Vector2.zero);
+        RestoreCamPos(Vector2.zero, speed);
     }
 
-    public void RestoreCamPos(Vector2 offset)
+    public void RestoreCamPos(Vector2 offset, float speed)
     {
         lerpStart = Camera.main.transform.position;
         lerpEnd = LevelManager.instance.CurrentScene.playerEntrance.parent.position + new Vector3(offset.x, offset.y, -10f);
         totalDist = Vector3.Distance(lerpStart, lerpEnd);
         startTime = Time.time;
         restoreCameraPos = true;
+        lerpSpeed = speed;
     }
 
     public void SetCameraSize(float size)
@@ -101,8 +112,9 @@ public class CameraShake : MonoBehaviour
         virtualCamera.m_Lens.OrthographicSize = size;   
     }
 
-    public void LerpCameraSize(float size)
+    public void LerpCameraSize(float size, float speed = 1f)
     {
+        lerpSpeed = speed;
         StartCoroutine(nameof(LerpCameraSizeRoutine), size);      
     }
 
@@ -119,8 +131,8 @@ public class CameraShake : MonoBehaviour
         while (alpha < 1)
         {
             float time = (Time.time - startTime) * 4f;
-            alpha = time / difference;
-            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(currentSize, size, alpha);
+            alpha = time / difference * lerpSpeed;
+            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(currentSize, size, alpha );
             yield return null;
         }
     }
@@ -148,6 +160,10 @@ public class CameraShake : MonoBehaviour
     private void ResetDamping()
     {
         virtualCamera.GetCinemachineComponent<CinemachineHardLockToTarget>().m_Damping = 0f;
+    }
 
+    public float GetIntensity()
+    {
+        return intensity;
     }
 }

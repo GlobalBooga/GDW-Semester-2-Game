@@ -20,6 +20,13 @@ public class AmbushBossManager : BossRoomManager
     const string CLOSE_DOORS = "CloseDoors";
 
 
+    [Header("Dialogue")]
+    public bool enableDialogue = false;
+    public DialogueController.DialoguePart[] doorsClosedScript;
+    public DialogueController.DialoguePart[] endScript;
+
+
+
     private void Awake()
     {
         roomAnimator = GetComponent<Animator>();
@@ -35,6 +42,9 @@ public class AmbushBossManager : BossRoomManager
     public override void ForceSetScene()
     {
         base.ForceSetScene();
+
+        LevelManager.instance.DisablePlayerInput();
+        CameraShake.instance.restoreCamPosAfterShake = false;
 
         // hide enemies
         for (int i = 0; i < LevelManager.instance.CurrentScene.enemyContainer.transform.childCount; i++)
@@ -70,20 +80,19 @@ public class AmbushBossManager : BossRoomManager
 
         yield return new WaitForSeconds(1f);
 
-
-        // dialogue
-
-        yield return new WaitForSeconds(0.3f);
-        Debug.Log("Adana: \"oh shit dead end\"");
-        yield return new WaitForSeconds(2f);
-
-
         // close doors
 
         roomAnimator.Play(CLOSE_DOORS);
 
-        yield return new WaitForSeconds(0.7f);
-        Debug.Log("Room: \"its a trap lol get fucked\"");
+        yield return new WaitForSeconds(0.5f);
+
+
+        if (enableDialogue)
+        {
+            LevelManager.instance.dialogueController.StartDialogue(doorsClosedScript);
+        
+            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+        }
 
         // wait for doors to close
         while (roomAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1) yield return null;
@@ -135,7 +144,17 @@ public class AmbushBossManager : BossRoomManager
 
     private IEnumerator EndCutscene()
     {
+        yield return new WaitForSeconds(0.5f);
+
+        // end
+        if (bossBarScript)
+        {
+            bossBarScript.Dissapear();
+        }
+
+
         yield return new WaitForSeconds(3f);
+
 
         // turn on the lights
         foreach (var item in roomLights)
@@ -149,15 +168,21 @@ public class AmbushBossManager : BossRoomManager
 
         yield return new WaitForSeconds(1f);
         player.FlashlightOff();
-        //yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2f);
 
-
-        //LevelManager.instance.DisablePlayerInput();
+        LevelManager.instance.DisablePlayerInput();
 
 
         // dialogue
+        LevelManager.instance.dialogueController.StartDialogue(endScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
+        yield return new WaitForSeconds(1f);
 
-        // teleport
+        GameData gd = LevelManager.instance.LoadGameData();
+        gd.beatValkyrie = true;
+        LevelManager.instance.Save(gd);
+
+        LevelManager.instance.NextScene();
     }
 }

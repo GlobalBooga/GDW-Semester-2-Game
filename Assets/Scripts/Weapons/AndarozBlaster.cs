@@ -12,7 +12,10 @@ public class AndarozBlaster : Gun
     private float temp;
     public ParticleSystem chargeParticles;
 
-
+    public override int GetID()
+    {
+        return 4;
+    }
     public override void UseAbility()
     {
         if (!canUseAbility) return;
@@ -55,15 +58,5 @@ public class AndarozBlaster : Gun
 
         cooldown = temp;
         readyToUse = true;
-    }
-
-    public override void Drop(Vector2 forwards)
-    {
-        base.Drop(forwards);
-    }
-
-    public override void Pickup(Transform parentTo, Weapon weapon)
-    {
-        base.Pickup(parentTo, weapon);
     }
 }

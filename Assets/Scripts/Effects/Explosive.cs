@@ -26,7 +26,7 @@ public class Explosive : MonoBehaviour
         if (!LevelManager.instance.IsQuitting() && !cancelExplosion) Explode();
     }
 
-    private void Explode()
+    public void Explode()
     {
         CameraShake.instance.ShakeCamera(cameraShakeIntensity, cameraShakeTime);
 

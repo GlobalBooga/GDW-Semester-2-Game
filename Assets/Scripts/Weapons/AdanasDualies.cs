@@ -8,6 +8,11 @@ public class AdanasDualies : DualPistols
     public float newCooldown = 0.08f;
     public float abilityShots;
 
+    public override int GetID()
+    {
+        return 1;
+    }
+
     public override void UseAbility()
     {
         if (!canUseAbility) return;

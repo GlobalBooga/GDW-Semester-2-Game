@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(HPComponent))]
@@ -61,9 +60,12 @@ public class Enemy : MonoBehaviour
     private Quaternion originalRot;
     public Animator animator;
 
+    [Space(10f)]
+    [Header("Tutorial"), Space(5f)]
+    public bool isDummy;
+    public float reviveDelay = 2f;
 
-
-
+    private bool reviving;
 
     public Vector3 PlayerDirection => playerLoc.position - transform.position;
     public float PlayerDistance => Vector3.Distance(transform.position, playerLoc.position);
@@ -88,8 +90,9 @@ public class Enemy : MonoBehaviour
         originalPos = transform.position;
         originalRot = transform.rotation;
         rb = GetComponent<Rigidbody2D>();
-        //cc = GetComponent<CircleCollider2D>();
+        sr = transform.GetChild(0).GetComponent<SpriteRenderer>();
         playerLoc = GameObject.Find("Player").transform;
+        //cc = GetComponent<CircleCollider2D>();
         // set the ondied func
         if (TryGetComponent(out hp)) 
         {
@@ -126,6 +129,8 @@ public class Enemy : MonoBehaviour
 
     internal virtual void Update()
     {
+        if (isDummy) return;
+
         UpdateDetection();
 
         // base attack logic
@@ -154,6 +159,8 @@ public class Enemy : MonoBehaviour
 
     internal virtual void FixedUpdate()
     {
+        if (isDummy) return;
+
         // Standard chase player
         if (eso.chasePlayer && lockedOnPlayer && PlayerDistance > attackDistance)
         {
@@ -370,6 +377,11 @@ public class Enemy : MonoBehaviour
 
         Invoke(nameof(OnPlayerFoundDelayed), eso.defaultReactionTime);
         //Debug.Log("found player");
+
+        if (!LevelManager.instance.playerFound)
+        {
+            LevelManager.instance.playerFound = true;
+        }
     }
 
     /// <summary>
@@ -577,9 +589,31 @@ public class Enemy : MonoBehaviour
 
     public virtual void OnDied()
     {
+        if (isDummy) 
+        {
+            rb.simulated = false;
+            sr.color = new Color(1,1,1,0.3f);
+            hp.isInvincible = true;
+            if (!reviving)
+            {
+                reviving = true;
+                Invoke(nameof(Revive), reviveDelay);
+            }
+            return;
+        }
+
         LevelManager.instance.EnemyDied();
-        gameObject.SetActive(false);
+        Destroy(gameObject);
         //Debug.Log("doed");
+    }
+
+    public void Revive()
+    {
+        rb.simulated = true;
+        hp.isInvincible = false;
+        sr.color = Color.white;
+        hp.Add(hp.maxHealth);
+        reviving = false;
     }
 
     public void Alert(Vector3 lookAt)

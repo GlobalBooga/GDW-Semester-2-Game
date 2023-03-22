@@ -13,7 +13,7 @@ TagManager:
   - Water
   - UI
   - Wall
-  - NPCPathTrigger
+  - InvisibleWall
   - Player
   - Enemy
   - EnemyProjectile
@@ -25,9 +25,9 @@ TagManager:
   - Breakable Objects
   - Explosives
   - SpecialBreakableObject
-  - IgnoreWalls
+  - HomingArrow
   - EnergyOrb
-  - 
+  - TrainWeapons
   - 
   - 
   - 

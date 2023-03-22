@@ -22,6 +22,7 @@ public class SceneExit : MonoBehaviour
         {
             //Debug.Log("trigger enter");
             LevelManager.instance.StartSceneTransition();
+            enabled = false;
         }
     }
 
@@ -34,6 +35,7 @@ public class SceneExit : MonoBehaviour
             willFailToDetectTriggerEnter=false;
             //Debug.Log("trigger enter");
             LevelManager.instance.StartSceneTransition();
+            enabled = false;
         }
     }
 
@@ -55,7 +57,7 @@ public class SceneExit : MonoBehaviour
         {
             //Debug.Log("must kill remaining enemies");
             willFailToDetectTriggerEnter = true;
-            LevelManager.instance.ShowHint();
+            if (!LevelManager.instance.hintController.IsShowing) LevelManager.instance.hintController.ShowHint();
         }
     }
 

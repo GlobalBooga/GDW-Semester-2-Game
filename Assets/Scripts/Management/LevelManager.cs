@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -30,44 +29,58 @@ public class LevelManager : MonoBehaviour
 
     public static LevelManager instance;
 
+    [Header("Menu")]
+    public PauseMenu pauseMenu;
+
+    [Header("DeadScreen")]
+    public DeadScreen deadScreen;
+
     [Header("Crosshair Settings")]
-    public Color color;
-    //public Sprite cursorSprite;
+    public Color color = Color.yellow;
     public Image cursor;
-    //private SpriteRenderer cursorSpriteRenderer;
+
+    [Header("Dialogue")]
+    public DialogueController dialogueController;
 
     [Header("General Scene Settings")]
-    public AnimationCurve messageFade;
-    public float hintTime = 5f;
-    public Text hintText;
     public bool loop;
 
+    [Header("Scene Objective")]
+    public HintController hintController;
+
     [Header("Weather Settings")]
+    public bool enableWeather;
     public float dayClearBrightness = 1f;
     public float daySnowBrightness = 0.8f;
     public float nightClearBrightness = 0.3f;
     public float nightSnowBrightness = 0.1f;
     public Light2D globalLight;
+    public GameObject lightsContainer;
     public GameObject snowPrefab;
     private Weather weather;
 
     [Header("Scene Transition")]
     public Animator screenOverlayAnimator;
     public float transitionTime = 0.2f;
-    private const string TRANSITION_ANIM = "SceneTransition";
+    public const string TRANSITION_ANIM = "SceneTransition";
+    public const string TELEPORT_START = "TeleportStart";
+    public const string TELEPORT_END = "TeleportEnd";
 
     [Header("Boss")]
     public string bossTitle = "ANDAROZ THE GREEDY";
 
     [Header("Scenes")]
     [SerializeField] private List<Scene> orderedScenes;
+
     public Scene CurrentScene => orderedScenes[currentSceneIndex];
+    
 
     private int currentSceneIndex = 0;
-    private bool showingHint;
     private bool isQuitting;
+    public bool playerFound { get; set; }
 
     private Player player;
+
 
     [HideInInspector] public bool startBossBattle;
 
@@ -79,7 +92,7 @@ public class LevelManager : MonoBehaviour
 
         weather = (Weather)UnityEngine.Random.Range(0, (int)Weather.max);
         SetGlobalLightAccordingToWeather();
-        
+        Cursor.visible = false;
     }
 
     private void Update()
@@ -93,18 +106,31 @@ public class LevelManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        ResetProgressFull();
+        isQuitting = true;
+    }
+
+    private void OnDisable()
+    {
         isQuitting = true;
     }
 
     private void Start()
     {
-        Cursor.visible = false;
+
+        if (!globalLight)
+        {
+            enableWeather = false;
+        }
+
+        if (orderedScenes.Count == 0) return;
 
         // disable all scenes besides the first one
         for (int i = 0; i < orderedScenes.Count; i++)
         {
             currentSceneIndex = i;
             orderedScenes[i].manager.DisableScene();
+            if (orderedScenes[i].exit) orderedScenes[i].exit.enabled = true;
         }
 
         orderedScenes[currentSceneIndex = 0].manager.SetScene();
@@ -129,16 +155,21 @@ public class LevelManager : MonoBehaviour
 
     public void NextScene()
     {
+        playerFound = false;
+
         // close the current scene
         orderedScenes[currentSceneIndex].manager.DisableScene();
 
         // if last scene in level and not a looping level
-        if (currentSceneIndex == orderedScenes.Count - 1 && !loop)
+        if (currentSceneIndex == orderedScenes.Count-1 && !loop)
         {
             // end level
-            Debug.Log("end level. Return to hub");
+            //Debug.Log("end level. Return to hub");
 
             // Return to hub
+            isQuitting = true;
+            screenOverlayAnimator.Play(TELEPORT_START);
+            Invoke(nameof(ReturnToHub), 0.25f);
 
             return;
         }
@@ -176,39 +207,6 @@ public class LevelManager : MonoBehaviour
     public void EnemyDied()
     {
         orderedScenes[currentSceneIndex].manager.ProgressKillAllEnemies();
-    }
-
-    public void KeyCollected()
-    {
-        orderedScenes[currentSceneIndex].manager.ProgressFindTheKey();
-    }
-
-    public void ShowHint()
-    {
-        if (!hintText) return;
-
-        hintText.enabled = true;
-        hintText.color = new Color(1, 1, 1, 1);
-
-        if (showingHint) StopCoroutine(nameof(HideHint));
-
-        StartCoroutine(nameof(HideHint));
-    }
-
-    private IEnumerator HideHint()
-    {
-        showingHint = true;
-        yield return new WaitForSeconds(hintTime);
-
-        // make the hint fade away
-        float time = 0;
-        while (messageFade.Evaluate(time) < 1)
-        {
-            time += Time.deltaTime;
-            hintText.color = Color.Lerp(Color.white, Color.clear, messageFade.Evaluate(time));
-            yield return null;
-        }
-        hintText.enabled = false;
     }
 
     public void StartSceneTransition()
@@ -283,24 +281,36 @@ public class LevelManager : MonoBehaviour
 
     public void SetGlobalLightAccordingToWeather()
     {
+        if (!globalLight) return;
+        if (!enableWeather)
+        {
+            if (snowPrefab) snowPrefab.SetActive(false);
+            globalLight.intensity = 1f;
+            return;
+        }
+
         Debug.Log(weather);
         switch (weather)
         {
             case Weather.day_clear:
                 globalLight.intensity = dayClearBrightness;
                 if (snowPrefab) snowPrefab.SetActive(false);
+                if (lightsContainer) lightsContainer.SetActive(false);
                 break;
             case Weather.day_snow:
                 globalLight.intensity = daySnowBrightness;
                 if (snowPrefab) snowPrefab.SetActive(true);
+                if (lightsContainer) lightsContainer.SetActive(false);
                 break;
             case Weather.night_clear:
                 globalLight.intensity = nightClearBrightness;
                 if (snowPrefab) snowPrefab.SetActive(false);
+                if (lightsContainer) lightsContainer.SetActive(true);
                 break;
             case Weather.night_snow:
                 globalLight.intensity = nightSnowBrightness;
                 if (snowPrefab) snowPrefab.SetActive(true);
+                if (lightsContainer) lightsContainer.SetActive(true);
                 break;
             default:
                 break;
@@ -309,9 +319,79 @@ public class LevelManager : MonoBehaviour
 
     public bool IsQuitting() => isQuitting;
 
-
     public void SetCursorColor(Color newColor)
     {
         color = newColor;
+    }
+
+    void ReturnToHub()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+    }
+
+    public void ReturnToMainMenu()
+    {
+        GameData fg = LoadGameData();
+        fg.weaponID = 1;
+        Save(fg);
+
+        isQuitting = true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
+    public void Save(GameData playerData)
+    {
+        string data = JsonUtility.ToJson(playerData);
+        System.IO.File.WriteAllText(Application.persistentDataPath + "/GameData.json", data);
+    }
+
+    public GameData LoadGameData()
+    {
+        string path = Application.persistentDataPath + "/GameData.json";
+
+        if (!System.IO.File.Exists(path))
+        {
+            Save(new GameData());
+        }
+
+
+        string savedData = System.IO.File.ReadAllText(Application.persistentDataPath + "/GameData.json");
+
+        GameData data = JsonUtility.FromJson<GameData>(savedData);
+        
+        return data;
+    }
+
+    public void ResetLevelProgress()
+    {
+        GameData fg = LoadGameData();
+        fg.beatValkyrie = false;
+        fg.firstTimeInHub = true;
+        fg.beatGluttony = false;
+        fg.beatAndaroz = false;
+        Save(fg);
+    }
+
+    public void ResetProgressFull()
+    {
+        GameData fg = LoadGameData();
+        fg.beatValkyrie = false;
+        fg.firstTimeInHub = true;
+        fg.beatGluttony = false;
+        fg.beatAndaroz = false;
+        fg.foundAndarozGun = false;
+        fg.weaponID = 1;
+        Save(fg);
+    }
+
+    public Weather GetWeather()
+    {
+        return weather;
+    }
+
+
+    public void IDied()
+    {
+        deadScreen.gameObject.SetActive(true);
     }
 }

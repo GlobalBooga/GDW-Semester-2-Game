@@ -14,6 +14,11 @@ public class EnergyDualies : DualPistols
 
     private GameObject orb;
 
+    public override int GetID()
+    {
+        return 2;
+    }
+
     public override void UseAbility()
     {
         if (!canUseAbility) return;

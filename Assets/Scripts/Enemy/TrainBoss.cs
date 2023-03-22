@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
 using static TrainBossScriptableObject;
 
@@ -9,7 +8,8 @@ public class TrainBoss : MonoBehaviour
     public TrainBossScriptableObject tso;
     public List<MultiBarrelMissileLauncher> missileLaunchers;
     public List<MachineGunTurret> turrets;
-    public GameObject flamethrower;
+    public List<Flamethrower> flamethrowers;
+    public BoxCollider2D troopSpawn;
 
     private List<string> allAttacks = new() { nameof(Turrets), nameof(Flamethrower), nameof(Missiles), nameof(Artillery), nameof(Troops) };
     private Queue<string> attackPattern = new();
@@ -23,43 +23,51 @@ public class TrainBoss : MonoBehaviour
     private Animator animator;
 
     private float ogX;
+    private int defartilleryshots = 3;
+    private bool defartillerybool = false;
+    private float defatkspeed = 1;
+    private bool defflamebool = true;
+    private bool resettingpos;
+    private bool posreset;
+    private int deftroopsamount = 5;
 
     // animations
-
     const string TURRETS_EXTRACT = "TurretExtract";
     const string TURRETS_RETRACT = "TurretRetract";
     const string MISSILES_EXTRACT = "MissilesExtract";
     const string MISSILES_RETRACT = "MissilesRetract";
-    const string FLAMETHROWER_SHOOT = "FlamethrowerShoot";
-    const string FLAMETHROWER_END = "FlamethrowerEnd";
+    const string FLAMETHROWER_SHOOT0 = "FlamethrowerShoot0";
+    const string FLAMETHROWER_END0 = "FlamethrowerEnd0";
+    const string FLAMETHROWER_SHOOT1 = "FlamethrowerShoot1";
+    const string FLAMETHROWER_END1 = "FlamethrowerEnd1";
     const string FLAMETHROWER_EXTRACT = "FlamethrowerExtract";
     const string FLAMETHROWER_RETRACT = "FlamethrowerRetract";
 
-    const int LAYER_FLAMETHROWER = 0;
+    const int LAYER_FLAMETHROWERS = 0;
+    const int LAYER_FIREZONE0 = 10;
+    const int LAYER_FIREZONE1 = 11;
     const int LAYER_TURRETS = 1;
     const int LAYER_MISSILES = 2;
-
 
     private void Start()
     {
         hp = GetComponent<HPComponent>();
         if (hp) hp.OnHPZero = OnDied;
+
+        hp.OnHit.Add(WeaponDestroyed);
+
         playerLoc = GameObject.Find("Player").transform;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
         Invoke(nameof(NextAttack), 1);
-        ogX = transform.position.x;
-
-        if (!tso.enableTurrets && !turretattack) turretattack = true;
-        if (!tso.enableMissiles && !missileattack) missileattack = true;
-        if (!tso.enableArtillery && !artilleryattack) artilleryattack = true;
-        if (!tso.enableFlamethrower && !flamethrowerattack) flamethrowerattack = true;
-        //if (tso.enableFlamethrower && !flamethrowerattack) flamethrowerattack = true;
+        ogX = LevelManager.instance.CurrentScene.manager.transform.position.x;
     }
 
     private void Update()
     {
+        if (hp.GetHealth() == 0) return;
+
         if (turretattack)
         {
             // aim at player
@@ -76,21 +84,82 @@ public class TrainBoss : MonoBehaviour
                 }
             }
         }
+
+        if (!flamethrowerattack)
+        {
+            // return to center
+            float currentX = CenterofFireZone();
+
+            if (Mathf.Abs(currentX - ogX) > 1f)
+            {
+                if (!resettingpos)
+                {
+                    resettingpos = true;
+                    rb.constraints = RigidbodyConstraints2D.FreezePositionY;
+                    rb.freezeRotation = true;
+                    posreset = false;
+                }
+
+
+                if (currentX - ogX > 0)
+                {
+                    rb.AddForce(Vector2.left * tso.moveSpeed * rb.mass, ForceMode2D.Force);
+                }
+                else
+                {
+                    rb.AddForce(Vector2.right * tso.moveSpeed * rb.mass, ForceMode2D.Force);
+                }
+            }
+            else if (!posreset)
+            {
+                posreset = true;
+                rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        tso.artillery_shots = defartilleryshots;
+        tso.artillery_useWithOtherAttacks = defartillerybool;
+        tso.artillery_delayBeforeNextAttack = defatkspeed;
+        tso.flamethrower_delayBeforeNextAttack = defatkspeed;
+        tso.missile_delayBeforeNextAttack = defatkspeed;
+        tso.turrets_delayBeforeNextAttack = defatkspeed;
+        tso.flamethrower_useWithOtherAttacks = defflamebool;
+        tso.troop_spawnAmount = deftroopsamount;
+    }
+
+    private void OnDisable()
+    {
+        tso.artillery_shots = defartilleryshots;
+        tso.artillery_useWithOtherAttacks = defartillerybool;
+        tso.artillery_delayBeforeNextAttack = defatkspeed;
+        tso.flamethrower_delayBeforeNextAttack = defatkspeed;
+        tso.missile_delayBeforeNextAttack = defatkspeed;
+        tso.turrets_delayBeforeNextAttack = defatkspeed;
+        tso.flamethrower_useWithOtherAttacks = defflamebool;
+        tso.troop_spawnAmount = deftroopsamount;
     }
 
     private IEnumerator Turrets()
     {
-        if (!CanUseAttack(tso.turrets_maxHpForUse))
+        if (tso.turrets_maxHpForUse < hp.GetHealth())
         {
             NextAttack();
             yield break;
         }
 
-        Debug.Log("Turrets");
+        //Debug.Log("Turrets");
 
         // expose
         animator.Play(TURRETS_EXTRACT, LAYER_TURRETS);
 
+        // show hpbars
+        foreach (var item in turrets)
+        {
+            item.mainUnit.GetComponent<TrainWeapon>().Expose();
+        }
 
         yield return new WaitForSeconds(tso.turrets_aimStartDelay);
         turretattack = true;
@@ -128,18 +197,25 @@ public class TrainBoss : MonoBehaviour
                 {
                     rotdone++;
                     item.mainUnit.rotation = Quaternion.Euler(0, 0, 90f);
-                    Debug.Log(rotdone);
                 }
 
                 if (Mathf.Abs(angle) < 1f && !retract)
                 {
                     retract = true;
                     animator.Play(TURRETS_RETRACT, LAYER_TURRETS);
+
+                    // hide hpbars
+                    foreach (var t in turrets)
+                    {
+                        t.mainUnit.GetComponent<TrainWeapon>().Hide();
+                    }
                 }
                 
             }
             yield return null;
         }
+
+
 
 
         yield return new WaitForSeconds(tso.turrets_delayBeforeNextAttack);
@@ -148,101 +224,136 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Flamethrower()
     {
-        if (!CanUseAttack(tso.flamethrower_maxHpForUse))
+        if (tso.flamethrower_maxHpForUse < hp.GetHealth())
         {
             NextAttack();
             yield break;
         }
 
-        NextAttack();
-
         flamethrowerattack = true;
-        animator.Play(FLAMETHROWER_EXTRACT, LAYER_FLAMETHROWER);
+        animator.Play(FLAMETHROWER_EXTRACT, LAYER_FLAMETHROWERS);
 
-        if (rb)
+        // show hpbars
+        foreach (var item in flamethrowers)
         {
-            float time = 0;
-            if (tso.aimForPlayer)
+            item.mainUnit.GetComponent<TrainWeapon>().Expose();
+        }
+
+
+        float time = 0;
+        rb.constraints = RigidbodyConstraints2D.FreezePositionY;
+        rb.freezeRotation = true;
+        resettingpos = false;
+        if (tso.aimForPlayer)
+        {
+            rb.drag = 1f;
+            while (true)
             {
-                rb.drag = 1f;
-                while (true)
-                {
-                    Vector3 playerDirection = (playerLoc.position - transform.position).normalized;
+                Vector3 playerDirection = (playerLoc.position - transform.position);
+                if (playerDirection.x > 0) playerDirection = Vector3.right;
+                else playerDirection = Vector3.left;
                     
-                    if ((playerDirection.x < 0 && transform.position.x > (ogX - tso.maxXmove)) ||
-                     (playerDirection.x > 0 && transform.position.x < (ogX + tso.maxXmove)))
-                    {
-                        rb.AddForce(Vector2.right * playerDirection.x * tso.moveSpeed * rb.mass, ForceMode2D.Force);
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                    if (Mathf.Abs(playerLoc.position.x - flamethrower.transform.position.x) < 5f)
-                    {
-                        break;
-                    }
-
-                    time += Time.deltaTime;
-                    yield return null;
-                }
-                rb.drag = 5f;
-            }
-            else
-            {
-                Vector3 playerDirection = (playerLoc.position - transform.position).normalized;
-                rb.drag = 1f;
-                while (true)
+                if ((playerDirection.x < 0 && CenterofFireZone() > (ogX - tso.maxXmove)) ||
+                    (playerDirection.x > 0 && CenterofFireZone() < (ogX + tso.maxXmove)))
                 {
-                    if ((playerDirection.x < 0 && transform.position.x > (ogX - tso.maxXmove))||
-                     (playerDirection.x > 0 && transform.position.x < (ogX + tso.maxXmove)))
-                    {
-                        rb.AddForce(Vector2.right * playerDirection.x * tso.moveSpeed * rb.mass, ForceMode2D.Force);
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                    yield return null;
+                    rb.AddForce(playerDirection * tso.moveSpeed * rb.mass, ForceMode2D.Force);
                 }
-                rb.drag = 5f;
+                else
+                {
+                    break;
+                }
+
+                if (Mathf.Abs(playerLoc.position.x - CenterofFireZone()) < 5f)
+                {
+                    break;
+                }
+
+                time += Time.deltaTime;
+                yield return null;
             }
+            rb.drag = 5f;
+        }
+        else
+        {
+            Vector3 playerDirection = (playerLoc.position - transform.position);
+            if (playerDirection.x > 0) playerDirection = Vector3.right;
+            else playerDirection = Vector3.left;
+
+            rb.drag = 1f;
+            while (true)
+            {
+                if ((playerDirection.x < 0 && CenterofFireZone() > (ogX - tso.maxXmove)) ||
+                   (playerDirection.x > 0 && CenterofFireZone() < (ogX + tso.maxXmove)))
+                {
+                    rb.AddForce(playerDirection * tso.moveSpeed * rb.mass, ForceMode2D.Force);
+                }
+                else
+                {
+                    break;
+                }
+
+                time += Time.deltaTime;
+                yield return null;
+            }
+            rb.drag = 5f;
         }
 
         yield return new WaitForSeconds(tso.flamethrower_shootStartDelay);
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        
 
-        animator.Play(FLAMETHROWER_SHOOT, LAYER_FLAMETHROWER);
+        // Shoot fire
+        animator.Play(FLAMETHROWER_SHOOT0, LAYER_FIREZONE0);
+        animator.Play(FLAMETHROWER_SHOOT1, LAYER_FIREZONE1);
+        if (tso.flamethrower_useWithOtherAttacks) NextAttack();
 
-        yield return new WaitForSeconds(tso.time_flamethrower);
-        //animator.Play(FLAMETHROWER_END);
 
-        animator.Play(FLAMETHROWER_RETRACT, LAYER_FLAMETHROWER);
+        // Retract flamethrowers
+        yield return new WaitForSeconds(tso.flamethrower_timeBeforeRetract);
+        animator.Play(FLAMETHROWER_RETRACT, LAYER_FLAMETHROWERS);
+
+
+        // hide hpbars
+        foreach (var item in flamethrowers)
+        {
+            item.mainUnit.GetComponent<TrainWeapon>().Hide();
+        }
+
+
+        // end fire
+        yield return new WaitForSeconds(tso.flamethrower_timeBeforeEnd);
+        animator.Play(FLAMETHROWER_END0, LAYER_FIREZONE0);
+        animator.Play(FLAMETHROWER_END1, LAYER_FIREZONE1);
+
 
 
         // this line is only here because otherwise it will give an error
         // when you start coding, move it to where you need it
         yield return new WaitForSeconds(tso.flamethrower_delayBeforeNextAttack);
         flamethrowerattack = false;
-
-        NextAttack();
+        if (!tso.flamethrower_useWithOtherAttacks) NextAttack();
     }
 
     private IEnumerator Missiles()
     {
-        if (!CanUseAttack(tso.missile_maxHpForUse))
+        if (tso.missile_maxHpForUse < hp.GetHealth())
         {
             NextAttack();
             yield break;
         }
 
-        Debug.Log("missiles");
+        //Debug.Log("missiles");
 
         missileattack = true;
 
         // make launchers come out
         animator.Play(MISSILES_EXTRACT, LAYER_MISSILES);
+
+        // show hpbars
+        foreach (var item in missileLaunchers)
+        {
+            item.mainUnit.GetComponent<TrainWeapon>().Expose();
+        }
 
         yield return new WaitForSeconds(tso.missile_aimStartDelay);
 
@@ -277,7 +388,12 @@ public class TrainBoss : MonoBehaviour
 
         // make launchers return
         animator.Play(MISSILES_RETRACT, LAYER_MISSILES);
-        
+
+        // hide hpbars
+        foreach (var item in missileLaunchers)
+        {
+            item.mainUnit.GetComponent<TrainWeapon>().Hide();
+        }
 
         yield return new WaitForSeconds(tso.missile_delayBeforeNextAttack);
         missileattack = false;
@@ -287,17 +403,18 @@ public class TrainBoss : MonoBehaviour
 
     private IEnumerator Artillery()
     {
-        if (!CanUseAttack(tso.Artillery_maxHpForUse))
+        if (tso.Artillery_maxHpForUse < hp.GetHealth())
         {
             NextAttack();
             yield break;
         }
 
-        Debug.Log("artillery");
+        //Debug.Log("artillery");
 
         artilleryattack = true;
 
         yield return new WaitForSeconds(tso.artillery_shootStartDelay);
+        if (tso.artillery_useWithOtherAttacks) NextAttack();
 
         float maxOffset, xpos, ypos;
 
@@ -307,6 +424,7 @@ public class TrainBoss : MonoBehaviour
             CameraShake.instance.ShakeCamera(tso.artillery_cameraShakeIntensity, tso.artillery_cameraShakeTime);
             yield return new WaitForSeconds(tso.artillery_delayBetweenShots);
         }
+
 
         // delay before they land
         yield return new WaitForSeconds(tso.artillery_airTime);
@@ -329,18 +447,41 @@ public class TrainBoss : MonoBehaviour
 
         yield return new WaitForSeconds(tso.artillery_delayBeforeNextAttack);
         artilleryattack = false;
-        NextAttack();
+        if (!tso.artillery_useWithOtherAttacks) NextAttack();
     }
     
     private IEnumerator Troops()
     {
-        if (!CanUseAttack(tso.troopDeploy_maxHpForUse))
+        if (tso.troopDeploy_maxHpForUse < hp.GetHealth())
         {
             NextAttack();
             yield break;
         }
+        yield return new WaitForSeconds(tso.troop_startDelay);
 
-        yield return null;
+        bool sniper = false;
+
+        for (int i = 0; i < tso.troop_spawnAmount; i++)
+        {
+            GameObject o = tso.troop_types[Random.Range(0, tso.troop_types.Length)];
+            while (o.name.Contains("sniper") && sniper) o = tso.troop_types[Random.Range(0, tso.troop_types.Length)];
+
+            Transform t = Instantiate(o, transform.parent).transform;
+            t.position = new Vector3(
+                Random.Range(troopSpawn.bounds.min.x, troopSpawn.bounds.max.x),
+                Random.Range(troopSpawn.bounds.min.y, troopSpawn.bounds.max.y), 0f);
+            
+            if (o.name.Contains("sniper"))
+            {
+                sniper = true;
+            }
+        }
+
+        LevelManager.instance.AlertAllEnemiesInCurrentScene(playerLoc.position);
+
+
+        yield return new WaitForSeconds(tso.troop_delayBeforeNextAttack);
+        NextAttack();
     }
 
     private void NewAttackOrder()
@@ -361,25 +502,20 @@ public class TrainBoss : MonoBehaviour
    
     private void NextAttack()
     {
+        if (hp.GetHealth() == 0) return;
+
         if (!tso.enableTurrets && !tso.enableFlamethrower && !tso.enableMissiles && !tso.enableArtillery && !tso.enableTroops)
         {
             Debug.LogWarning("No attacks enabled! Enabling attack 1");
             tso.enableTurrets = true;
         }
 
-        if (flamethrowerattack && missileattack)
-        {
-            Debug.Log("overflow protection");
-            Invoke(nameof(NextAttack), 2f);
-            return;
-        }
-
         if (attackPattern.Count == 0) NewAttackOrder();
 
         // skip disabled attacks
-        if (attackPattern.Peek() == nameof(Turrets) && (!tso.enableTurrets || turretattack)) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(Flamethrower) && (!tso.enableFlamethrower || flamethrowerattack)) { attackPattern.Dequeue(); NextAttack(); return; }
-        if (attackPattern.Peek() == nameof(Missiles) && (!tso.enableMissiles || missileattack)) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Turrets) && (!tso.enableTurrets || turretattack || AreTurretsDestroyed())) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Flamethrower) && (!tso.enableFlamethrower || flamethrowerattack || AreFlamethrowersDestroyed())) { attackPattern.Dequeue(); NextAttack(); return; }
+        if (attackPattern.Peek() == nameof(Missiles) && (!tso.enableMissiles || missileattack || AreMissileLaunchersDestroyed())) { attackPattern.Dequeue(); NextAttack(); return; }
         if (attackPattern.Peek() == nameof(Artillery) && (!tso.enableArtillery || artilleryattack)) { attackPattern.Dequeue(); NextAttack(); return; }
         if (attackPattern.Peek() == nameof(Troops) && !tso.enableTroops) { attackPattern.Dequeue(); NextAttack(); return; }
 
@@ -392,13 +528,115 @@ public class TrainBoss : MonoBehaviour
     /// </summary>
     public void OnDied()
     {
-        StopAllCoroutines();
+        tso.artillery_shots = 15;
+        if (!artilleryattack) StartCoroutine(Artillery());
+        if (!troopSpawn) tso.troop_spawnAmount = 10f;
+        StartCoroutine(Troops());
+
+        StartCoroutine(WaitForAttacksToFinish());
     }
 
-    private bool CanUseAttack(float hpThreshold)
+    IEnumerator WaitForAttacksToFinish()
     {
-        if (hp.GetHealth() == 0 || hp.GetHealth() > hp.maxHealth * hpThreshold) return false;
-        else return true;
+        yield return new WaitForSeconds(3f);
+
+        while (transform.parent.childCount > 1 || artilleryattack)
+        {
+            yield return null;
+        }
+
+        TrainBossManager m = LevelManager.instance.CurrentScene.manager as TrainBossManager;
+        StartCoroutine(m.EndCutscene());
     }
 
+    public void WeaponDestroyed() // AKA on hit
+    {
+        tso.artillery_shots++;
+
+        if (hp.GetHealth() == 5)
+        {
+            tso.artillery_useWithOtherAttacks = true;
+        }
+
+        if (hp.GetHealth() == 1)
+        {
+            tso.artillery_useWithOtherAttacks = false;
+            tso.flamethrower_useWithOtherAttacks = false;
+        }
+
+        // Speed up
+        tso.artillery_delayBeforeNextAttack = Mathf.Clamp(tso.artillery_delayBeforeNextAttack - 0.25f, 0, 2);
+        tso.flamethrower_delayBeforeNextAttack = Mathf.Clamp(tso.flamethrower_delayBeforeNextAttack - 0.25f, 0, 2);
+        tso.missile_delayBeforeNextAttack = Mathf.Clamp(tso.missile_delayBeforeNextAttack - 0.25f, 0, 2);
+        tso.turrets_delayBeforeNextAttack = Mathf.Clamp(tso.turrets_delayBeforeNextAttack - 0.25f, 0, 2);
+    }
+
+    public bool AreFlamethrowersDestroyed()
+    {
+        int i = 0;
+        foreach (var item in flamethrowers)
+        {
+            if (!item.mainUnit.gameObject.activeSelf)
+            {
+                i++;
+            }
+        }
+        return i == flamethrowers.Count;
+    }
+
+    public bool AreTurretsDestroyed()
+    {
+        int i = 0;
+        foreach (var item in turrets)
+        {
+            if (!item.mainUnit.gameObject.activeSelf)
+            {
+                i++;
+            }
+        }
+        return i == turrets.Count;
+    }
+
+    public bool AreMissileLaunchersDestroyed()
+    {
+        int i = 0;
+        foreach (var item in missileLaunchers)
+        {
+            if (!item.mainUnit.gameObject.activeSelf)
+            {
+                i++;
+            }
+        }
+        return i == missileLaunchers.Count;
+    }
+
+    private float CenterofFireZone()
+    {
+        int i = 0;
+        foreach (var item in flamethrowers)
+        {
+            if (!item.mainUnit.gameObject.activeSelf)
+            {
+                i++;
+            }
+        }
+
+        if (i == 0)
+        {
+            return (flamethrowers[0].mainUnit.position.x + flamethrowers[1].mainUnit.position.x) / 2;
+        }
+        else
+        {
+            foreach (var item in flamethrowers)
+            {
+                if (item.mainUnit.gameObject.activeSelf)
+                {
+                    return item.mainUnit.position.x;
+                }
+            }
+        }
+
+        //Debug.LogWarning("CenterofFireZone returned 0!");
+        return ogX;
+    }
 }

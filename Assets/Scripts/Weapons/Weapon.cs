@@ -27,6 +27,11 @@ public class Weapon : MonoBehaviour
 
     public Action OnAbilityEnded;
 
+    public virtual int GetID()
+    {
+        return 0;
+    }
+
 
     internal virtual void Awake()
     {
@@ -36,7 +41,10 @@ public class Weapon : MonoBehaviour
 
     private void Start()
     {
-        weaponAbilityCooldown = Hud.instance.abilityCooldown;
+        if (Hud.instance)
+        {
+            weaponAbilityCooldown = Hud.instance.abilityCooldown;
+        }
         
     }
 

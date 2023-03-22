@@ -7,11 +7,28 @@ public class SceneManager : MonoBehaviour
         None,
         Boss,
         KillAllEnemies,
-        FindTheKey
+        MovementTutorial,
+        DodgeTutorial,
+        WeaponsTutorial,
+        DestructibleObjectsTutorial,
+        EnemiesTutorial,
+        PickAContract,
+        PickAWeapon
     }
 
+    internal const string MOVEMENT_TUTORIAL = "Move";
+    internal const string DODGE_TUTORIAL = "Dodge";
+    internal const string KILL_ALL_ENEMIES_OBJECTIVE = "Kill All Enemies";
+    internal const string PICK_A_CONTRACT_OBJECTIVE = "Pick a contract";
+    internal const string WEAPONS_TUTORIAL = "Shoot";
+    internal const string DESTRUCTIBLE_OBJECTS_TUTORIAL = "Break stuff";
+    internal const string ENEMIES_TUTORIAL = "Observe";
+    internal const string PICK_A_WEAPON = "Pick a weapon";
 
-    public SceneObjective sceneObjective;
+
+
+    [Header("Scene Stuff")]
+    public SceneObjective[] sceneObjectives;
     public float cameraSize;
     private int enemyCount;
     public bool isIndoors;
@@ -39,16 +56,34 @@ public class SceneManager : MonoBehaviour
         // if no objective
         if (currentScene.exit)
         {
-            if (sceneObjective == SceneObjective.None)
+            if (sceneObjectives.Length == 0)
             {
                 currentScene.exit.Unblock();
             }
         }
 
-        if (isIndoors) LevelManager.instance.globalLight.intensity = 0f;
-        else LevelManager.instance.SetGlobalLightAccordingToWeather();
+        if (isIndoors && LevelManager.instance.enableWeather)
+        {
+            LevelManager.instance.globalLight.intensity = 0f;
+            if (LevelManager.instance.GetWeather() == LevelManager.Weather.day_snow ||
+                LevelManager.instance.GetWeather() == LevelManager.Weather.night_snow)
+            {
+                LevelManager.instance.snowPrefab.SetActive(false);
+            }
+        }
+        else if (LevelManager.instance.enableWeather)
+        {
+            LevelManager.instance.SetGlobalLightAccordingToWeather();
+            if (LevelManager.instance.GetWeather() == LevelManager.Weather.day_snow ||
+                LevelManager.instance.GetWeather() == LevelManager.Weather.night_snow)
+            {
+                LevelManager.instance.snowPrefab.SetActive(true);
+                LevelManager.instance.snowPrefab.transform.position = transform.position;
+            }
+        } 
+
         Camera.main.transform.position = transform.position + Vector3.back * 10f;
-        CameraShake.instance.SetCameraSize(cameraSize);
+        if (CameraShake.instance) CameraShake.instance.SetCameraSize(cameraSize);
 
         Transform player = GameObject.Find("Player").transform;
         if (currentScene.playerEntrance)
@@ -74,27 +109,63 @@ public class SceneManager : MonoBehaviour
 
 
         // setting the hint message
-        switch (sceneObjective)
+        if (LevelManager.instance.hintController)
         {
-            case SceneObjective.KillAllEnemies:
-                LevelManager.instance.hintText.text = $"Kill All Enemies. {enemyCount} Still Remain!";
-                LevelManager.instance.CurrentScene.exit.Block();
-                break;
-            case SceneObjective.FindTheKey:
-                LevelManager.instance.hintText.text = "Find the Key.";
-                LevelManager.instance.CurrentScene.exit.Block();
-                break;
-            case SceneObjective.Boss:
-            case SceneObjective.None:
-            default:
-                if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
-                LevelManager.instance.hintText.text = "";
-                break;
+
+
+            LevelManager.instance.hintController.ClearObjectives();
+            
+            
+            foreach (var objective in sceneObjectives)
+            {
+                switch (objective)
+                {
+                    case SceneObjective.KillAllEnemies:
+                        LevelManager.instance.hintController.AddObjective(KILL_ALL_ENEMIES_OBJECTIVE);
+                        LevelManager.instance.CurrentScene.exit.Block();
+                        break;
+                    case SceneObjective.PickAContract:
+                        LevelManager.instance.hintController.AddObjective(PICK_A_CONTRACT_OBJECTIVE);
+                        //if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
+                        break;
+                    case SceneObjective.PickAWeapon:
+                        LevelManager.instance.hintController.AddObjective(PICK_A_WEAPON);
+                        if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
+                        break;
+                    case SceneObjective.MovementTutorial:
+                        LevelManager.instance.hintController.AddObjective(MOVEMENT_TUTORIAL);
+                        if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
+                        break;
+                    case SceneObjective.DodgeTutorial:
+                        LevelManager.instance.hintController.AddObjective(DODGE_TUTORIAL);
+                        if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
+                        break;
+                    case SceneObjective.WeaponsTutorial:
+                        LevelManager.instance.hintController.AddObjective(WEAPONS_TUTORIAL);
+                        if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
+                        break;
+                    case SceneObjective.DestructibleObjectsTutorial:
+                        LevelManager.instance.hintController.AddObjective(DESTRUCTIBLE_OBJECTS_TUTORIAL);
+                        if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
+                        break;
+                    case SceneObjective.EnemiesTutorial:
+                        LevelManager.instance.hintController.AddObjective(ENEMIES_TUTORIAL);
+                        if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
+                        break;
+                    case SceneObjective.Boss:
+                    case SceneObjective.None:
+                    default:
+                        if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
+                        break;
+                }
+            }
         }
     }
 
     public virtual void DisableScene()
     {
+        if (LevelManager.instance.hintController.IsShowing) LevelManager.instance.hintController.HideHint();
+
         currentScene = LevelManager.instance.CurrentScene;
 
         if (currentScene.enemyContainer) currentScene.enemyContainer.SetActive(false);
@@ -106,22 +177,18 @@ public class SceneManager : MonoBehaviour
     {
         currentScene = LevelManager.instance.CurrentScene;
 
-        if (sceneObjective != SceneObjective.KillAllEnemies) return;
-
-        if (--enemyCount <= 0)
+        foreach (var objective in sceneObjectives)
         {
-            //Debug.Log("scene complete");
-            if (currentScene.exit) currentScene.exit.Unblock();
-            LevelManager.instance.hintText.text = "";
-            return;
+            if (objective != SceneObjective.KillAllEnemies) return;
+
+            if (--enemyCount <= 0)
+            {
+                //Debug.Log("scene complete");
+                if (currentScene.exit) currentScene.exit.Unblock();
+                LevelManager.instance.hintController.ObjectiveComplete(KILL_ALL_ENEMIES_OBJECTIVE);
+                return;
+            }
         }
-
-        LevelManager.instance.hintText.text = $"Kill All Enemies. {enemyCount} Still Remain!";
-    }
-
-    public virtual void ProgressFindTheKey()
-    {
-        if (sceneObjective != SceneObjective.FindTheKey) return;
     }
 
     public virtual void EnableScene()

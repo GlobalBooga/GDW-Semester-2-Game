@@ -22,7 +22,7 @@ public class BossBar : MonoBehaviour
         if (textObj) textObj.text = bossName;
     }
 
-    private void Dissapear()
+    public void Dissapear()
     {
         animator.Play(DISSAPEAR);
         Invoke(nameof(DisableThis), 0.1f);

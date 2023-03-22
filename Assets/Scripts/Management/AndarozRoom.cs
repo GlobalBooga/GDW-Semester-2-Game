@@ -7,7 +7,7 @@ public class AndarozRoom : BossRoomManager
     public Animator forceFieldAnimator;
 
     [Header("Dialogue")]
-    public bool enableDialogue = false;
+    public bool enableDialogue = true;
     public DialogueController.DialoguePart[] enterScript;
     public DialogueController.DialoguePart[] stage2Script;
     public DialogueController.DialoguePart[] endScript;
@@ -54,14 +54,17 @@ public class AndarozRoom : BossRoomManager
     {
         yield return new WaitForSeconds(.4f);
         if (forceFieldAnimator) forceFieldAnimator.Play("ForceFieldOn");
-        LevelManager.instance.DisablePlayerInput();
-        yield return new WaitForSeconds(.4f);
 
+        if (enableDialogue)
+        {
+            LevelManager.instance.DisablePlayerInput();
+            yield return new WaitForSeconds(.4f);
 
-        // dialogue
-        LevelManager.instance.dialogueController.StartDialogue(enterScript);
-        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+            // dialogue
+            LevelManager.instance.dialogueController.StartDialogue(enterScript);
+            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
+        }
         yield return new WaitForSeconds(0.25f);
 
         LevelManager.instance.EnablePlayerInput();
@@ -73,13 +76,17 @@ public class AndarozRoom : BossRoomManager
     IEnumerator EndCutsceneRoutine()
     {
         yield return new WaitForSeconds(2f);
-        LevelManager.instance.DisablePlayerInput();
 
-        // dialogue
-        LevelManager.instance.dialogueController.StartDialogue(endScript);
-        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+        if (enableDialogue)
+        {
+            LevelManager.instance.DisablePlayerInput();
 
-        yield return new WaitForSeconds(1f);
+            // dialogue
+            LevelManager.instance.dialogueController.StartDialogue(endScript);
+            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+
+            yield return new WaitForSeconds(1f);
+        }
 
         GameData gd = LevelManager.instance.LoadGameData();
         gd.beatAndaroz = true;

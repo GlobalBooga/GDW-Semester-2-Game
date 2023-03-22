@@ -38,52 +38,51 @@ public class Bow : Gun
 
         Transform target = null;
 
-        Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, lockOnDistance, whatIsEnemy);
-
-        if (col.Length > 0)
-        {
-            col = col.OrderBy((d) => (d.transform.position - transform.position).sqrMagnitude).ToArray();
-        }
-
-        for (int n = 0; n < 2; n++)
-        {
-            if (target) break;
-
-            for (int i = 0; i < col.Length; i++)
-            {
-                // check if we are facing this enemy
-                if (Vector3.Angle(transform.up, col[i].transform.position - transform.position) <= lockOnAngle * 0.5f)
-                {
-                    // operation 1: lockon to a visible target
-                    if (n == 0)
-                    {
-                        // is anything blocking the way
-                        RaycastHit2D hit = Physics2D.Raycast(transform.position, (col[i].transform.position - transform.position).normalized, lockOnDistance, whatBlocksSight);
-                        if (hit.transform.gameObject.layer == StaticHelpers.EnemyLayer ||
-                            hit.transform.gameObject.layer == StaticHelpers.EnemyMissileLayer ||
-                            hit.transform.gameObject.layer == StaticHelpers.TrainWeaponLayer)
-                        {
-                            target = col[i].transform;
-                            break;
-                        }
-                    }
-                    // operation 2 : lockon to target behind a wall
-                    else if (n == 1)
-                    {
-                        target = col[i].transform;
-                        break;
-                    }
-                }
-            }
-        }
-
-
         if (bullet && bulletSpawn)
         {
             HomingArrow a = Instantiate(bullet, bulletSpawn).GetComponent<HomingArrow>();
 
             yield return new WaitForSeconds(0.4f);
-            
+
+            Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, lockOnDistance, whatIsEnemy);
+
+            if (col.Length > 0)
+            {
+                col = col.OrderBy((d) => (d.transform.position - transform.position).sqrMagnitude).ToArray();
+            }
+
+            for (int n = 0; n < 2; n++)
+            {
+                if (target) break;
+
+                for (int i = 0; i < col.Length; i++)
+                {
+                    // check if we are facing this enemy
+                    if (Vector3.Angle(transform.up, col[i].transform.position - transform.position) <= lockOnAngle * 0.5f)
+                    {
+                        // operation 1: lockon to a visible target
+                        if (n == 0)
+                        {
+                            // is anything blocking the way
+                            RaycastHit2D hit = Physics2D.Raycast(transform.position, (col[i].transform.position - transform.position).normalized, lockOnDistance, whatBlocksSight);
+                            if (hit.transform.gameObject.layer == StaticHelpers.EnemyLayer ||
+                                hit.transform.gameObject.layer == StaticHelpers.EnemyMissileLayer ||
+                                hit.transform.gameObject.layer == StaticHelpers.TrainWeaponLayer)
+                            {
+                                target = col[i].transform;
+                                break;
+                            }
+                        }
+                        // operation 2 : lockon to target behind a wall
+                        else if (n == 1)
+                        {
+                            target = col[i].transform;
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (target) a.Fly(target, transform.parent.up, homingForce, bulletSpeed, damage);
             else a.Fly(transform.up, bulletSpeed, damage);
             Destroy(a.gameObject, arrowLifetime);
@@ -91,6 +90,8 @@ public class Bow : Gun
 
         if (cooldown > 0) Invoke(nameof(ResetUse), cooldown);
         else ResetUse();
+
+
     }
 
 
@@ -110,6 +111,25 @@ public class Bow : Gun
     IEnumerator Ability()
     {
         Transform[] targets = new Transform[5];
+
+        HomingArrow[] arrows = new HomingArrow[5];
+
+        arrows[0] = Instantiate(bullet, bulletSpawn).GetComponent<HomingArrow>();
+        arrows[0].GetComponent<BoxCollider2D>().enabled = false;
+
+        yield return new WaitForSeconds(0.4f);
+        arrows[1] = Instantiate(bullet, deg15Spawn).GetComponent<HomingArrow>();
+        arrows[2] = Instantiate(bullet, neg15Spawn).GetComponent<HomingArrow>();
+        arrows[1].GetComponent<BoxCollider2D>().enabled = false;
+        arrows[2].GetComponent<BoxCollider2D>().enabled = false;
+
+        yield return new WaitForSeconds(0.4f);
+        arrows[3] = Instantiate(bullet, deg30Spawn).GetComponent<HomingArrow>();
+        arrows[4] = Instantiate(bullet, neg30Spawn).GetComponent<HomingArrow>();
+        arrows[3].GetComponent<BoxCollider2D>().enabled = false;
+        arrows[4].GetComponent<BoxCollider2D>().enabled = false;
+
+        yield return new WaitForSeconds(0.5f);
 
         //lockon to a target
         Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, lockOnDistance, whatIsEnemy);
@@ -136,7 +156,7 @@ public class Bow : Gun
                             i++;
                             break;
                         }
-                        else 
+                        else
                         {
                             // is anything blocking the way
                             RaycastHit2D hit = Physics2D.Raycast(transform.position, (col[i].transform.position - transform.position).normalized, lockOnDistance, whatBlocksSight);
@@ -158,25 +178,6 @@ public class Bow : Gun
 
             break;
         }
-
-        HomingArrow[] arrows = new HomingArrow[5];
-
-        arrows[0] = Instantiate(bullet, bulletSpawn).GetComponent<HomingArrow>();
-        arrows[0].GetComponent<BoxCollider2D>().enabled = false;
-
-        yield return new WaitForSeconds(0.4f);
-        arrows[1] = Instantiate(bullet, deg15Spawn).GetComponent<HomingArrow>();
-        arrows[2] = Instantiate(bullet, neg15Spawn).GetComponent<HomingArrow>();
-        arrows[1].GetComponent<BoxCollider2D>().enabled = false;
-        arrows[2].GetComponent<BoxCollider2D>().enabled = false;
-
-        yield return new WaitForSeconds(0.4f);
-        arrows[3] = Instantiate(bullet, deg30Spawn).GetComponent<HomingArrow>();
-        arrows[4] = Instantiate(bullet, neg30Spawn).GetComponent<HomingArrow>();
-        arrows[3].GetComponent<BoxCollider2D>().enabled = false;
-        arrows[4].GetComponent<BoxCollider2D>().enabled = false;
-
-        yield return new WaitForSeconds(0.5f);
 
         for (int i = 0; i < arrows.Length; i++)
         {

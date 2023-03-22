@@ -148,7 +148,7 @@ MonoBehaviour:
   sr: {fileID: 282190699103916245}
   alertsEnemies: 0
   bulletSpread: 0
-  bulletSpeed: 25
+  bulletSpeed: 15
   cameraShakeIntensity: 0
   cameraShakeTime: 0
   muzzleFlash: {fileID: 0}
@@ -157,7 +157,7 @@ MonoBehaviour:
   lockOnDistance: 30
   lockOnAngle: 120
   homingForce: 200
-  arrowLifetime: 0.5
+  arrowLifetime: 1.5
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 2105856

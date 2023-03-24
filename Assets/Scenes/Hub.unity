@@ -297,7 +297,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 559549006}
   m_CullTransparentMesh: 1
---- !u!43 &683134972
+--- !u!43 &624819166
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2882,8 +2882,8 @@ MonoBehaviour:
   - {x: -0.11016846, y: -0.19876456, z: 0}
   - {x: -0.186409, y: -0.17676282, z: 0}
   m_ShapePathHash: 743514181
-  m_Mesh: {fileID: 683134972}
-  m_InstanceId: 298394
+  m_Mesh: {fileID: 624819166}
+  m_InstanceId: 36208
 --- !u!95 &1218351397116128946
 Animator:
   serializedVersion: 5
@@ -8186,6 +8186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 7527019939074135809}
+  deadScreen: {fileID: 0}
   color: {r: 1, g: 1, b: 0, a: 1}
   cursor: {fileID: 4445584196231963457}
   dialogueController: {fileID: 6635752894202686718}
@@ -8900,7 +8901,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &7008191336069111816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9769,7 +9770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &8102381498546506937
 MonoBehaviour:
   m_ObjectHideFlags: 0

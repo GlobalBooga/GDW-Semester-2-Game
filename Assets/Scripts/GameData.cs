@@ -2,11 +2,14 @@
 [System.Serializable]
 public class GameData
 {
-    public GameData(int gunid, bool foundgun, bool beatambush)
+    public GameData()
     {
-        weaponID = gunid;
-        foundAndarozGun = foundgun;
-        beatValkyrie = beatambush;
+        weaponID = 1;
+        firstTimeInHub = true;
+        beatValkyrie = false;
+        foundAndarozGun = false;
+        beatGluttony = false;
+        beatAndaroz = false;
     }
 
     // player weapon

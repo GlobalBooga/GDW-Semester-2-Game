@@ -32,6 +32,9 @@ public class LevelManager : MonoBehaviour
     [Header("Menu")]
     public PauseMenu pauseMenu;
 
+    [Header("DeadScreen")]
+    public DeadScreen deadScreen;
+
     [Header("Crosshair Settings")]
     public Color color = Color.yellow;
     public Image cursor;
@@ -89,6 +92,7 @@ public class LevelManager : MonoBehaviour
 
         weather = (Weather)UnityEngine.Random.Range(0, (int)Weather.max);
         SetGlobalLightAccordingToWeather();
+        Cursor.visible = false;
     }
 
     private void Update()
@@ -106,9 +110,13 @@ public class LevelManager : MonoBehaviour
         isQuitting = true;
     }
 
+    private void OnDisable()
+    {
+        isQuitting = true;
+    }
+
     private void Start()
     {
-        Cursor.visible = false;
 
         if (!globalLight)
         {
@@ -122,6 +130,7 @@ public class LevelManager : MonoBehaviour
         {
             currentSceneIndex = i;
             orderedScenes[i].manager.DisableScene();
+            if (orderedScenes[i].exit) orderedScenes[i].exit.enabled = true;
         }
 
         orderedScenes[currentSceneIndex = 0].manager.SetScene();
@@ -338,6 +347,14 @@ public class LevelManager : MonoBehaviour
 
     public GameData LoadGameData()
     {
+        string path = Application.persistentDataPath + "/GameData.json";
+
+        if (!System.IO.File.Exists(path))
+        {
+            Save(new GameData());
+        }
+
+
         string savedData = System.IO.File.ReadAllText(Application.persistentDataPath + "/GameData.json");
 
         GameData data = JsonUtility.FromJson<GameData>(savedData);
@@ -372,4 +389,9 @@ public class LevelManager : MonoBehaviour
         return weather;
     }
 
+
+    public void IDied()
+    {
+        deadScreen.gameObject.SetActive(true);
+    }
 }

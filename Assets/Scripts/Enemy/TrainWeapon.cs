@@ -53,11 +53,13 @@ public class TrainWeapon : MonoBehaviour
     {
         hp.hpBars[0].transform.parent.gameObject.SetActive(true);
         hp.isInvincible = false;
+        GetComponent<BoxCollider2D>().enabled = true;
     }
 
     public void Hide()
     {
         hp.hpBars[0].transform.parent.gameObject.SetActive(false);
         hp.isInvincible = true;
+        GetComponent<BoxCollider2D>().enabled = false;
     }
 }

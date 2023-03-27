@@ -62,7 +62,7 @@ public class SceneManager : MonoBehaviour
             }
         }
 
-        if (isIndoors && LevelManager.instance.enableWeather)
+        if (isIndoors)
         {
             LevelManager.instance.globalLight.intensity = 0f;
             if (LevelManager.instance.GetWeather() == LevelManager.Weather.day_snow ||

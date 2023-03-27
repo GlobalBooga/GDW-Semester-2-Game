@@ -156,14 +156,11 @@ MonoBehaviour:
   bulletSpawn: {fileID: 1572344642505310178}
   lockOnDistance: 30
   lockOnAngle: 120
-  homingForce: 200
+  homingForce: 80
   arrowLifetime: 1.5
   whatIsEnemy:
     serializedVersion: 2
-    m_Bits: 2105856
-  whatBlocksSight:
-    serializedVersion: 2
-    m_Bits: 2564673
+    m_Bits: 512
   deg15Spawn: {fileID: 3519350718699938743}
   deg30Spawn: {fileID: 4923465277717880698}
   neg15Spawn: {fileID: 5377846143457610857}

@@ -14,7 +14,6 @@ public class TrainBossManager : BossRoomManager
     private Transform playerTransform;
 
     public bool skipCutscene;
-    public bool enableDialogue = true;
 
     [Header("Dialogue")]
     public DialogueController.DialoguePart[] enterScript;
@@ -52,15 +51,12 @@ public class TrainBossManager : BossRoomManager
     {
         yield return new WaitForSeconds(0.5f);
 
-        if (enableDialogue)
-        {
-            // dialogue
-            LevelManager.instance.dialogueController.StartDialogue(enterScript);
-            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+        // dialogue
+        LevelManager.instance.dialogueController.StartDialogue(enterScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
-            yield return new WaitForSeconds(0.2f);
-        }
 
+        yield return new WaitForSeconds(0.2f);
         LevelManager.instance.EnablePlayerInput();
         CameraShake.instance.restoreCamPosAfterShake = true;
 
@@ -94,13 +90,10 @@ public class TrainBossManager : BossRoomManager
 
         yield return new WaitForSeconds(0.2f);
 
-        if (enableDialogue)
-        {
-            LevelManager.instance.dialogueController.StartDialogue(noticedScript);
-            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+        LevelManager.instance.dialogueController.StartDialogue(noticedScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
         
-            yield return new WaitForSeconds(0.2f);
-        }
+        yield return new WaitForSeconds(0.2f);
 
         // enemies run in the train
 
@@ -128,11 +121,8 @@ public class TrainBossManager : BossRoomManager
         
         yield return new WaitForSeconds(3f);
 
-        if (enableDialogue)
-        {
-            LevelManager.instance.dialogueController.StartDialogue(fightStartScript);
-            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
-        }
+        LevelManager.instance.dialogueController.StartDialogue(fightStartScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
         // start
         if (bossBarScript)
@@ -172,23 +162,15 @@ public class TrainBossManager : BossRoomManager
 
     public IEnumerator EndCutscene()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
 
         LevelManager.instance.DisablePlayerInput();
 
-        if (enableDialogue)
-        {
-            // dialogue
-            LevelManager.instance.dialogueController.StartDialogue(endScript);
-            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+        // dialogue
+        LevelManager.instance.dialogueController.StartDialogue(endScript);
+        while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
-            yield return new WaitForSeconds(1.5f);
-        }
-
-        GameData gd = LevelManager.instance.LoadGameData();
-        gd.beatGluttony = true;
-        LevelManager.instance.Save(gd);
-
+        yield return new WaitForSeconds(1.5f);
         LevelManager.instance.NextScene();
     }
 

@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: -4186290192929349455}
   - component: {fileID: 2554821954583363593}
   - component: {fileID: -2159584466490027448}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: HomingMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -494,25 +494,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5329789863531299260, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
-      propertyPath: m_Layer
-      value: 13
-      objectReference: {fileID: 0}
     - target: {fileID: 5972767953269003667, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
       propertyPath: m_Name
       value: CenteredHPBar
       objectReference: {fileID: 0}
     - target: {fileID: 5972767953269003667, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
-      propertyPath: m_Layer
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 5972767953269003667, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7805887230765404100, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}
-      propertyPath: m_Layer
-      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aba9c1cb5f5ef234f980f36b00ae6bf4, type: 3}

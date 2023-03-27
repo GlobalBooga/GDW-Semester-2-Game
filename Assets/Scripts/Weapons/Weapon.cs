@@ -41,10 +41,7 @@ public class Weapon : MonoBehaviour
 
     private void Start()
     {
-        if (Hud.instance)
-        {
-            weaponAbilityCooldown = Hud.instance.abilityCooldown;
-        }
+        weaponAbilityCooldown = Hud.instance.abilityCooldown;
         
     }
 

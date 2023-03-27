@@ -32,7 +32,7 @@ public class HubManager : SceneManager
     private const int MAX_TRAIN_LEVEL_INDEX = 6;//9;
 
 
-    private void Awake()
+    private void Start()
     {
         gameData = LevelManager.instance.LoadGameData();
 
@@ -58,20 +58,16 @@ public class HubManager : SceneManager
     {
         base.ForceSetScene();
 
-        LevelManager.instance.GetPlayer().DisableAttacks();
-
         if (!enableDialogue)
         {
+            LevelManager.instance.GetPlayer().DisableAttacks();
             return;
         }
 
         // dialogue
-        gameData = LevelManager.instance.LoadGameData();
+        GameData gd = LevelManager.instance.LoadGameData();
 
-        if (LevelManager.instance.hintController && gameData.firstTimeInHub) 
-        {
-            StartCoroutine(IntroDialogue());
-        }
+        if (LevelManager.instance.hintController && gd.firstTimeInHub) StartCoroutine(IntroDialogue());
     }
 
     private IEnumerator IntroDialogue()
@@ -87,8 +83,6 @@ public class HubManager : SceneManager
 
         yield return new WaitForSeconds(0.5f);
         LevelManager.instance.hintController.ShowHint();
-        gameData.firstTimeInHub = false;
-        LevelManager.instance.Save(gameData);
     }
 
     public void PickedAndarozContract()

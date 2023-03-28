@@ -129,7 +129,7 @@ public class TrainBossScriptableObject : ScriptableObject
                 }
 
                 m.transform.Rotate(0f, 0f, Vector2.SignedAngle(targetDir, missileDir));
-                m.gameObject.layer = StaticHelpers.EnemyMissileLayer;
+                m.gameObject.layer = StaticHelpers.EnemyMissile;
                 m.Fly(target, missileDir, rotForce, speed, damage);
                 m.specialObjectDamageMultiplier = coverDmgMult;
                 m.explosive.SetWhatTakesDamage(whatTakesDamage);

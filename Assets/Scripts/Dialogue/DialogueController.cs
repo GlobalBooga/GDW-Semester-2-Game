@@ -31,7 +31,7 @@ public class DialogueController : MonoBehaviour
     private bool isWriting;
     
     public bool isEnabled { get; private set; }
-    public bool isFinished { get; private set; } = true;
+    public bool isFinished { get; private set; }
 
     public Color notSpeaking;
 

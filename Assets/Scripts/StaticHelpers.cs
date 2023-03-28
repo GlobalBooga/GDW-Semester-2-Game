@@ -11,12 +11,10 @@ public class StaticHelpers
     public static LayerMask EnemyProjectileLayer => LayerMask.NameToLayer("EnemyProjectile");
     public static LayerMask PlayerProjectileLayer => LayerMask.NameToLayer("PlayerProjectile");
     public static LayerMask PickupLayer => LayerMask.NameToLayer("Pickup");
-    public static LayerMask EnemyMissileLayer => LayerMask.NameToLayer("EnemyMissile");
+    public static LayerMask EnemyMissile => LayerMask.NameToLayer("EnemyMissile");
     public static LayerMask PlayerInvincibleLayer => LayerMask.NameToLayer("PlayerInvincible");
     public static LayerMask BreakableObjectsLayer => LayerMask.NameToLayer("Breakable Objects");
     public static LayerMask SpecialBreakableObjectLayer => LayerMask.NameToLayer("SpecialBreakableObject");
-    public static LayerMask HomingArrowLayer => LayerMask.NameToLayer("HomingArrow");
-    public static LayerMask TrainWeaponLayer => LayerMask.NameToLayer("TrainWeapons");
 
     public static bool ApplyDamage(GameObject other, float damage)
     {

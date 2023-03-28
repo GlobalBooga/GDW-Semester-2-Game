@@ -22,7 +22,6 @@ public class SceneExit : MonoBehaviour
         {
             //Debug.Log("trigger enter");
             LevelManager.instance.StartSceneTransition();
-            enabled = false;
         }
     }
 
@@ -35,7 +34,6 @@ public class SceneExit : MonoBehaviour
             willFailToDetectTriggerEnter=false;
             //Debug.Log("trigger enter");
             LevelManager.instance.StartSceneTransition();
-            enabled = false;
         }
     }
 

@@ -6,7 +6,6 @@ public class Ranged : Enemy
 {
     
     public Transform bulletSpawn;
-    public GameObject muzzleFlash;
     private RangedScriptableObject rso;
     const string HIT_RANGED = "RangedHit";
 
@@ -61,7 +60,7 @@ public class Ranged : Enemy
             Vector3 bulletDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
             // muzzleFlash
-            if (muzzleFlash) muzzleFlash.SetActive(true);
+            if (rso.muzzleFlash) rso.muzzleFlash.SetActive(true);
 
             if (showDebugStuff) Debug.DrawLine(body.position, body.position + bulletDir * 50f, Color.red, rso.delayBetweenShots);
 
@@ -71,6 +70,8 @@ public class Ranged : Enemy
                 b.transform.Rotate(0f,0f, Vector2.SignedAngle(body.up, bulletDir));
                 b.gameObject.layer = StaticHelpers.EnemyProjectileLayer;
                 b.Fly(bulletDir, rso.bulletSpeed, rso.damage);
+
+                //play muzzle effect
             }
 
             yield return new WaitForSeconds(rso.delayBetweenShots);

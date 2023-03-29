@@ -144,7 +144,7 @@ MonoBehaviour:
   moveForce: 40
   accelerationDrag: 5
   deccelerationDrag: 20
-  gamepadRotSpeed: 300
+  gamepadRotSpeed: 350
   dodgeCooldown: 0.2
   dodgeDuration: 0.3
   dodgeForce: 50
@@ -232,7 +232,7 @@ MonoBehaviour:
   - {x: -0.186409, y: -0.17676282, z: 0}
   m_ShapePathHash: 743514181
   m_Mesh: {fileID: 0}
-  m_InstanceId: 795984
+  m_InstanceId: 145516
 --- !u!1 &6843829853753993103
 GameObject:
   m_ObjectHideFlags: 0

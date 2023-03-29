@@ -35,6 +35,7 @@ public class LevelManager : MonoBehaviour
     [Header("Crosshair Settings")]
     public Color color = Color.yellow;
     public Image cursor;
+    private bool isVisible;
 
     [Header("Dialogue")]
     public DialogueController dialogueController;
@@ -372,4 +373,17 @@ public class LevelManager : MonoBehaviour
         return weather;
     }
 
+    public void ShowCursor()
+    {
+        if (!cursor || isVisible) return;
+        isVisible = true;
+        cursor.enabled = true;
+    }
+
+    public void HideCursor()
+    {
+        if (!cursor || !isVisible) return;
+        isVisible = false;
+        cursor.enabled = false;
+    }
 }

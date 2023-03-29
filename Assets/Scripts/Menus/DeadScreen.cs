@@ -9,7 +9,6 @@ public class DeadScreen : MonoBehaviour
         LevelManager.instance.RestartLevel();
     }
 
-
     public void ReturnToMainMenu()
     {
         LevelManager.instance.ReturnToMainMenu();

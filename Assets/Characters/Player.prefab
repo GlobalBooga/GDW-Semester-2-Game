@@ -144,6 +144,7 @@ MonoBehaviour:
   moveForce: 40
   accelerationDrag: 5
   deccelerationDrag: 20
+  gamepadRotSpeed: 300
   dodgeCooldown: 0.2
   dodgeDuration: 0.3
   dodgeForce: 50

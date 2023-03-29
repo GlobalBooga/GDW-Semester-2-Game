@@ -325,11 +325,6 @@ public class LevelManager : MonoBehaviour
         color = newColor;
     }
 
-    void ReturnToHub()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
-    }
-
     public void ReturnToMainMenu()
     {
         GameData fg = LoadGameData();
@@ -407,5 +402,17 @@ public class LevelManager : MonoBehaviour
     public void IDied()
     {
         deadScreen.gameObject.SetActive(true);
+    }
+
+    public void RestartLevel()
+    {
+        isQuitting = true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ReturnToHub()
+    {
+        isQuitting = true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 }

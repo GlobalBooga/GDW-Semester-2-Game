@@ -5,7 +5,7 @@ public class TutorialManager : SceneManager
 {
     [Header("Dialogue")]
     public int roomNumber;
-    public bool enableDialogue = false;
+    public bool enableDialogue = true;
     public DialogueController.DialoguePart[] script;
     public DialogueController.DialoguePart[] secondTimeArountScript;
     private int lap = 0;

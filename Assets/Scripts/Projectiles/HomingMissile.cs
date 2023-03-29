@@ -35,6 +35,8 @@ public class HomingMissile : Bullet
 
     internal virtual void Update()
     {
+        if (!target) return;
+
         if (force > 0)
         {
             Vector3 dir = target.position - body.position;
@@ -45,6 +47,8 @@ public class HomingMissile : Bullet
 
     internal virtual void FixedUpdate()
     {
+        if (!target) return;
+
         bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > maxSpeed;
 
         rb.AddForce((target.position - transform.position).normalized * force, ForceMode2D.Force);

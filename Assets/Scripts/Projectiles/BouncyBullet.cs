@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BouncyBullet : Bullet
 {
-    const int maxBounces = 3;
+    const int maxBounces = 2;
     int bounces;
 
     Vector2 lastVelocity;
@@ -36,9 +36,15 @@ public class BouncyBullet : Bullet
                 StaticHelpers.ApplyDamage(collision.gameObject, damage * specialObjectDamageMultiplier);
             }
         }
-        else if (StaticHelpers.ApplyDamage(collision.gameObject, damage))
+        else
         {
-            Destroy(gameObject);
+            if (!StaticHelpers.ApplyDamage(collision.collider.gameObject, damage))
+            {
+                if (StaticHelpers.ApplyDamage(collision.gameObject, damage))
+                {
+                    Destroy(gameObject);
+                }
+            }
         }
 
         if (bounces < maxBounces)

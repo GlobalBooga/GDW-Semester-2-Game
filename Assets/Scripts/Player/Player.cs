@@ -1,4 +1,3 @@
-using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -57,7 +56,9 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject AndarozGun;
 
     // for animations
-    public const string PLAYER_HIT_INDICATOR = "PlayerDamageTaken";
+    public const string PLAYER_HIT_INDICATOR1 = "PlayerDamageTaken";
+    public const string PLAYER_HIT_INDICATOR2 = "PlayerDamageTakenMidHP";
+    public const string PLAYER_HIT_INDICATOR3 = "PlayerDamageTakenLowHP";
 
 
     // other
@@ -130,6 +131,7 @@ public class Player : MonoBehaviour
         originalRot = transform.rotation;
         rb.freezeRotation = true;
         rb.drag = accelerationDrag;
+        if (hpcomp)hpcomp.isInvincible = false;
 
         if (weapon)
         {
@@ -384,14 +386,31 @@ public class Player : MonoBehaviour
 
     private void OnDead()
     {
-        Debug.Log("you died");
+        hpcomp.isInvincible = true;
+        hpcomp.postDamageInvincibilityTime = 0;
+        cc.enabled = false;
+        DisableGeneralControls();
+        DisableRotation();
+        LevelManager.instance.IDied();
     }
 
     private void OnHit()
     {
         // disable movement until grounded
         //Debug.Log("ouch");
-        if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR);
+
+        if (hpcomp.GetHealth() >= 0.75f * hpcomp.maxHealth)
+        {
+            if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR1);
+        }
+        else if (hpcomp.GetHealth() < 0.75f * hpcomp.maxHealth && hpcomp.GetHealth() >= 0.25f * hpcomp.maxHealth)
+        {
+            if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR2);
+        }
+        else
+        {
+            if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR3);
+        }
     }
 
     private IEnumerator RechargeDodge(bool startImmediately = false)

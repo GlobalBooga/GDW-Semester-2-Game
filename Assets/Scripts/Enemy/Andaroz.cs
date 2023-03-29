@@ -373,7 +373,7 @@ public class Andaroz : Enemy
                 }
 
                 b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.up, missileDir));
-                b.gameObject.layer = StaticHelpers.EnemyMissile;
+                b.gameObject.layer = StaticHelpers.EnemyMissileLayer;
                 b.Fly(playerLoc, missileDir, aso.missileRotForce, aso.missileMaxSpeed, aso.missile_damage);
                 b.specialObjectDamageMultiplier = aso.missile_pillarDamageMultiplier;
                 b.explosive.SetWhatTakesDamage(aso.whatTakesDamageFromMissiles);

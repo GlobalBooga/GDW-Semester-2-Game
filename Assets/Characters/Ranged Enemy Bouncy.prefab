@@ -138,6 +138,31 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2781084931710897593, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
   m_PrefabInstance: {fileID: 3566517818449045404}
   m_PrefabAsset: {fileID: 0}
+--- !u!169 &1992735688564029458
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722265178022636069}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.22727273
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!82 &8318128781843469693
 AudioSource:
   m_ObjectHideFlags: 0

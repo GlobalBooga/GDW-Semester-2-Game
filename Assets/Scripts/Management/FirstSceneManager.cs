@@ -8,13 +8,12 @@ public class FirstSceneManager : SceneManager
     public bool enableDialogue = false;
     public DialogueController.DialoguePart[] introScript;
 
-    public AudioSource audioSource;
-    public AudioClip mainTheme;
+
     private void Start()
     {
         LevelManager.instance.screenOverlayAnimator.Play(LevelManager.TELEPORT_END);
-        audioSource.clip = mainTheme;
-        audioSource.Play();
+        
+       
     }
 
     public override void ForceSetScene()

@@ -35,7 +35,6 @@ public class SceneManager : MonoBehaviour
 
     private LevelManager.Scene currentScene;
 
-
     public virtual void SetScene()
     {
         if (LevelManager.instance.CurrentScene.skip)
@@ -44,7 +43,15 @@ public class SceneManager : MonoBehaviour
             return;
         }
 
-        ForceSetScene();
+        if (LevelManager.instance.isFirst)
+        {
+            LevelManager.instance.isFirst = false;
+            Invoke(nameof(ForceSetScene), 0.2f);
+        }
+        else
+        {
+            ForceSetScene();
+        }
     }
 
     public virtual void ForceSetScene()

@@ -45,6 +45,7 @@ public class LevelManager : MonoBehaviour
 
     [Header("General Scene Settings")]
     public bool loop;
+    [HideInInspector] public bool isFirst;
 
     [Header("Scene Objective")]
     public HintController hintController;
@@ -89,11 +90,6 @@ public class LevelManager : MonoBehaviour
     {
         instance = this;
         player = GameObject.Find("Player").GetComponent<Player>();
-        //if (cursor) cursorSpriteRenderer = cursorObject.GetComponent<SpriteRenderer>();
-
-        weather = (Weather)UnityEngine.Random.Range(0, (int)Weather.max);
-        SetGlobalLightAccordingToWeather();
-        Cursor.visible = false;
     }
 
     private void Update()
@@ -118,6 +114,10 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        SetGlobalLightAccordingToWeather();
+        isFirst = true;
+        Cursor.visible = false;
+        weather = (Weather)UnityEngine.Random.Range(0, (int)Weather.max);
 
         if (!globalLight)
         {

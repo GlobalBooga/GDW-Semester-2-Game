@@ -1477,6 +1477,7 @@ GameObject:
   - component: {fileID: 1502749270}
   - component: {fileID: 1502749269}
   - component: {fileID: 1502749273}
+  - component: {fileID: 1502749274}
   m_Layer: 5
   m_Name: Menus
   m_TagString: Untagged
@@ -1581,6 +1582,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursor: {fileID: 3442998306542000243}
+--- !u!114 &1502749274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1502749268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06f2d340b4c11fb47afe7d82e658faf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _activeMenu: {fileID: 0}
+  _increaseVert: 
+  _decreaseVert: 
+  _increaseHoriz: 00000000
+  _decreaseHoriz: 
+  _confirmButtons: 
 --- !u!1 &1669954337
 GameObject:
   m_ObjectHideFlags: 0
@@ -2332,6 +2351,7 @@ GameObject:
   - component: {fileID: 1931499192}
   - component: {fileID: 1931499191}
   - component: {fileID: 1931499193}
+  - component: {fileID: 1931499194}
   m_Layer: 0
   m_Name: Inner Margin
   m_TagString: Untagged
@@ -2425,6 +2445,20 @@ MonoBehaviour:
   m_Spacing: {x: 15, y: 15}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &1931499194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931499189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Softness: {x: 0, y: 0}
 --- !u!1 &1946319404
 GameObject:
   m_ObjectHideFlags: 0
@@ -2478,9 +2512,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3376ab67cb8ac5429677cd30cda429b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _menuType: 1
+  _menuType: 0
   _menuButtonObjects:
   - {fileID: 1861255078}
+  - {fileID: 1749835654}
   - {fileID: 991457104}
   - {fileID: 1295340070}
 --- !u!95 &1946319407

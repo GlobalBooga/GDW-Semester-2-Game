@@ -24,12 +24,17 @@ public class TrainBossManager : BossRoomManager
 
     private bool startboss;
 
+    public AudioSource audioSource;
+    public AudioClip bossTheme;
 
     private void Start()
     {
         roomAnimator = GetComponent<Animator>();
         player = LevelManager.instance.GetPlayer();
         playerTransform = player.transform;
+
+        audioSource.clip = bossTheme;
+        audioSource.Play();
     }
 
     public override void ForceSetScene()

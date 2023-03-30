@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Ranged : Enemy
 {
-    
+    public AudioSource audioSource;
+    public AudioClip atkSound;
+
     public Transform bulletSpawn;
     public GameObject muzzleFlash;
     private RangedScriptableObject rso;
@@ -14,6 +16,7 @@ public class Ranged : Enemy
     {
         base.Awake();
         rso = (RangedScriptableObject)eso;
+        audioSource = GetComponent<AudioSource>();
     }
 
     internal override void Update()
@@ -62,6 +65,8 @@ public class Ranged : Enemy
 
             // muzzleFlash
             if (muzzleFlash) muzzleFlash.SetActive(true);
+            audioSource.Play();
+
 
             if (showDebugStuff) Debug.DrawLine(body.position, body.position + bulletDir * 50f, Color.red, rso.delayBetweenShots);
 

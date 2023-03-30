@@ -25,7 +25,8 @@ public class AmbushBossManager : BossRoomManager
     public DialogueController.DialoguePart[] doorsClosedScript;
     public DialogueController.DialoguePart[] endScript;
 
-
+    public AudioSource audioSource;
+    public AudioClip bossTheme;
 
     private void Awake()
     {
@@ -37,6 +38,9 @@ public class AmbushBossManager : BossRoomManager
     {
         player = LevelManager.instance.GetPlayer();
         playerTransform = player.transform;
+
+        audioSource.clip = bossTheme;
+        audioSource.Play();
     }
 
     public override void ForceSetScene()

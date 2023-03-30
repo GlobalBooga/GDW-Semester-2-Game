@@ -13,6 +13,8 @@ public class Gun : Weapon
     public GameObject bullet;
     public Transform bulletSpawn;
 
+    
+
     // for alerting enemies
     private float alertInterval = 1f;
     private float time;
@@ -20,6 +22,7 @@ public class Gun : Weapon
     internal override void Awake()
     {
         base.Awake();
+ 
 
         time = Time.time - alertInterval;
     }
@@ -38,7 +41,7 @@ public class Gun : Weapon
         {
             muzzleFlash.SetActive(true);
         }
-
+        audioSource.Play();
         CameraShake.instance.ShakeCamera(cameraShakeIntensity, cameraShakeTime);
 
         // Alert enemies

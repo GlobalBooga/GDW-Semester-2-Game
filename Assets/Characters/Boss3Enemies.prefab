@@ -253,6 +253,8 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: 7be67767ee55e7040afdb05151d34fe7, type: 2}
   body: {fileID: 551038706215285180}
   animator: {fileID: 3449727805904463891}
+  isDummy: 0
+  reviveDelay: 2
 --- !u!1 &894614086395161150
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,7 +484,10 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: 6dbcccce7f753d24cbe1418bf43f56ee, type: 2}
   body: {fileID: 894614087039882351}
   animator: {fileID: 0}
+  isDummy: 0
+  reviveDelay: 2
   bulletSpawn: {fileID: 894614086395161151}
+  muzzleFlash: {fileID: 0}
 --- !u!1 &1515560291352681267
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,6 +741,8 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: 7be67767ee55e7040afdb05151d34fe7, type: 2}
   body: {fileID: 1515560291352681266}
   animator: {fileID: 4427621106115494557}
+  isDummy: 0
+  reviveDelay: 2
 --- !u!1 &6582883805441442640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,7 +1096,10 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: c1d832191b64ea84688d9dee025e8e37, type: 2}
   body: {fileID: 6582883807390384303}
   animator: {fileID: 0}
+  isDummy: 0
+  reviveDelay: 2
   bulletSpawn: {fileID: 6582883807265183196}
+  muzzleFlash: {fileID: 0}
 --- !u!1 &6582883805865244758
 GameObject:
   m_ObjectHideFlags: 0
@@ -1101,6 +1111,7 @@ GameObject:
   - component: {fileID: 6582883805865244757}
   - component: {fileID: 6582883805865244756}
   - component: {fileID: 6582883805865244747}
+  - component: {fileID: 208427015452930251}
   m_Layer: 0
   m_Name: Boss3Enemies
   m_TagString: Untagged
@@ -1167,6 +1178,102 @@ MonoBehaviour:
   postDamageInvincibilityTime: 0
   isInvincible: 0
   maxHealth: 0
+--- !u!82 &208427015452930251
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6582883805865244758}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6582883805874014641
 GameObject:
   m_ObjectHideFlags: 0
@@ -1294,7 +1401,10 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: c1d832191b64ea84688d9dee025e8e37, type: 2}
   body: {fileID: 6582883806492760511}
   animator: {fileID: 0}
+  isDummy: 0
+  reviveDelay: 2
   bulletSpawn: {fileID: 6582883807335539722}
+  muzzleFlash: {fileID: 0}
 --- !u!1 &6582883806358852291
 GameObject:
   m_ObjectHideFlags: 0
@@ -1491,6 +1601,8 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: 1f99e6acbffd4764aa901695d074aeed, type: 2}
   body: {fileID: 6582883807254502117}
   animator: {fileID: 6582883807234594268}
+  isDummy: 0
+  reviveDelay: 2
   laserStart: {fileID: 6582883806737074364}
   lineRenderer: {fileID: 6582883807234594259}
   laserAnimator: {fileID: 0}
@@ -1825,7 +1937,10 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: 6dbcccce7f753d24cbe1418bf43f56ee, type: 2}
   body: {fileID: 6582883806622521802}
   animator: {fileID: 0}
+  isDummy: 0
+  reviveDelay: 2
   bulletSpawn: {fileID: 6582883806372134087}
+  muzzleFlash: {fileID: 0}
 --- !u!1 &6582883806737074365
 GameObject:
   m_ObjectHideFlags: 0
@@ -2063,7 +2178,10 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: 6dbcccce7f753d24cbe1418bf43f56ee, type: 2}
   body: {fileID: 6582883807451760523}
   animator: {fileID: 0}
+  isDummy: 0
+  reviveDelay: 2
   bulletSpawn: {fileID: 6582883805874014640}
+  muzzleFlash: {fileID: 0}
 --- !u!1 &6582883807124608811
 GameObject:
   m_ObjectHideFlags: 0
@@ -3420,7 +3538,10 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: c1d832191b64ea84688d9dee025e8e37, type: 2}
   body: {fileID: 8622425283564316738}
   animator: {fileID: 0}
+  isDummy: 0
+  reviveDelay: 2
   bulletSpawn: {fileID: 8622425283452261906}
+  muzzleFlash: {fileID: 0}
 --- !u!1 &8980388429496065774
 GameObject:
   m_ObjectHideFlags: 0
@@ -3700,6 +3821,8 @@ MonoBehaviour:
   eso: {fileID: 11400000, guid: 1f99e6acbffd4764aa901695d074aeed, type: 2}
   body: {fileID: 9019861608008531861}
   animator: {fileID: 8980388429615361393}
+  isDummy: 0
+  reviveDelay: 2
   laserStart: {fileID: 8980388429496065769}
   lineRenderer: {fileID: 8980388429615361399}
   laserAnimator: {fileID: 0}

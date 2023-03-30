@@ -9,6 +9,9 @@ public class Sniper : Enemy
     public LineRenderer lineRenderer;
     public Animator laserAnimator;
 
+    public AudioSource audioSource;
+    public AudioClip atkSound;
+
     private bool isLaserOn;
     private const string LASER_SHOT_ANIM = "SniperLaserShot";
     private const string EMPTY = "Empty";
@@ -20,6 +23,8 @@ public class Sniper : Enemy
     {
         base.Awake();
         sso = (SniperScriptableObject)eso;
+       audioSource = GetComponent<AudioSource>();
+
     }
 
     internal override void Start()
@@ -40,6 +45,7 @@ public class Sniper : Enemy
             {
                 attackReady = false;
                 Attack();
+                audioSource.Play();
             }
         }
     }

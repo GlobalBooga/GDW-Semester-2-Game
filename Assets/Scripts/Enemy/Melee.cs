@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class Melee : Enemy
 {
-    
+
+    public AudioSource audioSource;
+    public AudioClip atkSound;
+
     private MeleeScriptableObject mso;
     const string HIT_MELEE = "MeleeHit";
 
@@ -11,6 +14,7 @@ public class Melee : Enemy
     {
         base.Awake();
         mso = (MeleeScriptableObject)eso;
+        audioSource = GetComponent<AudioSource>();
     }
 
     internal override void Attack()
@@ -25,7 +29,7 @@ public class Melee : Enemy
         // play animation
 
         yield return new WaitForSeconds(mso.applyDmgDelay);
-
+        audioSource.Play();
         // if we hit
         if (PlayerDistance <= eso.defaultMaxAttackDistance)
         {

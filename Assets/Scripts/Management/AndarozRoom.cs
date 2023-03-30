@@ -12,7 +12,8 @@ public class AndarozRoom : BossRoomManager
     public DialogueController.DialoguePart[] stage2Script;
     public DialogueController.DialoguePart[] endScript;
 
-
+    public AudioSource audioSource;
+    public AudioClip bossTheme;
     public override void ForceSetScene()
     {
         base.ForceSetScene();
@@ -22,6 +23,9 @@ public class AndarozRoom : BossRoomManager
         LevelManager.instance.DisablePlayerInput();
         CameraShake.instance.restoreCamPosAfterShake = false;
         CameraShake.instance.isLargePanningRoom = true;
+
+        audioSource.clip = bossTheme;
+        audioSource.Play();
 
         StartCutscene();
     }

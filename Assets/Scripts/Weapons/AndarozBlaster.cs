@@ -12,6 +12,7 @@ public class AndarozBlaster : Gun
     private float temp;
     public ParticleSystem chargeParticles;
 
+
     public override int GetID()
     {
         return 4;

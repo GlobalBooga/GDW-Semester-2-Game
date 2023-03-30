@@ -14,6 +14,7 @@ public class DualPistols : Weapon
     private bool right = true;
     public bool alertEnemies = true;
 
+
     public override void Use()
     {
         if (!readyToUse) return;

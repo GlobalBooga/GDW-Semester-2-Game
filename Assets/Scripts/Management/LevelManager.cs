@@ -38,6 +38,7 @@ public class LevelManager : MonoBehaviour
     [Header("Crosshair Settings")]
     public Color color = Color.yellow;
     public Image cursor;
+    private bool isVisible;
 
     [Header("Dialogue")]
     public DialogueController dialogueController;
@@ -324,11 +325,6 @@ public class LevelManager : MonoBehaviour
         color = newColor;
     }
 
-    void ReturnToHub()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
-    }
-
     public void ReturnToMainMenu()
     {
         GameData fg = LoadGameData();
@@ -389,9 +385,34 @@ public class LevelManager : MonoBehaviour
         return weather;
     }
 
+    public void ShowCursor()
+    {
+        if (!cursor || isVisible) return;
+        isVisible = true;
+        cursor.enabled = true;
+    }
 
+    public void HideCursor()
+    {
+        if (!cursor || !isVisible) return;
+        isVisible = false;
+        cursor.enabled = false;
+    }
+    
     public void IDied()
     {
         deadScreen.gameObject.SetActive(true);
+    }
+
+    public void RestartLevel()
+    {
+        isQuitting = true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ReturnToHub()
+    {
+        isQuitting = true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 }

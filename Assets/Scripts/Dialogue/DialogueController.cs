@@ -29,6 +29,7 @@ public class DialogueController : MonoBehaviour
     public float DialogueSpeed = 0.08f;
     private Animator DialogueAnimator;
     private bool isWriting;
+    public Image skip;
     
     public bool isEnabled { get; private set; }
     public bool isFinished { get; private set; } = true;
@@ -79,17 +80,22 @@ public class DialogueController : MonoBehaviour
         }
     }
 
+    public void Close()
+    {
+        DialogueText.text = "";
+        DialogueAnimator.Play(EXIT);
+        sentenceIndex = 0;
+        isFinished = true;
+        isEnabled = false;
+    }
+
     void NextPart()
     {
         sentenceIndex = 0;
 
         if (script.Count == 0)
         {
-            DialogueText.text = "";
-            DialogueAnimator.Play(EXIT);
-            sentenceIndex = 0;
-            isFinished = true;
-            isEnabled = false;
+            Close();
             return;
         }
 
@@ -187,5 +193,31 @@ public class DialogueController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void CancelSkipDialogue()
+    {
+        StopCoroutine(SkipDialogue());
+        if (skip) skip.fillAmount = 0f;
+    }
+
+    public IEnumerator SkipDialogue()
+    {
+        if (!skip)
+        {
+            yield return new WaitForSeconds(1f);
+            yield break;
+        }
+
+        while (skip.fillAmount < 1)
+        {
+            skip.fillAmount = Mathf.Clamp(skip.fillAmount + Time.deltaTime, 0f, 1f);
+            yield return null;  
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        Close();
+        skip.fillAmount = 0f;
     }
 }

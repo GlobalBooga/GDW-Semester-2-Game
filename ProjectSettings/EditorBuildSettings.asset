@@ -7,7 +7,7 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
-    guid: a39380da1166d6940b72d3a459515d56
+    guid: dabca76215c7811419df5f0d17d4078d
   - enabled: 1
     path: Assets/Scenes/Tutorial.unity
     guid: 30afce51bd4061d46b143af4604ea6fa
@@ -21,9 +21,27 @@ EditorBuildSettings:
     path: Assets/Scenes/tech planet levels/tech1.unity
     guid: 469340c3a2447934595573487fbfb7f4
   - enabled: 1
+    path: Assets/Scenes/tech planet levels/tech3.unity
+    guid: 40ad6f928a39a8c469d066ddc33f39f9
+  - enabled: 1
+    path: Assets/Scenes/tech planet levels/tech2.unity
+    guid: c715a68739bb80a4982dfdecf3c95263
+  - enabled: 1
+    path: Assets/Scenes/tech planet levels/bossTwo1.unity
+    guid: d6e94ee838ca9dd459e3ed147afc2952
+  - enabled: 1
     path: Assets/Scenes/tech planet levels/bossTwo2.unity
     guid: aaaefc6a973d87d4daf0e09dbaa881c7
   - enabled: 1
+    path: Assets/Scenes/tech planet levels/bossTwo3.unity
+    guid: 2d2401c4e9df2ea439f3b4a16091478a
+  - enabled: 1
     path: Assets/Scenes/tech planet levels/bossThree1.unity
     guid: 3a249696434656a4082b9a4934f8d38a
+  - enabled: 1
+    path: Assets/Scenes/tech planet levels/BossThree2.unity
+    guid: 2d57f5954fce1574cb667929f3a88927
+  - enabled: 1
+    path: Assets/Scenes/tech planet levels/bossThree3.unity
+    guid: f2052ba423df3c84d80ea389c8be77de
   m_configObjects: {}

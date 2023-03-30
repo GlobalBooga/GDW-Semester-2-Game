@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public float accelerationDrag = 1f;
     public float deccelerationDrag = 5f;
     private bool rotationEnabled = true;
+    public float gamepadRotSpeed = 10f;
 
     [Space(10f)]
 
@@ -60,13 +61,26 @@ public class Player : MonoBehaviour
     private Quaternion originalRot;
     private Vector3 originalPos;
     private Vector2 lastDirection;
+    
 
     GameData gameData;
 
+    // for gamepad rotation
+    bool lookIsDelta;
+    Quaternion lookstart;
+    Quaternion newrotation;
+    float gamepadRotAngle;
+
+
+    // for skipping dialogue
+    bool attemptingSkip;
+    bool skipSuccessful;
+
 
     public Vector2 RawDirection => controls.General.Move.ReadValue<Vector2>();
+    public float GamepadLookRadius => controls.General.GamepadLook.ReadValue<Vector2>().magnitude;
     public Vector2 RotatedRawDirection => transform.up * RawDirection.y + transform.right * RawDirection.x;
-    public Vector2 MousePosition => Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    public Vector2 MousePosition => Camera.main.ScreenToWorldPoint(controls.Universal.MouseMove.ReadValue<Vector2>());
     public Vector2 MouseDirection => (MousePosition - (Vector2)transform.position).normalized;
     public bool IsMoving => RawDirection != Vector2.zero;
 
@@ -80,6 +94,7 @@ public class Player : MonoBehaviour
     {
         controls.General.Enable();
         controls.Menus.Disable();
+        controls.Universal.Enable();
     }
 
     private void OnDisable()
@@ -87,7 +102,6 @@ public class Player : MonoBehaviour
         controls.General.Disable();
         controls.Menus.Enable();
     }
-
 
     private void OnDestroy()
     {
@@ -109,7 +123,6 @@ public class Player : MonoBehaviour
         }
 
         SetupInputEvents();
-
     }
 
     void Start()
@@ -138,7 +151,22 @@ public class Player : MonoBehaviour
             if (weapon.readyToUse && weapon.isAutoUse && controls.General.Attack.IsPressed()) weapon.Use();
         }
 
-        if (rotationEnabled) transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(MouseDirection, Vector3.up, Vector3.back));
+
+        if (rotationEnabled)
+        {
+
+            if (!lookIsDelta) transform.rotation = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(MouseDirection, Vector3.up, Vector3.back));
+            else
+            {
+                gamepadRotAngle = Vector3.SignedAngle(transform.up, controls.General.GamepadLook.ReadValue<Vector2>(), Vector3.back);
+
+                if (Mathf.Abs(gamepadRotAngle) > 1f)
+                {
+                    newrotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z + gamepadRotAngle);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, newrotation, GamepadLookRadius * Time.deltaTime * -gamepadRotSpeed);
+                }
+            }
+        }
         Debug.DrawLine(transform.position, transform.position + (Vector3)MouseDirection * 1.5f, Color.red, Time.deltaTime);
     }
 
@@ -298,8 +326,29 @@ public class Player : MonoBehaviour
             }
         };
 
+        controls.Menus.AdvanceDialogue.performed += ctx =>
+        {
+            if (LevelManager.instance.dialogueController.isEnabled && !controls.Menus.Unpause.IsPressed())
+            {
+                attemptingSkip = true;
+                StartCoroutine(LevelManager.instance.dialogueController.SkipDialogue());
+            }
+        };
+
+        controls.Menus.AdvanceDialogue.canceled += ctx =>
+        {
+            attemptingSkip = false;
+
+            if (!skipSuccessful)
+            {
+                LevelManager.instance.dialogueController.CancelSkipDialogue();
+            }
+        };
+
         controls.Menus.AdvanceDialogue.started += ctx =>
         {
+            attemptingSkip = false;
+            skipSuccessful = false;
             if (LevelManager.instance.dialogueController.isEnabled && !controls.Menus.Unpause.IsPressed())
             {
                 LevelManager.instance.dialogueController.NextSentence();
@@ -315,6 +364,19 @@ public class Player : MonoBehaviour
         {
             LevelManager.instance.pauseMenu.PauseGame();
         };
+
+        controls.Universal.MouseMove.performed += ctx => 
+        {
+            LevelManager.instance.ShowCursor();
+            lookIsDelta = false;
+        };
+
+        controls.General.GamepadLook.started += ctx =>
+        {
+            lookstart = transform.rotation;
+            LevelManager.instance.HideCursor();
+            lookIsDelta = true;
+        };
     }
 
     public void DisableGeneralControls()
@@ -325,6 +387,13 @@ public class Player : MonoBehaviour
 
     public void EnableGeneralControls()
     {
+        // if we were skipping the dialogue
+        if (attemptingSkip)
+        {
+            skipSuccessful = true;
+            attemptingSkip = false;
+        }
+
         controls.Menus.Disable();
         controls.General.Enable();
     }

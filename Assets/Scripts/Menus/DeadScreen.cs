@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DeadScreen : MonoBehaviour
@@ -8,9 +6,8 @@ public class DeadScreen : MonoBehaviour
     {
         LevelManager.instance.EnablePlayerInput();
         LevelManager.instance.EnablePlayerRotation();
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        LevelManager.instance.RestartLevel();
     }
-
 
     public void ReturnToMainMenu()
     {
@@ -21,7 +18,7 @@ public class DeadScreen : MonoBehaviour
     {
         LevelManager.instance.EnablePlayerInput();
         LevelManager.instance.EnablePlayerRotation();
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        LevelManager.instance.ReturnToHub();
     }
     
 }

@@ -1,11 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using UnityEditor.Search;
 using UnityEngine;
-using UnityEngine.LowLevel;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
@@ -69,15 +65,22 @@ public class Player : MonoBehaviour
 
     GameData gameData;
 
+    // for gamepad rotation
     bool lookIsDelta;
     Quaternion lookstart;
     Quaternion newrotation;
     float gamepadRotAngle;
 
+
+    // for skipping dialogue
+    bool attemptingSkip;
+    bool skipSuccessful;
+
+
     public Vector2 RawDirection => controls.General.Move.ReadValue<Vector2>();
     public float GamepadLookRadius => controls.General.GamepadLook.ReadValue<Vector2>().magnitude;
     public Vector2 RotatedRawDirection => transform.up * RawDirection.y + transform.right * RawDirection.x;
-    public Vector2 MousePosition => Camera.main.ScreenToWorldPoint(controls.General.MouseMove.ReadValue<Vector2>());
+    public Vector2 MousePosition => Camera.main.ScreenToWorldPoint(controls.Universal.MouseMove.ReadValue<Vector2>());
     public Vector2 MouseDirection => (MousePosition - (Vector2)transform.position).normalized;
     public bool IsMoving => RawDirection != Vector2.zero;
 
@@ -91,6 +94,7 @@ public class Player : MonoBehaviour
     {
         controls.General.Enable();
         controls.Menus.Disable();
+        controls.Universal.Enable();
     }
 
     private void OnDisable()
@@ -98,7 +102,6 @@ public class Player : MonoBehaviour
         controls.General.Disable();
         controls.Menus.Enable();
     }
-
 
     private void OnDestroy()
     {
@@ -120,7 +123,6 @@ public class Player : MonoBehaviour
         }
 
         SetupInputEvents();
-
     }
 
     void Start()
@@ -324,8 +326,29 @@ public class Player : MonoBehaviour
             }
         };
 
+        controls.Menus.AdvanceDialogue.performed += ctx =>
+        {
+            if (LevelManager.instance.dialogueController.isEnabled && !controls.Menus.Unpause.IsPressed())
+            {
+                attemptingSkip = true;
+                StartCoroutine(LevelManager.instance.dialogueController.SkipDialogue());
+            }
+        };
+
+        controls.Menus.AdvanceDialogue.canceled += ctx =>
+        {
+            attemptingSkip = false;
+
+            if (!skipSuccessful)
+            {
+                LevelManager.instance.dialogueController.CancelSkipDialogue();
+            }
+        };
+
         controls.Menus.AdvanceDialogue.started += ctx =>
         {
+            attemptingSkip = false;
+            skipSuccessful = false;
             if (LevelManager.instance.dialogueController.isEnabled && !controls.Menus.Unpause.IsPressed())
             {
                 LevelManager.instance.dialogueController.NextSentence();
@@ -342,7 +365,7 @@ public class Player : MonoBehaviour
             LevelManager.instance.pauseMenu.PauseGame();
         };
 
-        controls.General.MouseMove.performed += ctx => 
+        controls.Universal.MouseMove.performed += ctx => 
         {
             LevelManager.instance.ShowCursor();
             lookIsDelta = false;
@@ -364,6 +387,13 @@ public class Player : MonoBehaviour
 
     public void EnableGeneralControls()
     {
+        // if we were skipping the dialogue
+        if (attemptingSkip)
+        {
+            skipSuccessful = true;
+            attemptingSkip = false;
+        }
+
         controls.Menus.Disable();
         controls.General.Enable();
     }

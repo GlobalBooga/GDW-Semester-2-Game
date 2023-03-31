@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TrainBossManager : BossRoomManager
@@ -130,11 +129,11 @@ public class TrainBossManager : BossRoomManager
         
         yield return new WaitForSeconds(3f);
 
-        if (enableDialogue)
-        {
-            LevelManager.instance.dialogueController.StartDialogue(fightStartScript);
-            while (!LevelManager.instance.dialogueController.isFinished) yield return null;
-        }
+        //if (enableDialogue)
+        //{
+        //    LevelManager.instance.dialogueController.StartDialogue(fightStartScript);
+        //    while (!LevelManager.instance.dialogueController.isFinished) yield return null;
+        //}
 
         // start
 
@@ -193,6 +192,7 @@ public class TrainBossManager : BossRoomManager
 
         GameData gd = LevelManager.instance.LoadGameData();
         gd.beatGluttony = true;
+        gd.firstTimeInHub = false;
         LevelManager.instance.Save(gd);
 
         LevelManager.instance.NextScene();

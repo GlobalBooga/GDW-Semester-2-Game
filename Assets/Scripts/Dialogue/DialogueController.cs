@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Rendering.Universal;
 
 public class DialogueController : MonoBehaviour
 {
@@ -150,7 +151,8 @@ public class DialogueController : MonoBehaviour
     public void StartDialogue(DialoguePart[] script)
     {
         if (script.Length == 0) return;
-        
+
+        this.script.Clear();
 
         isFinished = false;
         isEnabled = true;

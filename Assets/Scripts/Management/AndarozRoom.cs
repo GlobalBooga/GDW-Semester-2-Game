@@ -97,6 +97,7 @@ public class AndarozRoom : BossRoomManager
 
         GameData gd = LevelManager.instance.LoadGameData();
         gd.beatAndaroz = true;
+        gd.firstTimeInHub = false;
         LevelManager.instance.Save(gd);
 
         LevelManager.instance.NextScene();

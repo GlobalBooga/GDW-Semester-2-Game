@@ -22,7 +22,7 @@ public class HubManager : SceneManager
     public GameObject AdanasDualies;
     public GameObject EnergyDualies;
     public GameObject Bow;
-    public GameObject AndarozGun;
+    //public GameObject AndarozGun;
 
     private GameData gameData;
 
@@ -35,17 +35,19 @@ public class HubManager : SceneManager
     private const int MIN_TRAIN_LEVEL_INDEX = 10;
     private const int MAX_TRAIN_LEVEL_INDEX = 12;
 
-
     private void Awake()
     {
         gameData = LevelManager.instance.LoadGameData();
+    }
 
+    private void Start()
+    {
         if (gameData.weaponID == 1) AdanasDualies.SetActive(false);
         else if (gameData.weaponID == 2) EnergyDualies.SetActive(false);
         else if (gameData.weaponID == 3) Bow.SetActive(false);
-        else if (gameData.weaponID == 4) AndarozGun.SetActive(false);
+        //else if (gameData.weaponID == 4) AndarozGun.SetActive(false);
 
-        if (gameData.weaponID != 4 && !gameData.foundAndarozGun) AndarozGun.SetActive(false);
+        //if (gameData.weaponID != 4 && !gameData.foundAndarozGun) AndarozGun.SetActive(false);
 
         LevelManager.instance.screenOverlayAnimator.Play(LevelManager.TELEPORT_END);
 
@@ -56,18 +58,11 @@ public class HubManager : SceneManager
             if (gameData.beatGluttony && cs.boss == Bosses.Gluttony) item.SetActive(false);
             if (gameData.beatAndaroz && gameData.beatGluttony && cs.boss == Bosses.TimeLord) item.SetActive(true);
         }
-
-        //gameData = LevelManager.instance.LoadGameData();
-    }
-
-    private void Start()
-    {
     }
 
     public override void ForceSetScene()
     {
         base.ForceSetScene();
-
 
         if (!enableDialogue)
         {

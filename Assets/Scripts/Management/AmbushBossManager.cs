@@ -187,6 +187,7 @@ public class AmbushBossManager : BossRoomManager
 
         GameData gd = LevelManager.instance.LoadGameData();
         gd.beatValkyrie = true;
+        gd.firstTimeInHub = false;
         LevelManager.instance.Save(gd);
 
         LevelManager.instance.NextScene();

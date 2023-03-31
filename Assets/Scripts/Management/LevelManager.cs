@@ -295,7 +295,6 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
-        Debug.Log(weather);
         switch (weather)
         {
             case Weather.day_clear:

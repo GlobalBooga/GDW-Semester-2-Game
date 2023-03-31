@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
@@ -172,6 +173,14 @@ public class LevelManager : MonoBehaviour
             // end level
             //Debug.Log("end level. Return to hub");
 
+            if (player.weapon.GetID() == 4)
+            {
+                GameData gm = LoadGameData();
+                gm.foundAndarozGun = true;
+                Debug.Log("foundGun");
+                Save(gm);
+            }
+
             // Return to hub
             isQuitting = true;
             screenOverlayAnimator.Play(TELEPORT_START);
@@ -331,9 +340,14 @@ public class LevelManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
-        GameData fg = LoadGameData();
-        fg.weaponID = 1;
-        Save(fg);
+        GameData gm = LoadGameData();
+        if (gm.weaponID == 4 && gm.foundAndarozGun == false)
+        {
+            gm.weaponID = 1;
+            Save(gm);
+        }
+
+        Save(gm);
 
         isQuitting = true;
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
@@ -418,6 +432,13 @@ public class LevelManager : MonoBehaviour
     public void ReturnToHub()
     {
         isQuitting = true;
+        GameData gm = LoadGameData();
+        if (gm.weaponID == 4 && gm.foundAndarozGun == false)
+        {
+            gm.weaponID = 1;
+            Save(gm);
+        }
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 

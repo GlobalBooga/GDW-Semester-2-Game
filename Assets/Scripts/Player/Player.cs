@@ -110,6 +110,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+
         controls = new PlayerControls();
         rb = GetComponent<Rigidbody2D>();
         cc = gameObject.GetComponent<CircleCollider2D>();
@@ -136,7 +137,7 @@ public class Player : MonoBehaviour
         if (hpcomp)hpcomp.isInvincible = false;
 
         if (weapon)
-        {
+        { 
             weapon.SetHeld();
             gameData.weaponID = weapon.GetID();
             LevelManager.instance.Save(gameData);
@@ -177,8 +178,6 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log(collision.gameObject.layer);
-        //Debug.Log(LayerMask.LayerToName(StaticHelpers.PickupLayer));
         if (collision.gameObject.layer == StaticHelpers.PickupLayer)
         {
             pickupable = collision.gameObject;
@@ -222,24 +221,11 @@ public class Player : MonoBehaviour
                 if (newWeapon)
                 {
                     weapon.Drop(transform.up);
-                
                     newWeapon.Pickup(transform, weapon);
                     weapon = newWeapon;
                     gameData.weaponID = newWeapon.GetID();
-
-                    TutorialManager tm = LevelManager.instance.CurrentScene.manager as TutorialManager;
-                    if (!tm)
-                    {
-                        if (newWeapon.GetID() == 4)
-                        {
-                            gameData.foundAndarozGun = true;
-                        }
-                        LevelManager.instance.Save(gameData);
-                    }
-                    else
-                    {
-                        Debug.Log("was tutorial");
-                    }
+                    
+                    LevelManager.instance.Save(gameData);
                 }
             }
         };
@@ -421,6 +407,14 @@ public class Player : MonoBehaviour
         cc.enabled = false;
         DisableGeneralControls();
         DisableRotation();
+
+        // if we die with andaroz gun we lose it
+        if (weapon.GetID() == 4)
+        {
+            gameData.foundAndarozGun = false;
+            LevelManager.instance.Save(gameData);
+        }
+
         LevelManager.instance.IDied();
     }
 

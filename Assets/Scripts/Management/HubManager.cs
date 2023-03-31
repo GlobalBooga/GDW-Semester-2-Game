@@ -10,9 +10,9 @@ public class HubManager : SceneManager
     [Header("Dialogue")]
     public bool enableDialogue = false;
     public DialogueController.DialoguePart[] introScript;
-    public DialogueController.DialoguePart[] andarozContractScript;
-    public DialogueController.DialoguePart[] trainContractScript;
-    public DialogueController.DialoguePart[] timeLordContractScript;
+    //public DialogueController.DialoguePart[] andarozContractScript;
+    //public DialogueController.DialoguePart[] trainContractScript;
+    //public DialogueController.DialoguePart[] timeLordContractScript;
 
     [Header("Music")]
     public AudioSource audioSource;
@@ -22,7 +22,7 @@ public class HubManager : SceneManager
     public GameObject AdanasDualies;
     public GameObject EnergyDualies;
     public GameObject Bow;
-    //public GameObject AndarozGun;
+    public GameObject AndarozGun;
 
     private GameData gameData;
 
@@ -41,13 +41,14 @@ public class HubManager : SceneManager
     }
 
     private void Start()
-    {
+    { 
+
         if (gameData.weaponID == 1) AdanasDualies.SetActive(false);
         else if (gameData.weaponID == 2) EnergyDualies.SetActive(false);
         else if (gameData.weaponID == 3) Bow.SetActive(false);
-        //else if (gameData.weaponID == 4) AndarozGun.SetActive(false);
+        else if (gameData.weaponID == 4) AndarozGun.SetActive(false);
 
-        //if (gameData.weaponID != 4 && !gameData.foundAndarozGun) AndarozGun.SetActive(false);
+        if (gameData.weaponID != 4 && !gameData.foundAndarozGun) AndarozGun.SetActive(false);
 
         LevelManager.instance.screenOverlayAnimator.Play(LevelManager.TELEPORT_END);
 
@@ -120,14 +121,7 @@ public class HubManager : SceneManager
 
     private IEnumerator StartLevel(int contract)
     {
-        //yield return new WaitForSeconds(0.5f);
-
         LevelManager.instance.DisablePlayerInput();
-
-        //if (contract == 0) LevelManager.instance.dialogueController.StartDialogue(andarozContractScript);
-        //else if (contract == 1) LevelManager.instance.dialogueController.StartDialogue(trainContractScript);
-
-        //while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
         yield return new WaitForSeconds(2f);
 

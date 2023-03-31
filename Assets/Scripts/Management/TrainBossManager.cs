@@ -32,9 +32,6 @@ public class TrainBossManager : BossRoomManager
         roomAnimator = GetComponent<Animator>();
         player = LevelManager.instance.GetPlayer();
         playerTransform = player.transform;
-
-        audioSource.clip = bossTheme;
-        audioSource.Play();
     }
 
     public override void ForceSetScene()
@@ -140,6 +137,10 @@ public class TrainBossManager : BossRoomManager
         }
 
         // start
+
+        audioSource.clip = bossTheme;
+        audioSource.Play();
+
         if (bossBarScript)
         {
             bossBarScript.bossName = LevelManager.instance.bossTitle;

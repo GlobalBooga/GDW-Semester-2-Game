@@ -12,20 +12,20 @@ public class AndarozRoom : BossRoomManager
     public DialogueController.DialoguePart[] stage2Script;
     public DialogueController.DialoguePart[] endScript;
 
-    public AudioSource audioSource;
+    //public AudioSource audioSource;
     public AudioClip bossTheme;
+
     public override void ForceSetScene()
     {
         base.ForceSetScene();
+
+        StartCoroutine(LevelManager.instance.MusicEnd(1000f));
 
         largeRoomCamera.enabled = true;
 
         LevelManager.instance.DisablePlayerInput();
         CameraShake.instance.restoreCamPosAfterShake = false;
         CameraShake.instance.isLargePanningRoom = true;
-
-        audioSource.clip = bossTheme;
-        audioSource.Play();
 
         StartCutscene();
     }
@@ -69,6 +69,9 @@ public class AndarozRoom : BossRoomManager
             while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
         }
+
+        StartCoroutine(LevelManager.instance.ChangeSongs(bossTheme));
+        
         yield return new WaitForSeconds(0.25f);
 
         LevelManager.instance.EnablePlayerInput();

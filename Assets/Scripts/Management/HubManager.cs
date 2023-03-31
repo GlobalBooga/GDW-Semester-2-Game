@@ -14,6 +14,10 @@ public class HubManager : SceneManager
     public DialogueController.DialoguePart[] trainContractScript;
     public DialogueController.DialoguePart[] timeLordContractScript;
 
+    [Header("Music")]
+    public AudioSource audioSource;
+    public float audioInSpeed = 1f;
+
     [Header("Weapons")]
     public GameObject AdanasDualies;
     public GameObject EnergyDualies;
@@ -52,25 +56,35 @@ public class HubManager : SceneManager
             if (gameData.beatGluttony && cs.boss == Bosses.Gluttony) item.SetActive(false);
             if (gameData.beatAndaroz && gameData.beatGluttony && cs.boss == Bosses.TimeLord) item.SetActive(true);
         }
+
+        //gameData = LevelManager.instance.LoadGameData();
+    }
+
+    private void Start()
+    {
     }
 
     public override void ForceSetScene()
     {
         base.ForceSetScene();
 
-        LevelManager.instance.GetPlayer().DisableAttacks();
 
         if (!enableDialogue)
         {
+            LevelManager.instance.GetPlayer().DisableAttacks();
             return;
         }
 
-        // dialogue
-        gameData = LevelManager.instance.LoadGameData();
+        StartCoroutine(MusicStart());
 
-        if (LevelManager.instance.hintController && gameData.firstTimeInHub) 
+        if (LevelManager.instance.hintController && gameData.firstTimeInHub == true) 
         {
             StartCoroutine(IntroDialogue());
+        }
+        else
+        {
+            LevelManager.instance.GetPlayer().DisableAttacks();
+            StartCoroutine(MusicContinue());
         }
     }
 
@@ -83,7 +97,7 @@ public class HubManager : SceneManager
         
         LevelManager.instance.EnablePlayerInput();
         LevelManager.instance.GetPlayer().DisableAttacks();
-
+        StartCoroutine(MusicContinue());
 
         yield return new WaitForSeconds(0.5f);
         LevelManager.instance.hintController.ShowHint();
@@ -158,5 +172,38 @@ public class HubManager : SceneManager
 
         LevelManager.instance.ResetLevelProgress();
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+    }
+
+    internal IEnumerator MusicStart()
+    {
+        if (audioSource)
+        {
+            AudioLowPassFilter lpf = audioSource.GetComponent<AudioLowPassFilter>();
+            if (lpf)
+            {
+                while (lpf.cutoffFrequency < 1000f)
+                {
+                    lpf.cutoffFrequency += audioInSpeed;
+                    yield return null;
+                }
+            }
+        }
+    }
+
+    internal IEnumerator MusicContinue()
+    {
+        if (audioSource)
+        {
+            AudioLowPassFilter lpf = audioSource.GetComponent<AudioLowPassFilter>();
+            if (lpf)
+            {
+                while (lpf.cutoffFrequency < 10000f)
+                {
+                    lpf.cutoffFrequency += audioInSpeed * 15f;
+                    yield return null;
+                }
+            }
+            lpf.enabled = false;
+        }
     }
 }

@@ -65,7 +65,7 @@ public class Ranged : Enemy
 
             // muzzleFlash
             if (muzzleFlash) muzzleFlash.SetActive(true);
-            audioSource.Play();
+            if (audioSource) audioSource.Play();
 
 
             if (showDebugStuff) Debug.DrawLine(body.position, body.position + bulletDir * 50f, Color.red, rso.delayBetweenShots);

@@ -30,6 +30,7 @@ public class DialogueController : MonoBehaviour
     private Animator DialogueAnimator;
     private bool isWriting;
     public Image skip;
+    private bool cancelSkip = false;
     
     public bool isEnabled { get; private set; }
     public bool isFinished { get; private set; } = true;
@@ -197,22 +198,28 @@ public class DialogueController : MonoBehaviour
 
     public void CancelSkipDialogue()
     {
-        StopCoroutine(SkipDialogue());
-        if (skip) skip.fillAmount = 0f;
+        cancelSkip = true;
     }
 
     public IEnumerator SkipDialogue()
     {
-        if (!skip)
-        {
-            yield return new WaitForSeconds(1f);
-            yield break;
-        }
+        if (!skip) yield break;
+
+        if (skip.fillAmount == 0 && cancelSkip == true) cancelSkip = false;
 
         while (skip.fillAmount < 1)
         {
-            skip.fillAmount = Mathf.Clamp(skip.fillAmount + Time.deltaTime, 0f, 1f);
-            yield return null;  
+            if (!cancelSkip)
+            {
+                skip.fillAmount = Mathf.Clamp(skip.fillAmount + Time.deltaTime, 0f, 1f);
+                yield return null;  
+            }
+            else
+            {
+                skip.fillAmount = 0f;
+                cancelSkip = false;
+                yield break;
+            }
         }
 
         yield return new WaitForSeconds(0.1f);

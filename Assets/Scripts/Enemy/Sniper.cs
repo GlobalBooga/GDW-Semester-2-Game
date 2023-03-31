@@ -45,7 +45,7 @@ public class Sniper : Enemy
             {
                 attackReady = false;
                 Attack();
-                audioSource.Play();
+                if (audioSource) audioSource.Play();
             }
         }
     }

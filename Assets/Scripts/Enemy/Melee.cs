@@ -29,7 +29,7 @@ public class Melee : Enemy
         // play animation
 
         yield return new WaitForSeconds(mso.applyDmgDelay);
-        audioSource.Play();
+        if (audioSource) audioSource.Play();
         // if we hit
         if (PlayerDistance <= eso.defaultMaxAttackDistance)
         {

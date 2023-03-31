@@ -7,13 +7,12 @@ public class FirstSceneManager : SceneManager
     [Header("Dialogue")]
     public bool enableDialogue = false;
     public DialogueController.DialoguePart[] introScript;
-
+    public AudioSource audioSource;
+    public float audioInSpeed = 5f;
 
     private void Start()
     {
         LevelManager.instance.screenOverlayAnimator.Play(LevelManager.TELEPORT_END);
-        
-       
     }
 
     public override void ForceSetScene()
@@ -22,8 +21,10 @@ public class FirstSceneManager : SceneManager
 
         if (!enableDialogue) return;
 
+        StartCoroutine(MusicStart());
+
         // dialogue
-        if (LevelManager.instance.hintController)
+        if (LevelManager.instance.hintController && introScript.Length > 0)
             StartCoroutine(IntroDialogue());
     }
 
@@ -37,5 +38,39 @@ public class FirstSceneManager : SceneManager
         while (!LevelManager.instance.dialogueController.isFinished) yield return null;
 
         LevelManager.instance.EnablePlayerInput();
+        StartCoroutine(MusicContinue());
+    }
+
+    internal IEnumerator MusicStart()
+    {
+        if (audioSource)
+        {
+            AudioLowPassFilter lpf = audioSource.GetComponent<AudioLowPassFilter>();
+            if (lpf)
+            {
+                while (lpf.cutoffFrequency < 1000f)
+                {
+                    lpf.cutoffFrequency += audioInSpeed;
+                    yield return null;
+                }
+            }
+        }
+    }
+
+    internal IEnumerator MusicContinue()
+    {
+        if (audioSource)
+        {
+            AudioLowPassFilter lpf = audioSource.GetComponent<AudioLowPassFilter>();
+            if (lpf)
+            {
+                while (lpf.cutoffFrequency < 10000f)
+                {
+                    lpf.cutoffFrequency += audioInSpeed * 15f;
+                    yield return null;
+                }
+            }
+            lpf.enabled = false;
+        }
     }
 }

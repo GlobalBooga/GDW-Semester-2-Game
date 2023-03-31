@@ -185,7 +185,7 @@ MonoBehaviour:
   lowHpColor: {r: 1, g: 1, b: 1, a: 1}
   postDamageInvincibilityTime: 0.1
   isInvincible: 0
-  maxHealth: 2000
+  maxHealth: 500
 --- !u!114 &6518958586976302533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +232,7 @@ MonoBehaviour:
   - {x: -0.186409, y: -0.17676282, z: 0}
   m_ShapePathHash: 743514181
   m_Mesh: {fileID: 0}
-  m_InstanceId: 145516
+  m_InstanceId: 795612
 --- !u!1 &6843829853753993103
 GameObject:
   m_ObjectHideFlags: 0

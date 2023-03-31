@@ -38,9 +38,6 @@ public class AmbushBossManager : BossRoomManager
     {
         player = LevelManager.instance.GetPlayer();
         playerTransform = player.transform;
-
-        audioSource.clip = bossTheme;
-        audioSource.Play();
     }
 
     public override void ForceSetScene()
@@ -49,6 +46,11 @@ public class AmbushBossManager : BossRoomManager
 
         LevelManager.instance.DisablePlayerInput();
         CameraShake.instance.restoreCamPosAfterShake = false;
+
+        // switch songs
+        StartCoroutine(LevelManager.instance.ChangeSongs(bossTheme));
+
+        
 
         // hide enemies
         for (int i = 0; i < LevelManager.instance.CurrentScene.enemyContainer.transform.childCount; i++)
@@ -105,7 +107,6 @@ public class AmbushBossManager : BossRoomManager
 
 
         yield return new WaitForSeconds(.5f);
-        
 
         // shut the lights
         foreach (var item in roomLights)
@@ -116,7 +117,6 @@ public class AmbushBossManager : BossRoomManager
             }
             yield return new WaitForSeconds(0.1f);
         }
-
 
         // start
         if (bossBarScript)
@@ -148,6 +148,8 @@ public class AmbushBossManager : BossRoomManager
 
     private IEnumerator EndCutscene()
     {
+        StartCoroutine(LevelManager.instance.MusicEnd(3000));
+
         yield return new WaitForSeconds(0.5f);
 
         // end

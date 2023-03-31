@@ -86,7 +86,6 @@ GameObject:
   - component: {fileID: 2756979745557484448}
   - component: {fileID: 1194528801317769501}
   - component: {fileID: 4482197766526765034}
-  - component: {fileID: 4729166949164795050}
   m_Layer: 17
   m_Name: Explosive Barrel
   m_TagString: Untagged
@@ -229,7 +228,7 @@ MonoBehaviour:
   - {x: 0.1876831, y: -0.46881175, z: 0.00000023841858}
   m_ShapePathHash: -1790670513
   m_Mesh: {fileID: 0}
-  m_InstanceId: 138912
+  m_InstanceId: 914916
 --- !u!114 &3647431242455224827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -301,24 +300,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e12e29e9b19cd3d4a83676255c63c4b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!50 &4729166949164795050
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4264694897828176043}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 10
-  m_LinearDrag: 5
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4

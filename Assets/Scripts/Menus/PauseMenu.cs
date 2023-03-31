@@ -7,6 +7,9 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        if (LevelManager.instance.backgroundAudioSource) LevelManager.instance.backgroundAudioSource.GetComponent<AudioHighPassFilter>().enabled = false;
+
+
         if (!LevelManager.instance.dialogueController.isFinished && !isPaused)
         {
             PauseGame();
@@ -20,6 +23,10 @@ public class PauseMenu : MonoBehaviour
         if (LevelManager.instance.dialogueController.isFinished)
         {
             LevelManager.instance.EnablePlayerInput();
+            if (LevelManager.instance.CurrentScene.manager.GetType() == typeof(HubManager))
+            {
+                LevelManager.instance.GetPlayer().DisableAttacks();
+            }
         }
         
         LevelManager.instance.EnablePlayerRotation();
@@ -29,6 +36,8 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
+        if (LevelManager.instance.backgroundAudioSource) LevelManager.instance.backgroundAudioSource.GetComponent<AudioHighPassFilter>().enabled = true;
+
         isPaused = true;
         gameObject.SetActive(true);
         LevelManager.instance.DisablePlayerInput();

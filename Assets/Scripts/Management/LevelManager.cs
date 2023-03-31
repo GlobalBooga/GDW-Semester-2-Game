@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -28,6 +29,10 @@ public class LevelManager : MonoBehaviour
     }
 
     public static LevelManager instance;
+
+    [Header("Music")]
+    public AudioSource backgroundAudioSource;
+    public float onDiedAudioOutSpeed = 50f;
 
     [Header("Menu")]
     public PauseMenu pauseMenu;
@@ -402,6 +407,7 @@ public class LevelManager : MonoBehaviour
     public void IDied()
     {
         deadScreen.gameObject.SetActive(true);
+        StartCoroutine(MusicEnd(200f));
     }
 
     public void RestartLevel()
@@ -414,5 +420,55 @@ public class LevelManager : MonoBehaviour
     {
         isQuitting = true;
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+    }
+
+    public IEnumerator MusicEnd(float min)
+    {
+        if (backgroundAudioSource)
+        {
+            AudioLowPassFilter lpf = backgroundAudioSource.GetComponent<AudioLowPassFilter>();
+            lpf.enabled = true;
+            if (lpf)
+            {
+                while (lpf.cutoffFrequency > min)
+                {
+                    lpf.cutoffFrequency = Mathf.Clamp(lpf.cutoffFrequency - onDiedAudioOutSpeed, min, 12000f);
+                    yield return null;
+                }
+            }
+            if (min == 10f)
+            {
+                backgroundAudioSource.mute = true;
+            }
+        }
+    }
+
+    public IEnumerator ChangeSongs(AudioClip next)
+    {
+        if (backgroundAudioSource)
+        {
+            AudioLowPassFilter lpf = backgroundAudioSource.GetComponent<AudioLowPassFilter>();
+            lpf.enabled = true;
+            if (lpf)
+            {
+                while (lpf.cutoffFrequency > 10)
+                {
+                    lpf.cutoffFrequency = Mathf.Clamp(lpf.cutoffFrequency - onDiedAudioOutSpeed*2, 10, 12000f);
+                    yield return null;
+                }
+
+                yield return new WaitForSeconds(0.25f);
+
+                backgroundAudioSource.clip = next;
+                backgroundAudioSource.Play();
+
+                while (lpf.cutoffFrequency < 10000)
+                {
+                    lpf.cutoffFrequency += onDiedAudioOutSpeed;
+                    yield return null;
+                }
+                lpf.enabled = false;
+            }
+        }
     }
 }

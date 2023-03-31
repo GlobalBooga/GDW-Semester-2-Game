@@ -1,11 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-public class TutorialManager : SceneManager
+public class TutorialManager : FirstSceneManager
 {
     [Header("Dialogue")]
     public int roomNumber;
-    public bool enableDialogue = true;
     public DialogueController.DialoguePart[] script;
     public DialogueController.DialoguePart[] secondTimeArountScript;
     private int lap = 0;
@@ -48,6 +47,8 @@ public class TutorialManager : SceneManager
 
     IEnumerator StartDialogue()
     {
+        StartCoroutine(MusicOut());
+
         yield return new WaitForSeconds(0.5f);
 
         LevelManager.instance.dialogueController.StartDialogue(script);
@@ -59,6 +60,8 @@ public class TutorialManager : SceneManager
         yield return new WaitForSeconds(0.25f);
 
         LevelManager.instance.EnablePlayerInput();
+
+        StartCoroutine(MusicContinue());
 
         if (roomNumber == 4)
         {
@@ -75,6 +78,7 @@ public class TutorialManager : SceneManager
 
     IEnumerator ExplosiveLabPart2DialogueRoutine()
     {
+        StartCoroutine(MusicOut());
         yield return new WaitForSeconds(0.5f);
 
         LevelManager.instance.dialogueController.StartDialogue(secondTimeArountScript);
@@ -84,5 +88,23 @@ public class TutorialManager : SceneManager
         yield return new WaitForSeconds(0.25f);
 
         LevelManager.instance.EnablePlayerInput();
+        StartCoroutine(MusicContinue());
+    }
+
+    private IEnumerator MusicOut()
+    {
+        if (audioSource)
+        {
+            AudioLowPassFilter lpf = audioSource.GetComponent<AudioLowPassFilter>();
+            lpf.enabled = true;
+            if (lpf)
+            {
+                while (lpf.cutoffFrequency > 1000f)
+                {
+                    lpf.cutoffFrequency = Mathf.Clamp(lpf.cutoffFrequency - audioInSpeed * 15f, 1000f, 12000f);
+                    yield return null;
+                }
+            }
+        }
     }
 }

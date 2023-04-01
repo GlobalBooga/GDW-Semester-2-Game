@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -7,12 +8,13 @@ using Slider = UnityEngine.UI.Slider;
 public class OptionsMenu : MonoBehaviour
 {
     [Header("Volume")]
-    [SerializeField] private AudioMixer Master;
-    [SerializeField] private AudioMixer SFX;
-    [SerializeField] private AudioMixer Music;
-    [SerializeField] private AudioSource MasterSource;
-    [SerializeField] private AudioSource SFXSource;
-    [SerializeField] private AudioSource MusicSource;
+    public AudioMixer MainMixer;
+    public Slider MasterSlider;
+    public Slider MusicSlider;
+    public Slider SFXSlider;
+    public Text MasterVolNum;
+    public Text MusicVolNum;
+    public Text SFXVolNum;
 
     [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensSlider;
@@ -21,27 +23,41 @@ public class OptionsMenu : MonoBehaviour
     public int difficulty = 0; 
     private void Start()
     {
-        Master.SetFloat("MasterVolume", Mathf.Log10(PlayerPrefs.GetFloat("MasterVolume", 1) * 20));
-        SFX.SetFloat("SFXVolume", Mathf.Log10(PlayerPrefs.GetFloat("SFXVolume", 1) * 20));
-        Music.SetFloat("MusicVolume", Mathf.Log10(PlayerPrefs.GetFloat("MusicVolume", 1) * 20));
+        float vol = 0f;
+        MainMixer.GetFloat("MasterVol", out vol);
+        MasterSlider.value = vol;
+        MainMixer.GetFloat("MusicVol", out vol);
+        MusicSlider.value = vol;
+        MainMixer.GetFloat("SFXVol", out vol);
+        SFXSlider.value = vol;
+
+        MasterVolNum.text = Mathf.RoundToInt(MasterSlider.value + 80).ToString();
+        MusicVolNum.text = Mathf.RoundToInt(MusicSlider.value + 80).ToString();
+        SFXVolNum.text = Mathf.RoundToInt(SFXSlider.value + 80).ToString();
     }
-    public void ChangeMasterVolume(float Value)
+    public void SetMasterVol()
     {
-        Master.SetFloat("MasterVolume", Mathf.Log10(Value) * 20);
-        PlayerPrefs.SetFloat("MasterVolume", Value);
-        PlayerPrefs.Save();
+        MasterVolNum.text = Mathf.RoundToInt(MasterSlider.value + 80).ToString();
+
+        MainMixer.SetFloat("MasterVol", MasterSlider.value);
+
+        PlayerPrefs.SetFloat("MasterVol", MasterSlider.value);
     }
-    public void ChangeSFXVolume(float Value)
+    public void SetMusicVol()
     {
-        SFX.SetFloat("SFXVolume", Mathf.Log10(Value) * 20);
-        PlayerPrefs.SetFloat("SFXVolume", Value);
-        PlayerPrefs.Save();
+        MusicVolNum.text = Mathf.RoundToInt(MusicSlider.value + 80).ToString();
+
+        MainMixer.SetFloat("MusicVol", MusicSlider.value);
+
+        PlayerPrefs.SetFloat("MusicVol", MusicSlider.value);
     }
-    public void ChangeMusicVolume(float Value)
+    public void SetSFXVol()
     {
-        Music.SetFloat("MusicVolume", Mathf.Log10(Value) * 20);
-        PlayerPrefs.SetFloat("MusicVolume", Value);
-        PlayerPrefs.Save();
+        SFXVolNum.text = Mathf.RoundToInt(SFXSlider.value + 80).ToString();
+
+        MainMixer.SetFloat("SFXVol", SFXSlider.value);
+
+        PlayerPrefs.SetFloat("SFXVol", SFXSlider.value);
     }
 
     public void SetControllerSen(float sensitivity)
@@ -60,6 +76,20 @@ public class OptionsMenu : MonoBehaviour
         gd.gpRotSpeed = mainControllerSen;
 
         LevelManager.instance.Save(gd);
+    }
+    public void SetDifficulty(float difficultySliderAmount)
+    {
+        difficulty = Mathf.RoundToInt(difficultySliderAmount);
+
+        if (difficulty == 0)
+        {
+
+        }
+
+        if (difficulty == 1)
+        {
+
+        }
     }
 }
   

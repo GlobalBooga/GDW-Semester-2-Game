@@ -73,6 +73,9 @@ public class LevelManager : MonoBehaviour
     [Header("Scenes")]
     [SerializeField] private List<Scene> orderedScenes;
 
+    [Header("Difficulty")]
+    public bool isEasyMode;
+
     public Scene CurrentScene => orderedScenes[currentSceneIndex];
     
 

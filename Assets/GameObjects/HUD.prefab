@@ -538,6 +538,84 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1806491823938575537
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1907951909383307747}
+  - component: {fileID: 666678660362134840}
+  - component: {fileID: 6036403541232833419}
+  m_Layer: 0
+  m_Name: EventSystem (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1907951909383307747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806491823938575537}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -443.00974, y: -249.19298, z: 0}
+  m_LocalScale: {x: 0.4614685, y: 0.4614685, z: 0.4614685}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4771758543057922348}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &666678660362134840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806491823938575537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 5757248464201639022}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!114 &6036403541232833419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806491823938575537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1 &1873557716634626252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,6 +1204,7 @@ RectTransform:
   - {fileID: 7657063716311895994}
   - {fileID: 320138308577951911}
   - {fileID: 7244261895460277369}
+  - {fileID: 1907951909383307747}
   m_Father: {fileID: 6556543753021720844}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2187,7 +2266,6 @@ GameObject:
   - component: {fileID: 2278676688894980436}
   - component: {fileID: 2959841463726966812}
   - component: {fileID: 8715322473848099590}
-  - component: {fileID: 1067765161357354223}
   m_Layer: 5
   m_Name: Return To Hub
   m_TagString: Untagged
@@ -2285,7 +2363,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 21300000, guid: 4da61cf19b4d21a4c82785fe18525f04, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: af2c5951496c6b14f8792339a0559831, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: a48d1055dc8aaf1498f0346eee5d9d93, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: 4da61cf19b4d21a4c82785fe18525f04, type: 3}
     m_DisabledSprite: {fileID: 21300000, guid: a48d1055dc8aaf1498f0346eee5d9d93, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -2322,21 +2400,6 @@ MonoBehaviour:
           m_StringArgument: TeleportStart
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1067765161357354223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5306616630590055794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
-  _selectedTint: {r: 1, g: 1, b: 1, a: 1}
-  _selected: 0
 --- !u!1 &5543318562763458374
 GameObject:
   m_ObjectHideFlags: 0
@@ -2524,7 +2587,6 @@ GameObject:
   - component: {fileID: 8115131905410884241}
   - component: {fileID: 3427450200705058267}
   - component: {fileID: 6317925297915254555}
-  - component: {fileID: 141286686850715014}
   m_Layer: 5
   m_Name: Restart
   m_TagString: Untagged
@@ -2622,7 +2684,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 21300000, guid: 4da61cf19b4d21a4c82785fe18525f04, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: af2c5951496c6b14f8792339a0559831, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: a48d1055dc8aaf1498f0346eee5d9d93, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: 4da61cf19b4d21a4c82785fe18525f04, type: 3}
     m_DisabledSprite: {fileID: 21300000, guid: a48d1055dc8aaf1498f0346eee5d9d93, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -2659,21 +2721,6 @@ MonoBehaviour:
           m_StringArgument: TeleportStart
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &141286686850715014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5757248464201639022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
-  _selectedTint: {r: 1, g: 1, b: 1, a: 1}
-  _selected: 1
 --- !u!1 &5840498450329613648
 GameObject:
   m_ObjectHideFlags: 0
@@ -2922,7 +2969,6 @@ GameObject:
   - component: {fileID: 8991932555157562561}
   - component: {fileID: 2309084312520765070}
   - component: {fileID: 1033870710380801800}
-  - component: {fileID: 1118500833045428148}
   m_Layer: 5
   m_Name: Main Menu
   m_TagString: Untagged
@@ -3020,7 +3066,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 21300000, guid: 4da61cf19b4d21a4c82785fe18525f04, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: af2c5951496c6b14f8792339a0559831, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: a48d1055dc8aaf1498f0346eee5d9d93, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: 4da61cf19b4d21a4c82785fe18525f04, type: 3}
     m_DisabledSprite: {fileID: 21300000, guid: a48d1055dc8aaf1498f0346eee5d9d93, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -3057,21 +3103,6 @@ MonoBehaviour:
           m_StringArgument: TeleportStart
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1118500833045428148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6325370717862691004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f25ebc72723dbc4084f7e2a68f37cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _unselectedTint: {r: 1, g: 1, b: 1, a: 1}
-  _selectedTint: {r: 1, g: 1, b: 1, a: 1}
-  _selected: 0
 --- !u!1 &6556543753021720840
 GameObject:
   m_ObjectHideFlags: 0

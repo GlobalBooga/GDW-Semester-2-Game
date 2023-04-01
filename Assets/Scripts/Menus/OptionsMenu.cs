@@ -77,21 +77,13 @@ public class OptionsMenu : MonoBehaviour
 
         LevelManager.instance.Save(gd);
     }
-    public void SetDifficulty(float difficultySliderAmount)
+    public void SetDifficulty(int difficulty)
     {
-        difficulty = Mathf.RoundToInt(difficultySliderAmount);
-
-        if (difficulty == 0)
-        {
-
-        }
-
-        if (difficulty == 1)
-        {
-
-        }
+        if (difficulty == 0) LevelManager.instance.isEasyMode = true;
+        else LevelManager.instance.isEasyMode = false;
     }
 }
+
   
 
    

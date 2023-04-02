@@ -45,6 +45,7 @@ public class HPComponent : MonoBehaviour
             float d = health / maxHealth;
             maxHealth = 2000;
             health = maxHealth * d;
+            Debug.Log("easy");
 
         }
         else if (!LevelManager.instance.isEasyMode && maxHealth == 2000)
@@ -52,6 +53,7 @@ public class HPComponent : MonoBehaviour
             float d = health / maxHealth;
             maxHealth = 500;
             health = maxHealth * d;
+            Debug.Log("normal");
         }
     }
 

@@ -115,6 +115,14 @@ public class AmbushBossManager : BossRoomManager
             {
                 item.enabled = false;
             }
+            else if (LevelManager.instance.isEasyMode)
+            {
+                item.intensity = 0.5f;
+            }
+            else
+            {
+                item.intensity = 0.1f;
+            }
             yield return new WaitForSeconds(0.1f);
         }
 

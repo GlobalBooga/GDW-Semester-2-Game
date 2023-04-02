@@ -463,7 +463,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public IEnumerator ChangeSongs(AudioClip next)
+    public IEnumerator ChangeSongs(AudioClip next, float startAt = 0f)
     {
         if (backgroundAudioSource)
         {
@@ -481,6 +481,8 @@ public class LevelManager : MonoBehaviour
 
                 backgroundAudioSource.clip = next;
                 backgroundAudioSource.Play();
+                backgroundAudioSource.time = startAt;
+
 
                 while (lpf.cutoffFrequency < 10000)
                 {

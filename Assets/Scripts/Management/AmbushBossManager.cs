@@ -48,9 +48,8 @@ public class AmbushBossManager : BossRoomManager
         CameraShake.instance.restoreCamPosAfterShake = false;
 
         // switch songs
-        StartCoroutine(LevelManager.instance.ChangeSongs(bossTheme));
+        StartCoroutine(LevelManager.instance.ChangeSongs(bossTheme, 50f));
 
-        
 
         // hide enemies
         for (int i = 0; i < LevelManager.instance.CurrentScene.enemyContainer.transform.childCount; i++)
@@ -106,6 +105,7 @@ public class AmbushBossManager : BossRoomManager
         CameraShake.instance.ShakeCamera(2f,0.2f);
 
 
+
         yield return new WaitForSeconds(.5f);
 
         // shut the lights
@@ -117,6 +117,8 @@ public class AmbushBossManager : BossRoomManager
             }
             yield return new WaitForSeconds(0.1f);
         }
+
+
 
         // start
         if (bossBarScript)

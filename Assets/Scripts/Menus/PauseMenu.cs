@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
@@ -8,6 +9,7 @@ public class PauseMenu : MonoBehaviour
     public void ResumeGame()
     {
         if (LevelManager.instance.backgroundAudioSource) LevelManager.instance.backgroundAudioSource.GetComponent<AudioHighPassFilter>().enabled = false;
+
 
 
         if (!LevelManager.instance.dialogueController.isFinished && !isPaused)

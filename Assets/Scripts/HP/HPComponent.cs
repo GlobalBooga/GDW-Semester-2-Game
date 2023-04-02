@@ -37,6 +37,25 @@ public class HPComponent : MonoBehaviour
 
     }
 
+
+    private void Update()
+    {
+        if (LevelManager.instance.isEasyMode && maxHealth == 500)
+        {
+            float d = health / maxHealth;
+            maxHealth = 2000;
+            health = maxHealth * d;
+
+        }
+        else if (!LevelManager.instance.isEasyMode && maxHealth == 2000)
+        {
+            float d = health / maxHealth;
+            maxHealth = 500;
+            health = maxHealth * d;
+        }
+    }
+
+
     private void OnEnable()
     {
         //reset

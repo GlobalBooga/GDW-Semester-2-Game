@@ -117,7 +117,7 @@ public class AmbushBossManager : BossRoomManager
             }
             else if (LevelManager.instance.isEasyMode)
             {
-                item.intensity = 0.5f;
+                item.intensity = 0.4f;
             }
             else
             {

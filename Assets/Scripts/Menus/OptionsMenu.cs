@@ -75,10 +75,18 @@ public class OptionsMenu : MonoBehaviour
 
         LevelManager.instance.Save(gd);
     }
-    public void SetDifficulty(int difficulty)
+    public void SetDifficulty()
     {
-        if (difficulty == 0) LevelManager.instance.isEasyMode = true;
-        else LevelManager.instance.isEasyMode = false;
+        if (difficulty == 0)
+        {
+            difficulty = 1;
+            LevelManager.instance.isEasyMode = true;
+        }
+        else
+        {
+            difficulty = 0;
+            LevelManager.instance.isEasyMode = false;
+        }
     }
 }
 

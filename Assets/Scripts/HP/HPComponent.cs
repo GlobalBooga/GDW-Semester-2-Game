@@ -144,4 +144,20 @@ public class HPComponent : MonoBehaviour
             hpText.text = text;
         }
     }
+
+    public void SetEasyMode()
+    {
+        float d = health / maxHealth;
+        maxHealth = 2000;
+        health = maxHealth * d;
+        Debug.Log("easy");
+    }
+
+    public void SetNormalMode()
+    {
+        float d = health / maxHealth;
+        maxHealth = 500;
+        health = maxHealth * d;
+        Debug.Log("normal");
+    }
 }

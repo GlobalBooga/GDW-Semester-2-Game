@@ -521,4 +521,9 @@ public class Player : MonoBehaviour
         newWeapon.Pickup(transform, weapon);
         weapon = newWeapon;
     }
+
+    public HPComponent GetHPComponent()
+    {
+        return hpcomp;
+    }
 }

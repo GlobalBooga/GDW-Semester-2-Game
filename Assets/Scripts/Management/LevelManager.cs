@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Rendering.Universal;
@@ -107,6 +109,18 @@ public class LevelManager : MonoBehaviour
         {
             cursor.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f);
             cursor.color = color;
+        }
+
+        if (isEasyMode && player.GetHPComponent().maxHealth == 500)
+        {
+            player.GetHPComponent().SetEasyMode();
+            
+
+        }
+        else if (!isEasyMode && player.GetHPComponent().maxHealth == 2000)
+        {
+            player.GetHPComponent().SetNormalMode();
+            
         }
     }
 
@@ -325,7 +339,8 @@ public class LevelManager : MonoBehaviour
                 if (lightsContainer) lightsContainer.SetActive(true);
                 break;
             case Weather.night_snow:
-                globalLight.intensity = nightSnowBrightness;
+                if (!isEasyMode) globalLight.intensity = nightSnowBrightness;
+                else globalLight.intensity = nightSnowBrightness * 2f;
                 if (snowPrefab) snowPrefab.SetActive(true);
                 if (lightsContainer) lightsContainer.SetActive(true);
                 break;

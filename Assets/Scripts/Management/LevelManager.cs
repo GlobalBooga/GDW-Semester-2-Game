@@ -80,6 +80,9 @@ public class LevelManager : MonoBehaviour
     [Header("Scenes")]
     [SerializeField] private List<Scene> orderedScenes;
 
+    [HideInInspector]
+    public bool isEasyMode;
+
     public Scene CurrentScene => orderedScenes[currentSceneIndex];
     
 

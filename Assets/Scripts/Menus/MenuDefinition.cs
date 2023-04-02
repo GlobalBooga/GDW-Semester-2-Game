@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public enum MenuType
 {
     HORIZONTAL,
-    VERTICAL
+    VERTICAL,
+    TwoByTwo
 }
 public class MenuDefinition : MonoBehaviour
 {

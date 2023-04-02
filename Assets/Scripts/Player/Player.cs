@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
     public List<Slider> staminaBars;
     private SpriteRenderer sr;
     public GameObject flashlight;
+    private OptionsMenu optionsMenu;
 
     [Header("All Weapons"), Space(5f)]
     [SerializeField] private GameObject AdanasDualies;
@@ -116,6 +117,7 @@ public class Player : MonoBehaviour
         cc = gameObject.GetComponent<CircleCollider2D>();
         hpcomp = gameObject.GetComponent<HPComponent>();
         sr = GetComponent<SpriteRenderer>();
+        optionsMenu = GetComponent<OptionsMenu>();
 
         if (hpcomp)
         {
@@ -130,11 +132,13 @@ public class Player : MonoBehaviour
     {
         gameData = LevelManager.instance.LoadGameData();
 
+        gamepadRotSpeed = gameData.gpRotSpeed;
+
         originalPos = transform.position;
         originalRot = transform.rotation;
         rb.freezeRotation = true;
         rb.drag = accelerationDrag;
-        if (hpcomp)hpcomp.isInvincible = false;
+        if (hpcomp) hpcomp.isInvincible = false;
 
         if (weapon)
         { 
@@ -145,7 +149,7 @@ public class Player : MonoBehaviour
     }
 
     private void Update()
-    {
+    { 
         // If we are still holding down attack button, continue attacking
         if (weapon)
         {

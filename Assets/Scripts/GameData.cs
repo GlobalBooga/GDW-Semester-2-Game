@@ -1,4 +1,3 @@
-
 [System.Serializable]
 public class GameData
 {
@@ -10,6 +9,7 @@ public class GameData
         foundAndarozGun = false;
         beatGluttony = false;
         beatAndaroz = false;
+        gpRotSpeed = 350f;
     }
 
     // player weapon
@@ -21,4 +21,5 @@ public class GameData
     public bool foundAndarozGun = false;
     public bool beatGluttony = false;
     public bool beatAndaroz = false;
+    public float gpRotSpeed = 350f;
 }

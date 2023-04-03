@@ -36,7 +36,6 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private CircleCollider2D cc;
     private HPComponent hpcomp;
-    //public ParticleSystem particles;
     private PlayerControls controls;
     public Weapon weapon;
     private GameObject pickupable;
@@ -57,13 +56,12 @@ public class Player : MonoBehaviour
     public const string PLAYER_HIT_INDICATOR2 = "PlayerDamageTakenMidHP";
     public const string PLAYER_HIT_INDICATOR3 = "PlayerDamageTakenLowHP";
 
-
     // other
     private Quaternion originalRot;
     private Vector3 originalPos;
     private Vector2 lastDirection;
     
-
+    // Save data
     GameData gameData;
 
     // for gamepad rotation
@@ -72,21 +70,18 @@ public class Player : MonoBehaviour
     Quaternion newrotation;
     float gamepadRotAngle;
 
-
     // for skipping dialogue
     bool attemptingSkip;
     bool skipSuccessful;
 
 
+    // Some helpers
     public Vector2 RawDirection => controls.General.Move.ReadValue<Vector2>();
     public float GamepadLookRadius => controls.General.GamepadLook.ReadValue<Vector2>().magnitude;
-    public Vector2 RotatedRawDirection => transform.up * RawDirection.y + transform.right * RawDirection.x;
     public Vector2 MousePosition => Camera.main.ScreenToWorldPoint(controls.Universal.MouseMove.ReadValue<Vector2>());
     public Vector2 MouseDirection => (MousePosition - (Vector2)transform.position).normalized;
     public bool IsMoving => RawDirection != Vector2.zero;
-
     public bool IsDodging => isUsingMoveAbility;
-
     public bool IsAttacking { get; private set; } 
 
     #region Unity Messages
@@ -111,7 +106,6 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-
         controls = new PlayerControls();
         rb = GetComponent<Rigidbody2D>();
         cc = gameObject.GetComponent<CircleCollider2D>();
@@ -180,9 +174,10 @@ public class Player : MonoBehaviour
         if (!isUsingMoveAbility) Move();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    // for picking up weapons
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == StaticHelpers.PickupLayer)
+        if (collision.gameObject.layer == StaticHelpers.PickupLayer && pickupable == null)
         {
             pickupable = collision.gameObject;
         }
@@ -408,25 +403,16 @@ public class Player : MonoBehaviour
     {
         hpcomp.isInvincible = true;
         hpcomp.postDamageInvincibilityTime = 0;
-        cc.enabled = false;
+        rb.simulated = false;
         DisableGeneralControls();
         DisableRotation();
-
-        // if we die with andaroz gun we lose it
-        if (weapon.GetID() == 4)
-        {
-            gameData.foundAndarozGun = false;
-            LevelManager.instance.Save(gameData);
-        }
 
         LevelManager.instance.IDied();
     }
 
     private void OnHit()
     {
-        // disable movement until grounded
-        //Debug.Log("ouch");
-
+        // show red vignette visual 
         if (hpcomp.GetHealth() >= 0.75f * hpcomp.maxHealth)
         {
             if (screenOverlayAnimator) screenOverlayAnimator.Play(PLAYER_HIT_INDICATOR1);
@@ -450,7 +436,6 @@ public class Player : MonoBehaviour
         int bar = 0;
         for (int i = staminaBars.Count - 1; i >= 0; i--)
         {
-            //rechargingDodge = true;
             bar = i;
             if (staminaBars[i].value < 1)
             {
@@ -462,7 +447,6 @@ public class Player : MonoBehaviour
                 }
                 staminaBars[bar].value = 1f;
             }
-            //if (!mustDepleteAllDodgesBeforeRecharging) rechargingDodge = false;
             yield return new WaitForSeconds(secondDodgeRechargeDelay);
         }
 
@@ -479,12 +463,16 @@ public class Player : MonoBehaviour
         rotationEnabled = true;
     }
 
+    // for picking up weapons
     public void SetSprite(Sprite sprite)
     {
+        // sets the player's sprite
         if (sprite) sr.sprite = sprite;
         else sr.sprite = defaultSprite;
     }
 
+
+    // for the ambush boss (valkyries)
     public void FlashlightOn()
     {
         flashlight.SetActive(true);
@@ -495,6 +483,8 @@ public class Player : MonoBehaviour
         flashlight.SetActive(false);
     }
 
+
+    // for hub
     public void DisableAttacks()
     {
         controls.General.Attack.Disable();

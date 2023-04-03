@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Playables;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
@@ -82,11 +79,10 @@ public class LevelManager : MonoBehaviour
     [Header("Scenes")]
     [SerializeField] private List<Scene> orderedScenes;
 
-    [HideInInspector]
+    // difficulty
     public bool isEasyMode;
 
     public Scene CurrentScene => orderedScenes[currentSceneIndex];
-    
 
     private int currentSceneIndex = 0;
     private bool isQuitting;
@@ -94,7 +90,7 @@ public class LevelManager : MonoBehaviour
 
     private Player player;
 
-
+    // for andaroz
     [HideInInspector] public bool startBossBattle;
 
     private void Awake()
@@ -114,13 +110,10 @@ public class LevelManager : MonoBehaviour
         if (isEasyMode && player.GetHPComponent().maxHealth == 500)
         {
             player.GetHPComponent().SetEasyMode();
-            
-
         }
         else if (!isEasyMode && player.GetHPComponent().maxHealth == 2000)
         {
             player.GetHPComponent().SetNormalMode();
-            
         }
     }
 
@@ -188,8 +181,6 @@ public class LevelManager : MonoBehaviour
         if (currentSceneIndex == orderedScenes.Count-1 && !loop)
         {
             // end level
-            //Debug.Log("end level. Return to hub");
-
             if (player.weapon.GetID() == 4)
             {
                 GameData gm = LoadGameData();
@@ -321,6 +312,7 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
+
         switch (weather)
         {
             case Weather.day_clear:
@@ -385,7 +377,6 @@ public class LevelManager : MonoBehaviour
         {
             Save(new GameData());
         }
-
 
         string savedData = System.IO.File.ReadAllText(Application.persistentDataPath + "/GameData.json");
 
@@ -460,6 +451,8 @@ public class LevelManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 
+
+    //make the music fade out via low pass filter
     public IEnumerator MusicEnd(float min)
     {
         if (backgroundAudioSource)
@@ -481,6 +474,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    // change songs with a low pass fade transition
     public IEnumerator ChangeSongs(AudioClip next, float startAt = 0f)
     {
         if (backgroundAudioSource)
@@ -510,5 +504,11 @@ public class LevelManager : MonoBehaviour
                 lpf.enabled = false;
             }
         }
+    }
+
+    public void Quit()
+    {
+        isQuitting = true;
+        Application.Quit();
     }
 }

@@ -88,6 +88,7 @@ MonoBehaviour:
   pickupIndicator: {fileID: 8240660146182839386}
   holdingSprite: {fileID: 21300000, guid: 0968cf2239c79fa41a82840f5b04dfee, type: 3}
   iconSprite: {fileID: 21300000, guid: d1026a2f7e42a11409df0330c431e646, type: 3}
+  abilityIconSprite: {fileID: 21300000, guid: b1724233b91d42049be40f1d1ea34900, type: 3}
   abilityCooldown: 6
   sr: {fileID: 0}
   audioSource: {fileID: 0}
@@ -250,6 +251,7 @@ MonoBehaviour:
   pickupIndicator: {fileID: 0}
   holdingSprite: {fileID: 0}
   iconSprite: {fileID: 0}
+  abilityIconSprite: {fileID: 0}
   abilityCooldown: 6
   sr: {fileID: 8240660145241135327}
   audioSource: {fileID: 0}
@@ -497,6 +499,7 @@ MonoBehaviour:
   pickupIndicator: {fileID: 0}
   holdingSprite: {fileID: 0}
   iconSprite: {fileID: 0}
+  abilityIconSprite: {fileID: 0}
   abilityCooldown: 6
   sr: {fileID: 8240660145119196248}
   audioSource: {fileID: 0}

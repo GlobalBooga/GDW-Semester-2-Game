@@ -5032,6 +5032,7 @@ MonoBehaviour:
   pickupIndicator: {fileID: 8606540473065151735}
   holdingSprite: {fileID: 21300000, guid: 2767ffc6d4156714894a56884237f2fe, type: 3}
   iconSprite: {fileID: 21300000, guid: 04513697a88128145a18acea672c3ad5, type: 3}
+  abilityIconSprite: {fileID: 21300000, guid: db73608d2e523ca4a8279b057ab38173, type: 3}
   abilityCooldown: 6
   sr: {fileID: 4770469878312874258}
   audioSource: {fileID: 2925319101837203309}

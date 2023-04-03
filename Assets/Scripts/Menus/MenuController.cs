@@ -35,6 +35,8 @@ public class MenuController : MonoBehaviour
 
     private void MenuInput(List<KeyCode> increase, List<KeyCode> decrease)
     {
+        LevelManager.instance.HideCursor();
+
         int newActive = _activeButton;
 
         for (int i = 0; i < increase.Count; i++)

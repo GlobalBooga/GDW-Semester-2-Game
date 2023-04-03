@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
@@ -6,11 +5,10 @@ public class PauseMenu : MonoBehaviour
     public GameObject optionsMenu;
     private bool isPaused;
 
+    // the pause toggle
     public void ResumeGame()
     {
         if (LevelManager.instance.backgroundAudioSource) LevelManager.instance.backgroundAudioSource.GetComponent<AudioHighPassFilter>().enabled = false;
-
-
 
         if (!LevelManager.instance.dialogueController.isFinished && !isPaused)
         {
@@ -36,6 +34,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+
     public void PauseGame()
     {
         if (LevelManager.instance.backgroundAudioSource) LevelManager.instance.backgroundAudioSource.GetComponent<AudioHighPassFilter>().enabled = true;
@@ -55,6 +54,6 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+        LevelManager.instance.Quit();
     }
 }

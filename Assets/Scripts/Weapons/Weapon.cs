@@ -13,6 +13,7 @@ public class Weapon : MonoBehaviour
     public ParticleSystem pickupIndicator;
     public Sprite holdingSprite;
     public Sprite iconSprite;
+    public Sprite abilityIconSprite;
 
     public float abilityCooldown = 6f;
     internal bool canUseAbility = true;
@@ -106,6 +107,7 @@ public class Weapon : MonoBehaviour
         if (sr) sr.enabled = false;
         if (holdingSprite) LevelManager.instance.SetPlayerSprite(holdingSprite);
         if (iconSprite) Hud.instance.SetWeaponIconImage(iconSprite);
+        if (abilityIconSprite) Hud.instance.SetAbilityIconImage(abilityIconSprite);
         else LevelManager.instance.SetPlayerSprite(null);
     }
 
@@ -131,7 +133,7 @@ public class Weapon : MonoBehaviour
         {
             while (time < abilityCooldown)
             {
-                if (time > 0) weaponAbilityCooldown.fillAmount = time / abilityCooldown;
+                if (time > 0) weaponAbilityCooldown.fillAmount = 1 - (time / abilityCooldown);
                 time += Time.deltaTime;
                 yield return null;
             }

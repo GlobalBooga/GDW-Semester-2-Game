@@ -75,6 +75,7 @@ public class AmbushBossManager : BossRoomManager
 
         float alpha = 0;
 
+        // move the player
         while (alpha < 1)
         {
             float distCovered = (Time.time - startTime) * player.runSpeed;
@@ -86,25 +87,20 @@ public class AmbushBossManager : BossRoomManager
         yield return new WaitForSeconds(1f);
 
         // close doors
-
         roomAnimator.Play(CLOSE_DOORS);
-
         yield return new WaitForSeconds(0.5f);
 
-
+        // wait for doors to close
+        while (roomAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1) yield return null;
+        CameraShake.instance.ShakeCamera(2f,0.2f);
+        
+        //dialogue
         if (enableDialogue)
         {
             LevelManager.instance.dialogueController.StartDialogue(doorsClosedScript);
         
             while (!LevelManager.instance.dialogueController.isFinished) yield return null;
         }
-
-        // wait for doors to close
-        while (roomAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1) yield return null;
-
-        CameraShake.instance.ShakeCamera(2f,0.2f);
-
-
 
         yield return new WaitForSeconds(.5f);
 
@@ -126,9 +122,7 @@ public class AmbushBossManager : BossRoomManager
             yield return new WaitForSeconds(0.1f);
         }
 
-
-
-        // start
+        // start fight
         if (bossBarScript)
         {
             bossBarScript.bossName = bossName;
@@ -162,7 +156,7 @@ public class AmbushBossManager : BossRoomManager
 
         yield return new WaitForSeconds(0.5f);
 
-        // end
+        // hide boss bar
         if (bossBarScript)
         {
             bossBarScript.Dissapear();

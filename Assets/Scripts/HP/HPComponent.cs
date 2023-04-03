@@ -37,7 +37,7 @@ public class HPComponent : MonoBehaviour
 
     }
 
-
+    // Updating the player's HP depending on difficulty
     private void Update()
     {
         if (LevelManager.instance.isEasyMode && maxHealth == 500)
@@ -121,7 +121,6 @@ public class HPComponent : MonoBehaviour
 
                 if (hpPercentage <= hpColorThreshold && hpPercentage > hpColorThreshold / 2)
                 {
-                    //Debug.Log("first half");
                     bar.color = Color.Lerp(midHpColor, fullHpColor, (bar.fillAmount - hpColorThreshold / 2) / (hpColorThreshold / 2));
                 }
                 else if (hpPercentage <= hpColorThreshold / 2)

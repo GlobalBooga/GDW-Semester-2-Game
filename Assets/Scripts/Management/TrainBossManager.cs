@@ -18,7 +18,6 @@ public class TrainBossManager : BossRoomManager
     [Header("Dialogue")]
     public DialogueController.DialoguePart[] enterScript;
     public DialogueController.DialoguePart[] noticedScript;
-    public DialogueController.DialoguePart[] fightStartScript;
     public DialogueController.DialoguePart[] endScript;
 
     private bool startboss;
@@ -95,6 +94,7 @@ public class TrainBossManager : BossRoomManager
 
         yield return new WaitForSeconds(0.2f);
 
+        //dialogue
         if (enableDialogue)
         {
             LevelManager.instance.dialogueController.StartDialogue(noticedScript);
@@ -129,14 +129,7 @@ public class TrainBossManager : BossRoomManager
         
         yield return new WaitForSeconds(3f);
 
-        //if (enableDialogue)
-        //{
-        //    LevelManager.instance.dialogueController.StartDialogue(fightStartScript);
-        //    while (!LevelManager.instance.dialogueController.isFinished) yield return null;
-        //}
-
         // start
-
         audioSource.clip = bossTheme;
         audioSource.Play();
 

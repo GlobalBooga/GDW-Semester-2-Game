@@ -145,6 +145,7 @@ MonoBehaviour:
   pickupIndicator: {fileID: 282190699806670393}
   holdingSprite: {fileID: -1111903146, guid: d0ffebb9e4ee7a447ba8114ae8c4a377, type: 3}
   iconSprite: {fileID: 21300000, guid: 916ae481e2e5529438f14779e69ed022, type: 3}
+  abilityIconSprite: {fileID: 21300000, guid: 4e5fa32c03a635548855400e59e8228a, type: 3}
   abilityCooldown: 4
   sr: {fileID: 282190699103916245}
   audioSource: {fileID: -6261409989855553816}

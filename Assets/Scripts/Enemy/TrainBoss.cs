@@ -300,11 +300,17 @@ public class TrainBoss : MonoBehaviour
 
         yield return new WaitForSeconds(tso.flamethrower_shootStartDelay);
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
-        
+
 
         // Shoot fire
-        animator.Play(FLAMETHROWER_SHOOT0, LAYER_FIREZONE0);
-        animator.Play(FLAMETHROWER_SHOOT1, LAYER_FIREZONE1);
+        foreach (var t in flamethrowers)
+        {
+            GameObject ff = Instantiate(tso.fireZone, t.mainUnit);
+            ff.transform.parent = null;
+            ff.transform.GetChild(0).GetComponent<FireZone>().SetDamage(tso.flamethrower_damage);
+            ff.transform.GetChild(0).GetComponent<FireZone>().SetDamageInterval(tso.flamethrower_dmgInterval);
+            Destroy(ff, 5.1f);
+        }
         if (tso.flamethrower_useWithOtherAttacks) NextAttack();
 
 

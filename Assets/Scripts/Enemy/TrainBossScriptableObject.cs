@@ -24,6 +24,7 @@ public class TrainBossScriptableObject : ScriptableObject
     [Space(10f)]
 
     [Header("Attack 2 - Flamethrower"), Space(5f)]
+    public GameObject fireZone;
     public bool flamethrower_useWithOtherAttacks;
     public float flamethrower_damage;
     public float flamethrower_dmgInterval;
@@ -174,9 +175,7 @@ public class TrainBossScriptableObject : ScriptableObject
     [Serializable]
     public struct Flamethrower
     {
-        public GameObject flameZone;
         public Transform mainUnit;
-        public BoxCollider2D fireZone;
     }
 }
 

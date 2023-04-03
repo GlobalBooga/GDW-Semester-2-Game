@@ -26,18 +26,19 @@ MonoBehaviour:
   extrudeDistance: 2
   turrets_coverDamageMultiplier: 0
   turrets_maxHpForUse: 7
+  fireZone: {fileID: 4893780685334221335, guid: dc793157f9d3b1f48914ea7af8e1836c, type: 3}
   flamethrower_useWithOtherAttacks: 1
   flamethrower_damage: 30
   flamethrower_dmgInterval: 0.2
   flamethrower_shootStartDelay: 1
-  flamethrower_timeBeforeRetract: 2.5
+  flamethrower_timeBeforeRetract: 5
   flamethrower_delayBeforeNextAttack: 1
-  flamethrower_timeBeforeEnd: 5
+  flamethrower_timeBeforeEnd: 2
   aimForPlayer: 1
   maxXmove: 12
   moveSpeed: 4
   flamethrower_coverDamageMultiplier: 0
-  flamethrower_maxHpForUse: 5
+  flamethrower_maxHpForUse: 6
   crosshairController: {fileID: 1336308465829088357, guid: b57007077a03ec94682ae7906b103ac5, type: 3}
   missile: {fileID: 6545307244740321829, guid: 45f776f1fe02de74bad65ddb5ebb7239, type: 3}
   missile_damage: 100

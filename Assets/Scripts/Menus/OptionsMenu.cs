@@ -23,52 +23,54 @@ public class OptionsMenu : MonoBehaviour
 
     private void Start()
     {
+        // get sound settings
         MasterSlider.value = PlayerPrefs.GetFloat("MasterVol");
         MusicSlider.value = PlayerPrefs.GetFloat("MusicVol");
         SFXSlider.value = PlayerPrefs.GetFloat("SFXVol");
 
+        // get game settings
         controllerSensSlider.value = PlayerPrefs.GetFloat("ControllerSens");
         difficultySlider.value = PlayerPrefs.GetInt("Difficulty");
 
+        // set stuff
         MasterVolNum.text = Mathf.RoundToInt(MasterSlider.value + 80).ToString();
         MusicVolNum.text = Mathf.RoundToInt(MusicSlider.value + 80).ToString();
         SFXVolNum.text = Mathf.RoundToInt(SFXSlider.value + 80).ToString();
         ControllerSensText.text = Mathf.RoundToInt(controllerSensSlider.value).ToString();
         DifficultyText.text = difficultySlider.value == 0 ? "Easy" : "Normal";
+
+        // set sound
+        MainMixer.SetFloat("MasterVol", MasterSlider.value);
+        MainMixer.SetFloat("MusicVol", MusicSlider.value);
+        MainMixer.SetFloat("SFXVol", SFXSlider.value);
     }
+
     public void SetMasterVol()
     {
         MasterVolNum.text = Mathf.RoundToInt(MasterSlider.value + 80).ToString();
-
         MainMixer.SetFloat("MasterVol", MasterSlider.value);
-
         PlayerPrefs.SetFloat("MasterVol", MasterSlider.value);
     }
+
     public void SetMusicVol()
     {
         MusicVolNum.text = Mathf.RoundToInt(MusicSlider.value + 80).ToString();
-
         MainMixer.SetFloat("MusicVol", MusicSlider.value);
-
         PlayerPrefs.SetFloat("MusicVol", MusicSlider.value);
     }
+
     public void SetSFXVol()
     {
         SFXVolNum.text = Mathf.RoundToInt(SFXSlider.value + 80).ToString();
-
         MainMixer.SetFloat("SFXVol", SFXSlider.value);
-
         PlayerPrefs.SetFloat("SFXVol", SFXSlider.value);
     }
 
     public void SetControllerSen()
     {
         mainControllerSen = Mathf.RoundToInt(controllerSensSlider.value);
-
         ControllerSensText.text = mainControllerSen.ToString();
-        
         PlayerPrefs.SetFloat("ControllerSens", controllerSensSlider.value);
-
     }
 
     public void SetDifficulty()

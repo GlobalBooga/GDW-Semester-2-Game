@@ -130,6 +130,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        isEasyMode = PlayerPrefs.GetInt("Difficulty") == 0;
+
         SetGlobalLightAccordingToWeather();
         isFirst = true;
         Cursor.visible = false;

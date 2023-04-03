@@ -3,6 +3,7 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject optionsMenu;
+    public GameObject pauseMenu;
     private bool isPaused;
 
     // the pause toggle
@@ -17,7 +18,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         optionsMenu.SetActive(false);
-        gameObject.SetActive(false);
+        pauseMenu.SetActive(false);
         isPaused = false;
 
         if (LevelManager.instance.dialogueController.isFinished)
@@ -40,7 +41,7 @@ public class PauseMenu : MonoBehaviour
         if (LevelManager.instance.backgroundAudioSource) LevelManager.instance.backgroundAudioSource.GetComponent<AudioHighPassFilter>().enabled = true;
 
         isPaused = true;
-        gameObject.SetActive(true);
+        pauseMenu.SetActive(true);
         LevelManager.instance.DisablePlayerInput();
         LevelManager.instance.DisablePlayerRotation();
         Time.timeScale = 0f;

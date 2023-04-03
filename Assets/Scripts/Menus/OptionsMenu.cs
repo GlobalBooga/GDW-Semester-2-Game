@@ -18,16 +18,15 @@ public class OptionsMenu : MonoBehaviour
     [SerializeField] private Slider controllerSensSlider;
     public int mainControllerSen = 10;
     [SerializeField] private Slider difficultySlider;
-    public int difficulty = 0; 
+    public int difficulty = 0;
+
     private void Start()
     {
-        float vol = 0f;
-        MainMixer.GetFloat("MasterVol", out vol);
-        MasterSlider.value = vol;
-        MainMixer.GetFloat("MusicVol", out vol);
-        MusicSlider.value = vol;
-        MainMixer.GetFloat("SFXVol", out vol);
-        SFXSlider.value = vol;
+        MasterSlider.value = PlayerPrefs.GetFloat("MasterVol");
+        MusicSlider.value = PlayerPrefs.GetFloat("MusicVol");
+        SFXSlider.value = PlayerPrefs.GetFloat("SFXVol");
+
+        controllerSensSlider.value = PlayerPrefs.GetFloat("ControllerSens");
 
         MasterVolNum.text = Mathf.RoundToInt(MasterSlider.value + 80).ToString();
         MusicVolNum.text = Mathf.RoundToInt(MusicSlider.value + 80).ToString();
@@ -58,34 +57,21 @@ public class OptionsMenu : MonoBehaviour
         PlayerPrefs.SetFloat("SFXVol", SFXSlider.value);
     }
 
-    public void SetControllerSen(float sensitivity)
+    public void SetControllerSen()
     {
-        mainControllerSen = Mathf.RoundToInt(sensitivity);
+        mainControllerSen = Mathf.RoundToInt(controllerSensSlider.value);
 
-        Player p = LevelManager.instance.GetPlayer();
-        GameData gd = LevelManager.instance.LoadGameData();
-
-        // check if player is valid, if not, then there is no player - meaning we are in the main menu level.
-        if (p)
-        {
-            p.gamepadRotSpeed = mainControllerSen;
-        }
-
-        gd.gpRotSpeed = mainControllerSen;
-
-        LevelManager.instance.Save(gd);
+        PlayerPrefs.SetFloat("ControllerSens", controllerSensSlider.value);
     }
+
     public void SetDifficulty()
     {
-        if (difficulty == 0)
+        PlayerPrefs.SetInt("Difficulty", difficulty);
+
+        // if we are not in main menu
+        if (LevelManager.instance)
         {
-            difficulty = 1;
-            LevelManager.instance.isEasyMode = true;
-        }
-        else
-        {
-            difficulty = 0;
-            LevelManager.instance.isEasyMode = false;
+            LevelManager.instance.isEasyMode = difficulty == 0;
         }
     }
 }

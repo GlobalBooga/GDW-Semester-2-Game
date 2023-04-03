@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
@@ -125,8 +126,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         gameData = LevelManager.instance.LoadGameData();
-
-        gamepadRotSpeed = gameData.gpRotSpeed;
+        gamepadRotSpeed = PlayerPrefs.GetFloat("ControllerSens");
 
         originalPos = transform.position;
         originalRot = transform.rotation;
@@ -207,12 +207,17 @@ public class Player : MonoBehaviour
 
     private void SetupInputEvents()
     {
-        controls.General.Move.started += ctx => rb.drag = accelerationDrag;
+        controls.General.Move.started += ctx =>
+        {
+            ToggleCursorDependingOnInputDevice(ctx.control.device);
+            rb.drag = accelerationDrag;
+        };
 
         controls.General.Move.canceled += ctx => rb.drag = deccelerationDrag;
 
         controls.General.Pickup.started += ctx => 
         {
+            ToggleCursorDependingOnInputDevice(ctx.control.device);
             if (pickupable)
             {
                 Weapon newWeapon = (Weapon)pickupable.GetComponent(typeof(Weapon));
@@ -231,6 +236,7 @@ public class Player : MonoBehaviour
 
         controls.General.Attack.started += ctx => 
         {
+            ToggleCursorDependingOnInputDevice(ctx.control.device);
             IsAttacking = true;
             if (weapon) weapon.Use(); 
         };
@@ -239,6 +245,8 @@ public class Player : MonoBehaviour
 
         controls.General.MovementAbility.started += ctx =>
         {
+            ToggleCursorDependingOnInputDevice(ctx.control.device);
+
             if (!canUseMoveAbility) return;
 
             if (staminaBars.Count > 0)
@@ -302,6 +310,8 @@ public class Player : MonoBehaviour
 
         controls.General.WeaponAbility.started += ctx =>
         {
+            ToggleCursorDependingOnInputDevice(ctx.control.device);
+
             if (weapon)
             {
                 if (weapon.canUseAbility)
@@ -313,6 +323,8 @@ public class Player : MonoBehaviour
 
         controls.Menus.AdvanceDialogue.performed += ctx =>
         {
+            ToggleCursorDependingOnInputDevice(ctx.control.device);
+
             if (LevelManager.instance.dialogueController.isEnabled && !controls.Menus.Unpause.IsPressed())
             {
                 attemptingSkip = true;
@@ -332,6 +344,8 @@ public class Player : MonoBehaviour
 
         controls.Menus.AdvanceDialogue.started += ctx =>
         {
+            ToggleCursorDependingOnInputDevice(ctx.control.device);
+
             attemptingSkip = false;
             skipSuccessful = false;
             if (LevelManager.instance.dialogueController.isEnabled && !controls.Menus.Unpause.IsPressed())
@@ -342,11 +356,14 @@ public class Player : MonoBehaviour
 
         controls.Menus.Unpause.started += ctx =>
         {
+            ToggleCursorDependingOnInputDevice(ctx.control.device);
+
             LevelManager.instance.pauseMenu.ResumeGame();
         };
 
         controls.General.Pause.started += ctx =>
         {
+            ToggleCursorDependingOnInputDevice(ctx.control.device);
             LevelManager.instance.pauseMenu.PauseGame();
         };
 
@@ -355,13 +372,27 @@ public class Player : MonoBehaviour
             LevelManager.instance.ShowCursor();
             lookIsDelta = false;
         };
-
+        
         controls.General.GamepadLook.started += ctx =>
         {
             lookstart = transform.rotation;
             LevelManager.instance.HideCursor();
             lookIsDelta = true;
         };
+    }
+
+    private void ToggleCursorDependingOnInputDevice(InputDevice device)
+    {
+        // double check in case some mice are different
+        if (device.description.deviceClass == "Mouse" || device.displayName == "Mouse" ||
+            device.description.deviceClass == "Keyboard" || device.displayName == "Keyboard")
+        {
+            LevelManager.instance.ShowCursor();
+        }
+        else
+        {
+            LevelManager.instance.HideCursor();
+        }
     }
 
     public void DisableGeneralControls()

@@ -4,11 +4,30 @@ using UnityEngine.UI;
 public class Mainmenu : MonoBehaviour
 {
     public Image cursor;
+    private bool firstTime = true;
+
+    public GameObject mainMenu;
+    public GameObject optionsMenu;
 
     private void Awake()
     {
-        if (cursor) cursor.color = UnityEngine.Color.yellow;
+        if (cursor) cursor.color = Color.yellow;
         Cursor.visible = false;
+    }
+
+    private void Start()
+    {
+        Animator mainMenuAnimator = mainMenu.GetComponent<Animator>();
+
+        if (firstTime)
+        {
+            firstTime = false;
+            mainMenuAnimator.Play("MainMenuStart");
+        }
+        else
+        {
+            mainMenuAnimator.Play("MainmenuIdle");
+        }
     }
 
     private void Update()

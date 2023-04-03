@@ -13,12 +13,13 @@ public class OptionsMenu : MonoBehaviour
     public Text MasterVolNum;
     public Text MusicVolNum;
     public Text SFXVolNum;
+    public Text ControllerSensText;
+    public Text DifficultyText;
 
     [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensSlider;
     public int mainControllerSen = 10;
     [SerializeField] private Slider difficultySlider;
-    public int difficulty = 0;
 
     private void Start()
     {
@@ -27,10 +28,13 @@ public class OptionsMenu : MonoBehaviour
         SFXSlider.value = PlayerPrefs.GetFloat("SFXVol");
 
         controllerSensSlider.value = PlayerPrefs.GetFloat("ControllerSens");
+        difficultySlider.value = PlayerPrefs.GetInt("Difficulty");
 
         MasterVolNum.text = Mathf.RoundToInt(MasterSlider.value + 80).ToString();
         MusicVolNum.text = Mathf.RoundToInt(MusicSlider.value + 80).ToString();
         SFXVolNum.text = Mathf.RoundToInt(SFXSlider.value + 80).ToString();
+        ControllerSensText.text = Mathf.RoundToInt(controllerSensSlider.value).ToString();
+        DifficultyText.text = difficultySlider.value == 0 ? "Easy" : "Normal";
     }
     public void SetMasterVol()
     {
@@ -61,12 +65,18 @@ public class OptionsMenu : MonoBehaviour
     {
         mainControllerSen = Mathf.RoundToInt(controllerSensSlider.value);
 
+        ControllerSensText.text = mainControllerSen.ToString();
+        
         PlayerPrefs.SetFloat("ControllerSens", controllerSensSlider.value);
+
     }
 
     public void SetDifficulty()
     {
+        int difficulty = Mathf.RoundToInt(difficultySlider.value);
         PlayerPrefs.SetInt("Difficulty", difficulty);
+
+        DifficultyText.text = difficulty == 0 ? "Easy" : "Normal";
 
         // if we are not in main menu
         if (LevelManager.instance)

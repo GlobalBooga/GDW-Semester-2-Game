@@ -173,6 +173,9 @@ public class SceneManager : MonoBehaviour
     {
         if (LevelManager.instance.hintController.IsShowing) LevelManager.instance.hintController.HideHint();
 
+        Hud.instance.HideDirectionArrows();
+
+
         currentScene = LevelManager.instance.CurrentScene;
 
         if (currentScene.enemyContainer) currentScene.enemyContainer.SetActive(false);
@@ -190,9 +193,10 @@ public class SceneManager : MonoBehaviour
 
             if (--enemyCount <= 0)
             {
-                //Debug.Log("scene complete");
+                // scene cleared
                 if (currentScene.exit) currentScene.exit.Unblock();
                 LevelManager.instance.hintController.ObjectiveComplete(KILL_ALL_ENEMIES_OBJECTIVE);
+                Hud.instance.ShowDirectionToNextPart();
                 return;
             }
         }

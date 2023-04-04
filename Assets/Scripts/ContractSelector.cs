@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ContractSelector : MonoBehaviour
 {
@@ -11,9 +12,12 @@ public class ContractSelector : MonoBehaviour
 
     public Bosses boss;
     public Animator animator;
+    public GameObject acceptButton;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        EventSystem.current.SetSelectedGameObject(acceptButton);
+
         if (collision.gameObject.layer == StaticHelpers.PlayerLayer ||
             collision.gameObject.layer == StaticHelpers.PlayerInvincibleLayer)
         {

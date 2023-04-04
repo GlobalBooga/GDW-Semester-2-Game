@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
@@ -431,6 +432,7 @@ public class LevelManager : MonoBehaviour
     public void IDied()
     {
         deadScreen.gameObject.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(deadScreen.transform.GetChild(1).gameObject);
         StartCoroutine(MusicEnd(200f));
     }
 

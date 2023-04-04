@@ -4870,7 +4870,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.64, y: 0.46}
+  m_Size: {x: 1.48, y: 0.46}
   m_EdgeRadius: 0
 --- !u!1 &2523768147586025102
 GameObject:
@@ -5006,8 +5006,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4770469878461794893}
   - {fileID: 4770469878312874257}
+  - {fileID: 4770469878461794893}
   - {fileID: 3206580669704936889}
   - {fileID: 4933940022836231426}
   m_Father: {fileID: 0}
@@ -5048,6 +5048,10 @@ MonoBehaviour:
   abilityShots: 50
   delayBeforeAbility: 0
   chargeParticles: {fileID: 1283244511}
+  holdingEmissionMapPinks: {fileID: 21300000, guid: 368dd1abe9b46ae428f0448e73f83762, type: 3}
+  droppedEmissionMapPinks: {fileID: 21300000, guid: e3ed3034d769164418d67dd4609c282c, type: 3}
+  holdingEmissionMapGreens: {fileID: 21300000, guid: 2d6d22c4bbabaea49a640fffce7575ae, type: 3}
+  droppedEmissionMapGreens: {fileID: 21300000, guid: a68d341f315e5594fa156dfa4193a409, type: 3}
 --- !u!50 &4770469877047556186
 Rigidbody2D:
   serializedVersion: 4
@@ -5213,7 +5217,7 @@ Transform:
   - {fileID: 7479388024297968420}
   - {fileID: 1487546188443268495}
   m_Father: {fileID: 4770469877047556185}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4770469878312874258
 SpriteRenderer:
@@ -5297,7 +5301,7 @@ Transform:
   m_Children:
   - {fileID: 3197350186134677877}
   m_Father: {fileID: 4770469877047556185}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5853650822433826579
 GameObject:

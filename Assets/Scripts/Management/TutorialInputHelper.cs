@@ -15,13 +15,11 @@ public class TutorialInputHelper : MonoBehaviour
     {
         if (!LevelManager.instance.cursor.isActiveAndEnabled && showingMouseAndKeyboardControls)
         {
-            Debug.Log("show controller");
             showingMouseAndKeyboardControls = false;
             ShowControls();
         }    
         else if (LevelManager.instance.cursor.isActiveAndEnabled && !showingMouseAndKeyboardControls)
         {
-            Debug.Log("show mouse and keyboard");
             showingMouseAndKeyboardControls = true;
             ShowControls();
         }

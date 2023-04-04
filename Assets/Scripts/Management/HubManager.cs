@@ -10,9 +10,6 @@ public class HubManager : SceneManager
     [Header("Dialogue")]
     public bool enableDialogue = false;
     public DialogueController.DialoguePart[] introScript;
-    //public DialogueController.DialoguePart[] andarozContractScript;
-    //public DialogueController.DialoguePart[] trainContractScript;
-    //public DialogueController.DialoguePart[] timeLordContractScript;
 
     [Header("Music")]
     public AudioSource audioSource;

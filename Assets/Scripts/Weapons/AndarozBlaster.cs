@@ -1,7 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class AndarozBlaster : Gun
 {
@@ -12,6 +11,11 @@ public class AndarozBlaster : Gun
     private float temp;
     public ParticleSystem chargeParticles;
 
+    [Header("Lighting"), Space(5f)]
+    public Sprite holdingEmissionMapPinks;
+    public Sprite droppedEmissionMapPinks;
+    public Sprite holdingEmissionMapGreens;
+    public Sprite droppedEmissionMapGreens;
 
     public override int GetID()
     {
@@ -30,7 +34,6 @@ public class AndarozBlaster : Gun
         cooldown = newCooldown;
 
         if (chargeParticles) StartCoroutine(nameof(ChargeAndFireAbility));
-
     }
 
     private IEnumerator ChargeAndFireAbility()
@@ -59,5 +62,32 @@ public class AndarozBlaster : Gun
 
         cooldown = temp;
         readyToUse = true;
+    }
+
+    public override void Pickup(Transform parentTo, Weapon weapon)
+    {
+        base.Pickup(parentTo, weapon);
+
+        transform.GetChild(0).GetChild(0).GetComponent<Light2D>().lightCookieSprite = holdingEmissionMapPinks;
+        transform.GetChild(0).GetChild(1).GetComponent<Light2D>().lightCookieSprite = holdingEmissionMapGreens;
+
+        Vector2 newpos = new Vector3(-0.139f, 0.047f, 0f);
+        transform.GetChild(0).GetChild(0).localPosition = newpos;
+        transform.GetChild(0).GetChild(1).localPosition = newpos;
+        transform.GetChild(0).GetChild(0).localScale = Vector3.one * 0.5f;
+        transform.GetChild(0).GetChild(1).localScale = Vector3.one * 0.5f;
+    }
+
+    public override void Drop(Vector2 forwards)
+    {
+        base.Drop(forwards);
+
+        transform.GetChild(0).GetChild(0).GetComponent<Light2D>().lightCookieSprite = droppedEmissionMapPinks;
+        transform.GetChild(0).GetChild(1).GetComponent<Light2D>().lightCookieSprite = droppedEmissionMapGreens;
+
+        transform.GetChild(0).GetChild(0).localPosition = Vector3.zero;
+        transform.GetChild(0).GetChild(1).localPosition = Vector3.zero;
+        transform.GetChild(0).GetChild(0).localScale = Vector3.one * 0.64f;
+        transform.GetChild(0).GetChild(1).localScale = Vector3.one * 0.64f;
     }
 }

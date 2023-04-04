@@ -32,7 +32,6 @@ public class TrainBossScriptableObject : ScriptableObject
     public float flamethrower_timeBeforeRetract = 1.5f;
     public float flamethrower_delayBeforeNextAttack = 6f;
     public int flamethrower_timeBeforeEnd = 5;
-    public bool aimForPlayer;
     public float maxXmove;
     public float moveSpeed;
     public float flamethrower_coverDamageMultiplier = 0;

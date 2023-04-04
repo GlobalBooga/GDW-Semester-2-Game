@@ -22,7 +22,7 @@ MonoBehaviour:
   bulletSpread: 5
   shots_Turrets: 20
   rotationSpeed: 4
-  maxAngle: 60
+  maxAngle: 65
   extrudeDistance: 2
   turrets_coverDamageMultiplier: 0
   turrets_maxHpForUse: 7
@@ -34,7 +34,6 @@ MonoBehaviour:
   flamethrower_timeBeforeRetract: 5
   flamethrower_delayBeforeNextAttack: 1
   flamethrower_timeBeforeEnd: 2
-  aimForPlayer: 1
   maxXmove: 12
   moveSpeed: 4
   flamethrower_coverDamageMultiplier: 0
@@ -77,7 +76,7 @@ MonoBehaviour:
   - {fileID: 2781084931710897593, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
   - {fileID: 1722265178022636069, guid: 41e82737a2bd85e45b0a9c37df700687, type: 3}
   troop_spawnAmount: 5
-  troopDeploy_maxHpForUse: 6
+  troopDeploy_maxHpForUse: 5
   enableTurrets: 1
   enableFlamethrower: 1
   enableMissiles: 1

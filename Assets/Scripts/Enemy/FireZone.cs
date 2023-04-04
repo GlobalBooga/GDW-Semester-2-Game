@@ -7,7 +7,18 @@ public class FireZone : MonoBehaviour
     private float time;
     private float damageInterval;
     private float damage;
-    private TrainBossScriptableObject tso;
+    public GameObject shooter;
+
+    private void Update()
+    {
+        if (shooter)
+        {
+            if (!shooter.activeSelf)
+            {
+                Destroy(transform.parent.gameObject);
+            }
+        }
+    }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -15,7 +26,6 @@ public class FireZone : MonoBehaviour
         if (time >= damageInterval)
         {
             time = 0;
-            Debug.Log(collision.transform.gameObject);
             StaticHelpers.ApplyDamage(collision.transform.gameObject, damage);
         }
     }

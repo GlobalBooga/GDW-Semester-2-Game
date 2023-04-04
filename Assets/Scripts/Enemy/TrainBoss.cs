@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using static TrainBossScriptableObject;
 
@@ -244,59 +246,36 @@ public class TrainBoss : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezePositionY;
         rb.freezeRotation = true;
         resettingpos = false;
-        if (tso.aimForPlayer)
-        {
-            rb.drag = 1f;
-            while (true)
-            {
-                Vector3 playerDirection = (playerLoc.position - transform.position);
-                if (playerDirection.x > 0) playerDirection = Vector3.right;
-                else playerDirection = Vector3.left;
-                    
-                if ((playerDirection.x < 0 && CenterofFireZone() > (ogX - tso.maxXmove)) ||
-                    (playerDirection.x > 0 && CenterofFireZone() < (ogX + tso.maxXmove)))
-                {
-                    rb.AddForce(playerDirection * tso.moveSpeed * rb.mass, ForceMode2D.Force);
-                }
-                else
-                {
-                    break;
-                }
+        
+        // align midpoint of flamethrowers with player
+        rb.drag = 1f;
 
-                if (Mathf.Abs(playerLoc.position.x - CenterofFireZone()) < 5f)
-                {
-                    break;
-                }
-
-                time += Time.deltaTime;
-                yield return null;
-            }
-            rb.drag = 5f;
-        }
-        else
+        while (true)
         {
-            Vector3 playerDirection = (playerLoc.position - transform.position);
+            Vector3 playerDirection = playerLoc.position - GetFlamethrowerMidpoint();
             if (playerDirection.x > 0) playerDirection = Vector3.right;
             else playerDirection = Vector3.left;
-
-            rb.drag = 1f;
-            while (true)
+                    
+            if ((playerDirection.x < 0 && CenterofFireZone() > (ogX - tso.maxXmove)) ||
+                (playerDirection.x > 0 && CenterofFireZone() < (ogX + tso.maxXmove)))
             {
-                if ((playerDirection.x < 0 && CenterofFireZone() > (ogX - tso.maxXmove)) ||
-                   (playerDirection.x > 0 && CenterofFireZone() < (ogX + tso.maxXmove)))
-                {
-                    rb.AddForce(playerDirection * tso.moveSpeed * rb.mass, ForceMode2D.Force);
-                }
-                else
-                {
-                    break;
-                }
-
-                time += Time.deltaTime;
-                yield return null;
+                rb.AddForce(playerDirection * tso.moveSpeed * rb.mass, ForceMode2D.Force);
             }
-            rb.drag = 5f;
+            else
+            {
+                break;
+            }
+
+            if (Mathf.Abs(playerLoc.position.x - CenterofFireZone()) < 2f)
+            {
+                break;
+            }
+
+            time += Time.deltaTime;
+            yield return null;
         }
+        rb.drag = 5f;
+        
 
         yield return new WaitForSeconds(tso.flamethrower_shootStartDelay);
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -305,10 +284,13 @@ public class TrainBoss : MonoBehaviour
         // Shoot fire
         foreach (var t in flamethrowers)
         {
+            if (!t.mainUnit.gameObject.activeSelf) continue;
+
             GameObject ff = Instantiate(tso.fireZone, t.mainUnit);
-            ff.transform.parent = null;
+            ff.transform.GetChild(0).GetComponent<FireZone>().shooter = t.mainUnit.gameObject;
             ff.transform.GetChild(0).GetComponent<FireZone>().SetDamage(tso.flamethrower_damage);
             ff.transform.GetChild(0).GetComponent<FireZone>().SetDamageInterval(tso.flamethrower_dmgInterval);
+            ff.transform.parent = null;
             Destroy(ff, 5.1f);
         }
         if (tso.flamethrower_useWithOtherAttacks) NextAttack();
@@ -642,7 +624,23 @@ public class TrainBoss : MonoBehaviour
             }
         }
 
-        //Debug.LogWarning("CenterofFireZone returned 0!");
         return ogX;
+    }
+
+    private Vector3 GetFlamethrowerMidpoint()
+    {
+        float x = 0f;
+        float y = 0f;
+
+        foreach (var item in flamethrowers)
+        {
+            x += item.mainUnit.position.x;
+            y += item.mainUnit.position.y;
+        }
+
+        x /= 2;
+        y /= 2;
+
+        return new Vector3(x, y, 0f);
     }
 }

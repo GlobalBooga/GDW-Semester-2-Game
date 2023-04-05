@@ -96,13 +96,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showDebugStuff: 0
-  showForwards: 1
+  showForwards: 0
   eso: {fileID: 11400000, guid: 6dbcccce7f753d24cbe1418bf43f56ee, type: 2}
   body: {fileID: 2781084931920902490}
   animator: {fileID: 8100914843955067681}
   isDummy: 0
   reviveDelay: 2
-  audioSource: {fileID: 0}
+  audioSource: {fileID: -5854597445503931174}
   atkSound: {fileID: 0}
   bulletSpawn: {fileID: 2781084932886251274}
   muzzleFlash: {fileID: 4745018865687402551}
@@ -115,7 +115,7 @@ AudioSource:
   m_GameObject: {fileID: 2781084931710897593}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: bcaab529e96222d49b41d1313b05670b, type: 2}
+  OutputAudioMixerGroup: {fileID: 489656781222849395, guid: a0f073bb5a01c4948bb4704163c5d0c8, type: 2}
   m_audioClip: {fileID: 8300000, guid: a35de319b94d8f041b96de73acd92d0a, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5

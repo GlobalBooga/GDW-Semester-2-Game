@@ -4,8 +4,7 @@ using UnityEngine;
 public class Melee : Enemy
 {
 
-    public AudioSource audioSource;
-    public AudioClip atkSound;
+    AudioSource audioSource;
 
     private MeleeScriptableObject mso;
     const string HIT_MELEE = "MeleeHit";

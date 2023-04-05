@@ -9,8 +9,7 @@ public class Sniper : Enemy
     public LineRenderer lineRenderer;
     public Animator laserAnimator;
 
-    public AudioSource audioSource;
-    public AudioClip atkSound;
+    AudioSource audioSource;
 
     private bool isLaserOn;
     private const string LASER_SHOT_ANIM = "SniperLaserShot";
@@ -64,7 +63,6 @@ public class Sniper : Enemy
 
     private IEnumerator Aim()
     {
-        //Debug.Log("aim");
         // aim delay
         yield return new WaitForSeconds(sso.aimStartDelay);
 
@@ -97,7 +95,6 @@ public class Sniper : Enemy
                 TurnOn();
                 
                 flashes++;
-                if (audioSource) audioSource.Play();
                 yield return new WaitForSeconds(sso.laserFlashOnTime);
             }
         }
@@ -105,6 +102,7 @@ public class Sniper : Enemy
 
 
         // shoot
+        if (audioSource) audioSource.Play();
 
         RaycastHit2D hit = Physics2D.Raycast(laserStart.position, body.up, 100f, sso.whatTakesDamage);
         if (hit)
@@ -147,6 +145,8 @@ public class Sniper : Enemy
         lineRenderer.SetPosition(1, endPos);
     }
 
+
+    // enable the laser
     public void TurnOn()
     {
         if (!isLaserOn)
@@ -155,7 +155,8 @@ public class Sniper : Enemy
             lineRenderer.enabled = true;
         }
     }
-    
+
+    // disable the laser
     public void TurnOff()
     {
         if (isLaserOn)
@@ -177,7 +178,6 @@ public class Sniper : Enemy
         base.ResetAttack();
         if (isLaserOn) TurnOff();
     }
-
 
     internal override void Hit()
     {

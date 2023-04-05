@@ -1070,7 +1070,7 @@ MonoBehaviour:
   lowHpColor: {r: 1, g: 0, b: 0, a: 1}
   postDamageInvincibilityTime: 0
   isInvincible: 0
-  maxHealth: 500
+  maxHealth: 750
 --- !u!114 &5465740423106623996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1258,7 +1258,7 @@ MonoBehaviour:
   lowHpColor: {r: 1, g: 0, b: 0, a: 1}
   postDamageInvincibilityTime: 0
   isInvincible: 0
-  maxHealth: 500
+  maxHealth: 750
 --- !u!114 &5465740423614793820
 MonoBehaviour:
   m_ObjectHideFlags: 0

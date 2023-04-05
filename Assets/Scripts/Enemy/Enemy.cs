@@ -6,10 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(HPComponent))]
 public class Enemy : MonoBehaviour
 {
-    [Header("Debug"), Space(5f)]
-    public bool showDebugStuff;
-    public bool showForwards = true;
-
     internal bool lockedOnPlayer;
     internal float lookSpeed = 0.01f;
     internal float rotationTime;
@@ -42,6 +38,7 @@ public class Enemy : MonoBehaviour
     internal bool attackReady = true; // cooldowns?
     internal bool isAttacking;
     internal bool lockRotation;
+    private bool isDead;
 
     [Space(10f)]
     [Header("Scriptable Object"), Space(5f)]
@@ -81,8 +78,6 @@ public class Enemy : MonoBehaviour
         ResetAttack();
         SetDefaultBehaviour();
         playerPoses.Clear();
-        //Debug.Log("resetting");
-
     }
 
     internal virtual void Awake()
@@ -143,9 +138,6 @@ public class Enemy : MonoBehaviour
 
     internal void UpdateDetection()
     {
-        if (showDebugStuff) CalculateEnemyView();
-        if (showForwards) Debug.DrawLine(transform.position, transform.position + body.up, Color.red, Time.deltaTime);
-
         HandleSight();
 
         if (eso.chasePlayer)
@@ -196,7 +188,6 @@ public class Enemy : MonoBehaviour
         //saveOneMorePos = false;
 
         if (playerPoses.Count > eso.maxStoredPoses) playerPoses.Dequeue();
-        if (showDebugStuff) DrawDebugCross(playerLoc.position, eso.secondsBetweenPoses * eso.maxStoredPoses);
         playerPoses.Enqueue(playerLoc.position);
     }
 
@@ -342,7 +333,6 @@ public class Enemy : MonoBehaviour
         // speed up detection rate even more
         NewDetectionRate(1 / (eso.searchDetectionRateMult * 1.5f));
 
-        //Debug.Log("Start inspect");
         Vector3 right = transform.position - transform.up;
         Vector3 left = transform.position + transform.up;
         Vector3 forward = transform.position + body.up;
@@ -373,10 +363,8 @@ public class Enemy : MonoBehaviour
 
         foundPlayer = true;
         rotationTime = 0f;
-        //fov = normalFOV;
 
         Invoke(nameof(OnPlayerFoundDelayed), eso.defaultReactionTime);
-        //Debug.Log("found player");
 
         if (!LevelManager.instance.playerFound)
         {
@@ -407,8 +395,6 @@ public class Enemy : MonoBehaviour
 
         eso.test = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-        //Debug.Log("lost player");
-
         // Change some detection related properties
         foundPlayer = false;
         if (!eso.canSeeThroughWalls) lockedOnPlayer = false;
@@ -435,7 +421,6 @@ public class Enemy : MonoBehaviour
         {
             bool clear = false;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, (pos - transform.position).normalized, eso.viewDistance, eso.whatIsWall);
-            if (showDebugStuff) Debug.DrawLine(transform.position, pos, Color.blue, 2f);                                                                        // <--- debug.drawline
             if (hit)
             {
                 float hitDist = Vector2.Distance(hit.point, (Vector2)transform.position);
@@ -462,7 +447,6 @@ public class Enemy : MonoBehaviour
         if (shortcut != Vector3.zero)
         {
             tempQ.Enqueue(shortcut);
-            if (showDebugStuff) Debug.DrawLine(transform.position, shortcut, Color.yellow, 5f);                                                                     // <--- debug.drawline
 
             int len = tempStk.Count;
             for (int i = 0; i < len; i++)
@@ -481,15 +465,6 @@ public class Enemy : MonoBehaviour
         lerpStartTime = Time.time;
         lerpStart = transform.position;
         rotationTime = 0f;
-
-        // for debugging
-        if (showDebugStuff)
-        {
-            foreach (Vector3 item in playerPoses)
-            {
-                DrawDebugCross(item);
-            }
-        }
     }
 
     internal virtual void NewDetectionRate(float multiplier = 1f)
@@ -505,24 +480,6 @@ public class Enemy : MonoBehaviour
         attackDistance = Random.Range(minAttackDistance, maxAttackDistance);
     }
 
-    /// <summary>
-    /// For debug purposes. Draws lines that show the enemy's view
-    /// </summary>
-    internal virtual void CalculateEnemyView()
-    {
-        // "cone" angle debug lines
-        float rads = Mathf.Deg2Rad * fov * 0.5f;
-        float rads2 = Mathf.Deg2Rad * (360f - fov*0.5f);
-        float x = body.up.x, y = body.up.y;
-
-        sightMax = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
-        sightMin = new Vector2((Mathf.Cos(rads2) * x) - (Mathf.Sin(rads2) * y), (Mathf.Sin(rads2) * x) + (Mathf.Cos(rads2) * y));
-
-        Debug.DrawLine(transform.position, transform.position + sightMax * eso.viewDistance, Color.red, Time.deltaTime);
-        Debug.DrawLine(transform.position, transform.position + body.up, Color.red, Time.deltaTime);
-        Debug.DrawLine(transform.position, transform.position + sightMin * eso.viewDistance, Color.red, Time.deltaTime);
-    }
-
     public bool CanSeePlayer()
     {
         return CanSeePlayer(fov, eso.viewDistance);
@@ -530,10 +487,13 @@ public class Enemy : MonoBehaviour
 
     public bool CanSeePlayer(float scanAngle, float scanDist)
     {
+        // is in range?
         if (PlayerDistance <= scanDist)
         {
+            // is in fov?
             if (Vector3.Angle(body.up, playerLoc.position - transform.position) <= scanAngle * 0.5f)
             {
+                // is view blocked?
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, (playerLoc.position - transform.position).normalized, scanDist, eso.whatBlocksSight);
                 if (hit)
                 {
@@ -557,23 +517,8 @@ public class Enemy : MonoBehaviour
             Vector2 desireddir = body.up;
             Vector3 correction = desireddir - currentdir;
             rb.AddForce((body.up * eso.defaultMoveForce * rb.mass) + (correction * eso.snappyness), ForceMode2D.Force);
-            Debug.DrawLine(body.position, body.position + (body.up * eso.defaultMoveForce * rb.mass) + (correction * eso.snappyness), Color.green, Time.fixedDeltaTime);
         }
         else rb.AddForce(body.up * -eso.defaultMoveForce * rb.mass, ForceMode2D.Force);
-    }
-
-    /// <summary>
-    /// for debug purposes
-    /// </summary>
-    /// <param name="pos"></param>
-    /// <param name="duration"></param>
-    /// <param name="segmentLength"></param>
-    internal virtual void DrawDebugCross(Vector3 pos, float duration = 1f, float segmentLength = 0.3f)
-    {
-        Debug.DrawLine(pos, pos + Vector3.up * segmentLength, Color.green, duration);
-        Debug.DrawLine(pos, pos + Vector3.down * segmentLength, Color.green, duration);
-        Debug.DrawLine(pos, pos + Vector3.left * segmentLength, Color.green, duration);
-        Debug.DrawLine(pos, pos + Vector3.right * segmentLength, Color.green, duration);
     }
 
     internal virtual void Attack()
@@ -591,6 +536,7 @@ public class Enemy : MonoBehaviour
     {
         if (isDummy) 
         {
+            // dont die
             rb.simulated = false;
             sr.color = new Color(1,1,1,0.3f);
             hp.isInvincible = true;
@@ -602,11 +548,15 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        LevelManager.instance.EnemyDied();
-        Destroy(gameObject);
-        //Debug.Log("doed");
+        if (!isDead)
+        {
+            isDead = true;
+            LevelManager.instance.EnemyDied();
+            Destroy(gameObject);
+        }
     }
 
+    // for tutorial
     public void Revive()
     {
         rb.simulated = true;

@@ -37,7 +37,8 @@ public class HPComponent : MonoBehaviour
 
     }
 
-    // Updating the player's HP depending on difficulty
+
+    // Update the player's HP when the difficulty changes
     private void Update()
     {
         if (LevelManager.instance.isEasyMode && maxHealth == 500)

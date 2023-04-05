@@ -133,7 +133,6 @@ public class SceneManager : MonoBehaviour
                         break;
                     case SceneObjective.PickAContract:
                         LevelManager.instance.hintController.AddObjective(PICK_A_CONTRACT_OBJECTIVE);
-                        //if (LevelManager.instance.CurrentScene.exit) Invoke(nameof(Unblock), 0.5f);
                         break;
                     case SceneObjective.PickAWeapon:
                         LevelManager.instance.hintController.AddObjective(PICK_A_WEAPON);
@@ -194,6 +193,8 @@ public class SceneManager : MonoBehaviour
             if (--enemyCount <= 0)
             {
                 // scene cleared
+
+
                 if (currentScene.exit) currentScene.exit.Unblock();
                 LevelManager.instance.hintController.ObjectiveComplete(KILL_ALL_ENEMIES_OBJECTIVE);
                 Hud.instance.ShowDirectionToNextPart();

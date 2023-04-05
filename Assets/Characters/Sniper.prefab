@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showDebugStuff: 0
-  showForwards: 1
+  showForwards: 0
   eso: {fileID: 11400000, guid: 1f99e6acbffd4764aa901695d074aeed, type: 2}
   body: {fileID: 6687974567901237534}
   animator: {fileID: 6703155169335968430}

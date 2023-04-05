@@ -126,17 +126,8 @@ public class Andaroz : Enemy
 
     private IEnumerator PerformSwipeAttack()
     {
-        /*// prepare - look at player
-        while (!LookAt(playerLoc.position)) yield return null;
-*/
         if (hp.GetHealth() == 0) yield break;
-       /* if (hp.GetHealth() > hp.maxHealth * aso.swipe_maxHpForUse)
-        {
-            NextAttack();
-            yield break;
-        }*/
 
-        //Debug.Log("swipe");
         SetSwipeBehaviour();
         NewAttackDistance();
 
@@ -147,18 +138,14 @@ public class Andaroz : Enemy
 
         while (true)
         {
-            //UpdateDetection();
-
             time += Time.deltaTime;
             if (time >= aso.swipe_maxAttackTime) break;
-            //Debug.Log(time);
+
             // else if we are in attack distance
             if (PlayerDistance <= maxAttackDistance)
             {
                 // Locking rotation
                 if (aso.swipe_lockRotation) Invoke(nameof(LockRotation),aso.swipe_lockRotDelay);
-
-                //Debug.Log("swiping");
 
                 // play swipe animation
                 if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
@@ -194,7 +181,6 @@ public class Andaroz : Enemy
 
             yield return null;
         }
-        //Debug.Log("swipe end");
 
         yield return new WaitForSeconds(aso.swipe_delayBeforeIdle);
         // unlock rotation
@@ -225,7 +211,6 @@ public class Andaroz : Enemy
             yield break;
         }
 
-        //Debug.Log("slam");
         SetSlamBehaviour();
         NewAttackDistance();
 
@@ -237,7 +222,6 @@ public class Andaroz : Enemy
         {
             time += Time.deltaTime;
             if (time >= aso.slam_maxAttackTime) break;
-            //Debug.Log(time);
          
             // else if we are in attack distance
             if (PlayerDistance <= maxAttackDistance)
@@ -246,7 +230,6 @@ public class Andaroz : Enemy
                 if (aso.slam_lockRotation) Invoke(nameof(LockRotation), aso.slam_lockRotDelay);
 
                 // play swipe animation
-                //Debug.Log("slamming");
 
                 if (LegsAnimator) LegsAnimator.Play(LEGS_ATTACKSTANCE);
                 if (TorsoAnimator) TorsoAnimator.Play(SLAM_ATTACK);
@@ -284,7 +267,6 @@ public class Andaroz : Enemy
 
             yield return null;
         }
-        //Debug.Log("slam end");
         yield return new WaitForSeconds(aso.slam_delayBeforeIdle);
         SetDefaultBehaviour();
         NewAttackDistance();
@@ -315,7 +297,6 @@ public class Andaroz : Enemy
         }
 
         // homing missile attack
-        //Debug.Log("missile");
 
 
         SetMissileBehaviour();
@@ -352,8 +333,6 @@ public class Andaroz : Enemy
 
             Vector3 missileDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
-
-            if (showDebugStuff) Debug.DrawLine(body.position, body.position + missileDir * 50f, Color.red, aso.missile_delayBetweenShots);
 
             if (aso.missile && missileSpawns.Count > 0)
             {
@@ -413,7 +392,6 @@ public class Andaroz : Enemy
         // GUN ATTACK
         // in this attack, Andaroz chases the player at walking speed.
         // he is always facing the player
-        //Debug.Log("gun");
 
         SetGunBehaviour();
         NewAttackDistance();
@@ -434,8 +412,6 @@ public class Andaroz : Enemy
             float x = body.up.x, y = body.up.y;
 
             Vector3 bulletDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
-
-            if (showDebugStuff) Debug.DrawLine(body.position, body.position + bulletDir * 50f, Color.red, aso.gun_delayBetweenShots);
 
             if (aso.bullet && bulletSpawn)
             {
@@ -477,7 +453,6 @@ public class Andaroz : Enemy
             NextAttack();
             yield break;
         }
-        Debug.Log("laser");
 
         rotationTime = 0;
         lockRotation = false;
@@ -646,13 +621,6 @@ public class Andaroz : Enemy
 
     }
 
-    internal override void ResetAttack()
-    {
-        base.ResetAttack();
-        //SetDefaultBehaviour();
-        //NewAttackDistance();
-    }
-
     public override void OnDied()
     {
         StopAllCoroutines();
@@ -663,7 +631,6 @@ public class Andaroz : Enemy
 
     private void Stage2()
     {
-        Debug.Log("stage 2");
         stage2 = true;
         pauseMovement = true;
         rotationTime = 0;

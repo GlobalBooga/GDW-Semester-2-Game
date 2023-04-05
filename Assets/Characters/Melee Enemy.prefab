@@ -253,8 +253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33d8912e44424a4eb6b92438f303c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebugStuff: 1
-  showForwards: 1
+  showDebugStuff: 0
+  showForwards: 0
   eso: {fileID: 11400000, guid: 7be67767ee55e7040afdb05151d34fe7, type: 2}
   body: {fileID: 7527923035042227798}
   animator: {fileID: 4612466656649084921}

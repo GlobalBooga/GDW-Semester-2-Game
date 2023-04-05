@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Ranged : Enemy
 {
-    public AudioSource audioSource;
-    public AudioClip atkSound;
 
     public Transform bulletSpawn;
     public GameObject muzzleFlash;
     private RangedScriptableObject rso;
     const string HIT_RANGED = "RangedHit";
+    
+    AudioSource audioSource;
 
     internal override void Awake()
     {
@@ -35,7 +35,6 @@ public class Ranged : Enemy
     internal override void Attack()
     {
         base.Attack();
-        //Debug.Log("attacck");
         StartCoroutine(nameof(Shoot));
     }
 
@@ -68,8 +67,7 @@ public class Ranged : Enemy
             if (audioSource) audioSource.Play();
 
 
-            if (showDebugStuff) Debug.DrawLine(body.position, body.position + bulletDir * 50f, Color.red, rso.delayBetweenShots);
-
+            // spawn bullet
             if (rso.bullet && bulletSpawn)
             {
                 Bullet b = Instantiate(rso.bullet, bulletSpawn).GetComponent<Bullet>();
@@ -82,6 +80,7 @@ public class Ranged : Enemy
         }
     }
 
+    // stop shooting
     internal override void OnLostSightOfPlayer()
     {
         base.OnLostSightOfPlayer();

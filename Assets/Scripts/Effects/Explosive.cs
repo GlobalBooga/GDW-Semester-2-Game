@@ -12,12 +12,13 @@ public class Explosive : MonoBehaviour
     [SerializeField] LayerMask whatTakesDamage;
     [SerializeField] float playerDamageMultiplier;
     [SerializeField] float specialObjectDamageMultiplier;
-
+    public AudioSource audioSource;
     private bool cancelExplosion;
 
     void Start()
     {       
         blastRadius = GetComponent<CircleCollider2D>();
+        audioSource = GetComponent<AudioSource>();
         blastRadius.enabled = false;
     }
 
@@ -29,11 +30,10 @@ public class Explosive : MonoBehaviour
     public void Explode()
     {
         CameraShake.instance.ShakeCamera(cameraShakeIntensity, cameraShakeTime);
-
         GameObject g = Instantiate(explosionObj, transform);
         g.transform.parent = null;
         Destroy(g, 1f);
-
+        if (audioSource) audioSource.Play();
         Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, blastRadius.radius * transform.parent.localScale.x, whatTakesDamage);
         if (cols.Length > 0)
         {

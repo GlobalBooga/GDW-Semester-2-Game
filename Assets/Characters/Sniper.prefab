@@ -106,8 +106,8 @@ MonoBehaviour:
   laserStart: {fileID: 6727311913798447202}
   lineRenderer: {fileID: 6727311913649292284}
   laserAnimator: {fileID: 6727311913649292282}
-  audioSource: {fileID: 0}
-  atkSound: {fileID: 0}
+  audioSource: {fileID: 693383461049427869}
+  atkSound: {fileID: 8300000, guid: 7c0a0cc0a24e8ef4d83f79adf143f137, type: 3}
 --- !u!82 &693383461049427869
 AudioSource:
   m_ObjectHideFlags: 0
@@ -117,8 +117,8 @@ AudioSource:
   m_GameObject: {fileID: 6687974566634874365}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 489656781222849395, guid: a0f073bb5a01c4948bb4704163c5d0c8, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 7c0a0cc0a24e8ef4d83f79adf143f137, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1

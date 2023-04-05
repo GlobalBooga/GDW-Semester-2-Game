@@ -45,7 +45,7 @@ public class Sniper : Enemy
             {
                 attackReady = false;
                 Attack();
-                if (audioSource) audioSource.Play();
+                
             }
         }
     }
@@ -59,6 +59,7 @@ public class Sniper : Enemy
     {
         base.Attack();
         StartCoroutine(nameof(Aim));
+       
     }
 
     private IEnumerator Aim()
@@ -94,7 +95,9 @@ public class Sniper : Enemy
             {
                 // turn on laser
                 TurnOn();
+                
                 flashes++;
+                if (audioSource) audioSource.Play();
                 yield return new WaitForSeconds(sso.laserFlashOnTime);
             }
         }

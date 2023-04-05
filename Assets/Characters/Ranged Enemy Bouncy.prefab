@@ -10,11 +10,11 @@ PrefabInstance:
     - target: {fileID: -5854597445503931174, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: 3fbc3eef0d5a7234da1e9639f982c35a, type: 3}
     - target: {fileID: -5854597445503931174, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
       propertyPath: OutputAudioMixerGroup
       value: 
-      objectReference: {fileID: 24300002, guid: bcaab529e96222d49b41d1313b05670b, type: 2}
+      objectReference: {fileID: 489656781222849395, guid: a0f073bb5a01c4948bb4704163c5d0c8, type: 2}
     - target: {fileID: 2781084931710897543, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -70,7 +70,7 @@ PrefabInstance:
     - target: {fileID: 2781084931710897592, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
       propertyPath: atkSound
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: 3fbc3eef0d5a7234da1e9639f982c35a, type: 3}
     - target: {fileID: 2781084931710897592, guid: af63be1fcf20b3f47b2828381eef5774, type: 3}
       propertyPath: audioSource
       value: 

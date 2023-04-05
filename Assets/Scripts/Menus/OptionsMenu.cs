@@ -24,13 +24,13 @@ public class OptionsMenu : MonoBehaviour
     private void Start()
     {
         // get sound settings
-        MasterSlider.value = PlayerPrefs.GetFloat("MasterVol");
-        MusicSlider.value = PlayerPrefs.GetFloat("MusicVol");
-        SFXSlider.value = PlayerPrefs.GetFloat("SFXVol");
+        MasterSlider.value = PlayerPrefs.GetFloat("MasterVol", 20);
+        MusicSlider.value = PlayerPrefs.GetFloat("MusicVol", -20);
+        SFXSlider.value = PlayerPrefs.GetFloat("SFXVol", -35);
 
         // get game settings
-        controllerSensSlider.value = PlayerPrefs.GetFloat("ControllerSens");
-        difficultySlider.value = PlayerPrefs.GetInt("Difficulty");
+        controllerSensSlider.value = PlayerPrefs.GetFloat("ControllerSens", 350f);
+        difficultySlider.value = PlayerPrefs.GetInt("Difficulty", 1);
 
         // set stuff
         MasterVolNum.text = Mathf.RoundToInt(MasterSlider.value + 80).ToString();

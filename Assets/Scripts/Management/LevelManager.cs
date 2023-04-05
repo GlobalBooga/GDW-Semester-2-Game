@@ -354,6 +354,8 @@ public class LevelManager : MonoBehaviour
     public void ReturnToMainMenu()
     {
         GameData gm = LoadGameData();
+
+        // save the gun we are holding
         if (gm.weaponID == 4 && gm.foundAndarozGun == false)
         {
             gm.weaponID = 1;
@@ -445,12 +447,15 @@ public class LevelManager : MonoBehaviour
     public void ReturnToHub()
     {
         isQuitting = true;
+
+        // save some settings
         GameData gm = LoadGameData();
+        gm.firstTimeInHub = false;
         if (gm.weaponID == 4 && gm.foundAndarozGun == false)
         {
             gm.weaponID = 1;
-            Save(gm);
         }
+        Save(gm);
 
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }

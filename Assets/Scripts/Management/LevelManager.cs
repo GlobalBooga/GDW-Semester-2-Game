@@ -82,6 +82,7 @@ public class LevelManager : MonoBehaviour
 
     // difficulty
     public bool isEasyMode;
+    private bool difficultyChanged;
 
     public Scene CurrentScene => orderedScenes[currentSceneIndex];
 
@@ -108,13 +109,37 @@ public class LevelManager : MonoBehaviour
             cursor.color = color;
         }
 
+        // automatically update HP when difficulty changes
         if (isEasyMode && player.GetHPComponent().maxHealth == 500)
         {
             player.GetHPComponent().SetEasyMode();
+
+            // also update the lighting
+            if (CurrentScene.manager.GetType() == typeof(AmbushBossManager))
+            {
+                AmbushBossManager a = CurrentScene.manager as AmbushBossManager;
+                a.MakeEasy();
+            }
+            else
+            {
+                SetGlobalLightAccordingToWeather();
+            }
+
         }
         else if (!isEasyMode && player.GetHPComponent().maxHealth == 2000)
         {
             player.GetHPComponent().SetNormalMode();
+
+            // also update the lighting
+            if (CurrentScene.manager.GetType() == typeof(AmbushBossManager))
+            {
+                AmbushBossManager a = CurrentScene.manager as AmbushBossManager;
+                a.MakeNormal();
+            }
+            else
+            {
+                SetGlobalLightAccordingToWeather();
+            }
         }
     }
 

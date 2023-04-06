@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
     internal Rigidbody2D rb;
     internal float damage;
     public float specialObjectDamageMultiplier;
+    internal float speed;
 
     internal virtual void Awake()
     {
@@ -20,6 +21,7 @@ public class Bullet : MonoBehaviour
         rb.AddForce(dir * force, ForceMode2D.Impulse);
         this.damage = damage;
         transform.parent = null;
+        speed = force;
     }
 
 

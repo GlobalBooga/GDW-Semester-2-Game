@@ -21,6 +21,7 @@ public class EnergyDualies : DualPistols
 
     public override void UseAbility()
     {
+        // prevent shooting during ability
         if (!canUseAbility) return;
         canUseAbility = false;
         readyToUse = false;

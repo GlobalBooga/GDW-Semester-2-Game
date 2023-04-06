@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class Andaroz : Enemy
@@ -25,6 +26,7 @@ public class Andaroz : Enemy
     private Laser rightLaser;
     private Laser leftLaser;
     private AndarozRoom roomManager;
+    private AudioSource gunAudioSource;
 
     private bool goToCenterOfRoom;
 
@@ -61,6 +63,7 @@ public class Andaroz : Enemy
     {
         base.Awake();
         roomManager = transform.parent.GetComponent<AndarozRoom>();
+        gunAudioSource = GetComponent<AudioSource>();
     }
 
     internal override void OnDisable()
@@ -296,8 +299,8 @@ public class Andaroz : Enemy
             yield break;
         }
 
-        // homing missile attack
 
+        // homing missile attack
 
         SetMissileBehaviour();
         NewAttackDistance();
@@ -333,30 +336,24 @@ public class Andaroz : Enemy
 
             Vector3 missileDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
-
+            // shoot
             if (aso.missile && missileSpawns.Count > 0)
             {
                 HomingMissile b;
-                if (missileSpawns.Count == 1)
-                {
-                    b = Instantiate(aso.missile, missileSpawns[0]).GetComponent<HomingMissile>();
-                }
-                else if (!aso.fireSequentially)
-                {
-                    b = Instantiate(aso.missile, missileSpawns[Random.Range(0, missileSpawns.Count)]).GetComponent<HomingMissile>();
-                }
-                else
-                {
-                    if (prev >= missileSpawns.Count) prev = 0;
-                    b = Instantiate(aso.missile, missileSpawns[prev++]).GetComponent<HomingMissile>();
-                }
+                
+                if (prev >= missileSpawns.Count) prev = 0;
+                b = Instantiate(aso.missile, missileSpawns[prev]).GetComponent<HomingMissile>();
+
+                //play shoot sound
+                missileSpawns[prev].GetComponent<AudioSource>().Play();
+
+                prev++;
 
                 b.transform.Rotate(0f, 0f, Vector2.SignedAngle(body.up, missileDir));
                 b.gameObject.layer = StaticHelpers.EnemyMissileLayer;
                 b.Fly(playerLoc, missileDir, aso.missileRotForce, aso.missileMaxSpeed, aso.missile_damage);
                 b.specialObjectDamageMultiplier = aso.missile_pillarDamageMultiplier;
                 b.explosive.SetWhatTakesDamage(aso.whatTakesDamageFromMissiles);
-                //play muzzle effect
             }
             yield return new WaitForSeconds(aso.missile_delayBetweenShots);
         }
@@ -423,6 +420,8 @@ public class Andaroz : Enemy
 
                 //play muzzle effect
                 if (muzzleFlash) muzzleFlash.SetActive(true);
+
+                gunAudioSource.Play();
             }
             yield return new WaitForSeconds(aso.gun_delayBetweenShots);
         }

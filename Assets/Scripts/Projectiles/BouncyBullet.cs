@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BouncyBullet : Bullet
@@ -18,7 +16,8 @@ public class BouncyBullet : Bullet
 
     private void Update()
     {
-        if (lastVelocity.magnitude == 0f && rb.velocity.magnitude == 0f && lastRotation == transform.rotation)
+        if ((lastVelocity.magnitude == 0f && rb.velocity.magnitude == 0f && lastRotation == transform.rotation) ||
+            rb.velocity.magnitude < speed - 2f)
         {
             Destroy(gameObject);
         }

@@ -196,4 +196,26 @@ public class AmbushBossManager : BossRoomManager
 
         LevelManager.instance.NextScene();
     }
+
+    public void MakeEasy()
+    {
+        foreach (var item in roomLights)
+        {
+            if (item.lightType != Light2D.LightType.Point)
+            {
+                item.intensity = 0.4f;
+            }
+        }
+    }
+
+    public void MakeNormal()
+    {
+        foreach (var item in roomLights)
+        {
+            if (item.lightType != Light2D.LightType.Point)
+            {
+                item.intensity = 0.1f;
+            }
+        }
+    }
 }

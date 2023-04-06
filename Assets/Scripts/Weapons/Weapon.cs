@@ -24,7 +24,7 @@ public class Weapon : MonoBehaviour
     private Rigidbody2D rb;
     public SpriteRenderer sr;
 
-    public AudioSource audioSource;
+    public AudioSource[] audioSource;
 
     private const float startDelay = 0.25f;
 
@@ -40,7 +40,7 @@ public class Weapon : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<CircleCollider2D>();
-        audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponents<AudioSource>();
     }
 
     private void Start()

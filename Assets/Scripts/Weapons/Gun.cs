@@ -37,12 +37,17 @@ public class Gun : Weapon
 
     public virtual void Fire()
     {
+        // flash
         if (muzzleFlash)
         {
             muzzleFlash.SetActive(true);
         }
-        audioSource.Play();
-        CameraShake.instance.ShakeCamera(cameraShakeIntensity, cameraShakeTime);
+
+        // sound
+        if (!audioSource[0].isPlaying || audioSource[0].time > audioSource[0].clip.length/4) audioSource[0].Play();
+        else if (!audioSource[1].isPlaying || audioSource[1].time > audioSource[1].clip.length / 4) audioSource[1].Play();
+
+        if (cameraShakeIntensity > 0) CameraShake.instance.ShakeCamera(cameraShakeIntensity, cameraShakeTime);
 
         // Alert enemies
         if (Time.time - time >= alertInterval)
@@ -59,6 +64,8 @@ public class Gun : Weapon
 
         Vector3 bulletDir = new Vector2((Mathf.Cos(rads) * x) - (Mathf.Sin(rads) * y), (Mathf.Sin(rads) * x) + (Mathf.Cos(rads) * y));
 
+
+        // spawn bullet
         if (bullet && bulletSpawn)
         {
             Bullet b = Instantiate(bullet, bulletSpawn).GetComponent<Bullet>();
@@ -68,6 +75,7 @@ public class Gun : Weapon
             b.specialObjectDamageMultiplier = 0f;
         }
 
+        // cooldown
         if (cooldown > 0) Invoke(nameof(ResetUse), cooldown);
         else ResetUse();
     }    

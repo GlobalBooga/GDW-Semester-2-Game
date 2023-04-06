@@ -42,7 +42,7 @@ public class Bow : Gun
         {
             HomingArrow a = Instantiate(bullet, bulletSpawn).GetComponent<HomingArrow>();
 
-            audioSource.Play();
+            //audioSource.Play();
 
             yield return new WaitForSeconds(0.4f);
 

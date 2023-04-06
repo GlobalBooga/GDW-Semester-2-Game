@@ -37,25 +37,6 @@ public class HPComponent : MonoBehaviour
 
     }
 
-
-    // Update the player's HP when the difficulty changes
-    private void Update()
-    {
-        if (LevelManager.instance.isEasyMode && maxHealth == 500)
-        {
-            float d = health / maxHealth;
-            maxHealth = 2000;
-            health = maxHealth * d;
-        }
-        else if (!LevelManager.instance.isEasyMode && maxHealth == 2000)
-        {
-            float d = health / maxHealth;
-            maxHealth = 500;
-            health = maxHealth * d;
-        }
-    }
-
-
     private void OnEnable()
     {
         //reset
@@ -147,7 +128,6 @@ public class HPComponent : MonoBehaviour
         float d = health / maxHealth;
         maxHealth = 2000;
         health = maxHealth * d;
-        Debug.Log("easy");
     }
 
     public void SetNormalMode()
@@ -155,6 +135,5 @@ public class HPComponent : MonoBehaviour
         float d = health / maxHealth;
         maxHealth = 500;
         health = maxHealth * d;
-        Debug.Log("normal");
     }
 }

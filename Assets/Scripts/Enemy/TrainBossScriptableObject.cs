@@ -111,22 +111,16 @@ public class TrainBossScriptableObject : ScriptableObject
 
             HomingMissile m;
 
-            // making sure there are no null refs (ish)
+            // Shoot
             if (missile && missileSpawns.Length > 0)
             {
-                if (missileSpawns.Length == 1)
-                {
-                    m = Instantiate(missile, missileSpawns[0]).GetComponent<HomingMissile>();
-                }
-                else if (!fireSequentially)
-                {
-                    m = Instantiate(missile, missileSpawns[UnityEngine.Random.Range(0, missileSpawns.Length)]).GetComponent<HomingMissile>();
-                }
-                else
-                {
-                    if (barrelIndex >= missileSpawns.Length) barrelIndex = 0;
-                    m = Instantiate(missile, missileSpawns[barrelIndex++]).GetComponent<HomingMissile>();
-                }
+                if (barrelIndex >= missileSpawns.Length) barrelIndex = 0;
+                m = Instantiate(missile, missileSpawns[barrelIndex]).GetComponent<HomingMissile>();
+
+                //play shoot sound
+                missileSpawns[barrelIndex].GetComponent<AudioSource>().Play();
+
+                barrelIndex++;
 
                 m.transform.Rotate(0f, 0f, Vector2.SignedAngle(targetDir, missileDir));
                 m.gameObject.layer = StaticHelpers.EnemyMissileLayer;

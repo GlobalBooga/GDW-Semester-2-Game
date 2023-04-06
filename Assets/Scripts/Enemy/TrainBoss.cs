@@ -330,8 +330,6 @@ public class TrainBoss : MonoBehaviour
             yield break;
         }
 
-        //Debug.Log("missiles");
-
         missileattack = true;
 
         // make launchers come out
@@ -357,8 +355,8 @@ public class TrainBoss : MonoBehaviour
         }
 
         yield return new WaitForSeconds(tso.missile_shootStartDelay);
-        // shoot
 
+        // shoot
         for (int n = 0; n < missileLaunchers.Count * 2; n++) 
         {
             int foo = 0;
@@ -368,7 +366,6 @@ public class TrainBoss : MonoBehaviour
                     playerLoc, tso.missile, tso.missile_damage, tso.missileSpread, 
                     tso.missileMaxSpeed, tso.missileRotForce, tso.missile_coverDamageMultiplier,
                     tso.whatTakesDamageFromMissiles, ref foo);
-
                 yield return new WaitForSeconds(tso.missile_delayBetweenShots);
             }
         }

@@ -1,0 +1,32 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class StaticHelpers 
+{
+    public static LayerMask AllLayers => LayerMask.NameToLayer("All");
+    public static LayerMask PlayerLayer => LayerMask.NameToLayer("Player");
+    public static LayerMask EnemyLayer => LayerMask.NameToLayer("Enemy");
+    public static LayerMask WallLayer => LayerMask.NameToLayer("Wall");
+    public static LayerMask EnemyProjectileLayer => LayerMask.NameToLayer("EnemyProjectile");
+    public static LayerMask PlayerProjectileLayer => LayerMask.NameToLayer("PlayerProjectile");
+    public static LayerMask PickupLayer => LayerMask.NameToLayer("Pickup");
+    public static LayerMask EnemyMissileLayer => LayerMask.NameToLayer("EnemyMissile");
+    public static LayerMask PlayerInvincibleLayer => LayerMask.NameToLayer("PlayerInvincible");
+    public static LayerMask BreakableObjectsLayer => LayerMask.NameToLayer("Breakable Objects");
+    public static LayerMask SpecialBreakableObjectLayer => LayerMask.NameToLayer("SpecialBreakableObject");
+    public static LayerMask HomingArrowLayer => LayerMask.NameToLayer("HomingArrow");
+    public static LayerMask TrainWeaponLayer => LayerMask.NameToLayer("TrainWeapons");
+
+    public static bool ApplyDamage(GameObject other, float damage)
+    {
+        HPComponent hp;
+        if (other.TryGetComponent(out hp))
+        {
+            hp.Reduce(damage);
+            return true;
+        }
+        return false;
+    }
+
+}

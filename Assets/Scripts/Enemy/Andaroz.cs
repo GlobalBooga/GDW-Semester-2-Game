@@ -491,7 +491,7 @@ public class Andaroz : Enemy
         }
 
         // stop
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
 
         lockRotation = false;
 
@@ -624,7 +624,7 @@ public class Andaroz : Enemy
     {
         StopAllCoroutines();
         LockRotation();
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         StartCoroutine(nameof(EndBossFight));
     }
 
@@ -694,7 +694,7 @@ public class Andaroz : Enemy
     {
         if (TorsoAnimator) TorsoAnimator.Play(DEATH);
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
 
         yield return new WaitForSeconds(1.86f / 2);
 
@@ -727,7 +727,7 @@ public class Andaroz : Enemy
         playerPoses.Clear();
         eso.chasePlayer = false;
         attackMovementSpeed = 0f;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
 
         lockRotation = true;
     }

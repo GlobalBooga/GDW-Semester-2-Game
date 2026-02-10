@@ -248,7 +248,7 @@ public class TrainBoss : MonoBehaviour
         resettingpos = false;
         
         // align midpoint of flamethrowers with player
-        rb.drag = 1f;
+        rb.linearDamping = 1f;
 
         while (true)
         {
@@ -274,7 +274,7 @@ public class TrainBoss : MonoBehaviour
             time += Time.deltaTime;
             yield return null;
         }
-        rb.drag = 5f;
+        rb.linearDamping = 5f;
         
 
         yield return new WaitForSeconds(tso.flamethrower_shootStartDelay);

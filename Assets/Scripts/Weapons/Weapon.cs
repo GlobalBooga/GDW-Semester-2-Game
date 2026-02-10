@@ -89,7 +89,7 @@ public class Weapon : MonoBehaviour
     {
         rb.simulated = true;
         transform.parent = null;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.AddForce(forwards * 2.5f, ForceMode2D.Impulse);
         Invoke(nameof(SetPickupable), startDelay);
         

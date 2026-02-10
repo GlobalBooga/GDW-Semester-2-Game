@@ -16,13 +16,13 @@ public class BouncyBullet : Bullet
 
     private void Update()
     {
-        if ((lastVelocity.magnitude == 0f && rb.velocity.magnitude == 0f && lastRotation == transform.rotation) ||
-            rb.velocity.magnitude < speed - 2f)
+        if ((lastVelocity.magnitude == 0f && rb.linearVelocity.magnitude == 0f && lastRotation == transform.rotation) ||
+            rb.linearVelocity.magnitude < speed - 2f)
         {
             Destroy(gameObject);
         }
 
-        lastVelocity = rb.velocity;
+        lastVelocity = rb.linearVelocity;
         lastRotation = transform.rotation;
     }
 
@@ -52,7 +52,7 @@ public class BouncyBullet : Bullet
             Vector2 d = lastVelocity.normalized;
             Vector2 n = collision.GetContact(0).normal;
             Vector2 r = d - 2 * Vector2.Dot(d, n) * n;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.AddForce(r*lastVelocity.magnitude,ForceMode2D.Impulse);
             transform.Rotate(0f, 0f, Vector2.SignedAngle(d, r));
         }

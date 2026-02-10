@@ -131,7 +131,7 @@ public class Player : MonoBehaviour
         originalPos = transform.position;
         originalRot = transform.rotation;
         rb.freezeRotation = true;
-        rb.drag = accelerationDrag;
+        rb.linearDamping = accelerationDrag;
         if (hpcomp) hpcomp.isInvincible = false;
 
         if (weapon)
@@ -194,15 +194,15 @@ public class Player : MonoBehaviour
     private void Move()
     {
         //bool movingInSameDir;
-        bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > runSpeed;
+        bool isTooFast = Mathf.Abs(rb.linearVelocity.magnitude) > runSpeed;
         rb.AddForce(RawDirection * moveForce * rb.mass, ForceMode2D.Force); //if (!isTooFast) 
 
         if (isTooFast)
         {
-            rb.velocity = rb.velocity.normalized * runSpeed;
+            rb.linearVelocity = rb.linearVelocity.normalized * runSpeed;
         }
 
-        if (RawDirection == Vector2.zero) rb.drag = deccelerationDrag;
+        if (RawDirection == Vector2.zero) rb.linearDamping = deccelerationDrag;
     }
 
     private void SetupInputEvents()
@@ -210,10 +210,10 @@ public class Player : MonoBehaviour
         controls.General.Move.started += ctx =>
         {
             ToggleCursorDependingOnInputDevice(ctx.control.device);
-            rb.drag = accelerationDrag;
+            rb.linearDamping = accelerationDrag;
         };
 
-        controls.General.Move.canceled += ctx => rb.drag = deccelerationDrag;
+        controls.General.Move.canceled += ctx => rb.linearDamping = deccelerationDrag;
 
         controls.General.Pickup.started += ctx => 
         {
@@ -291,8 +291,8 @@ public class Player : MonoBehaviour
             if (hpcomp) hpcomp.isInvincible = true;
             gameObject.layer = StaticHelpers.PlayerInvincibleLayer;
 
-            Vector2 dir = rb.velocity.normalized;
-            rb.velocity = Vector2.zero;
+            Vector2 dir = rb.linearVelocity.normalized;
+            rb.linearVelocity = Vector2.zero;
             if (RawDirection == Vector2.zero)
             {
                 // dash backwards
@@ -303,7 +303,7 @@ public class Player : MonoBehaviour
                 // dash in direction
                 rb.AddForce((dir + RawDirection * 2.5f).normalized * dodgeForce * rb.mass, ForceMode2D.Impulse);
             }
-            rb.drag = 10f;
+            rb.linearDamping = 10f;
             Invoke(nameof(EndDodge), dodgeDuration);
             
         };
@@ -416,7 +416,7 @@ public class Player : MonoBehaviour
 
     private void EndDodge()
     {
-        rb.drag = accelerationDrag;
+        rb.linearDamping = accelerationDrag;
         isUsingMoveAbility = false;
         if (hpcomp) hpcomp.isInvincible = false;
         gameObject.layer = StaticHelpers.PlayerLayer;

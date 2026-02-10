@@ -109,7 +109,7 @@ public class Enemy : MonoBehaviour
 
     internal void SetDefaultBehaviour()
     {
-        rb.drag = eso.defaultDeccelerationDrag;
+        rb.linearDamping = eso.defaultDeccelerationDrag;
         fov = eso.normalFOV;
         comfortableAttackDist = eso.defaultComfortableAttackDist;
         minAttackDistance = eso.defaultMinAttackDistance;
@@ -204,7 +204,7 @@ public class Enemy : MonoBehaviour
     internal void ChasePlayer()
     {
         moveSpeed = isAttacking ? attackMovementSpeed : runSpeed;
-        bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > moveSpeed;
+        bool isTooFast = Mathf.Abs(rb.linearVelocity.magnitude) > moveSpeed;
         if (!isTooFast) Move();
 
         // dont attack if chasing - calls once at a time
@@ -218,13 +218,13 @@ public class Enemy : MonoBehaviour
     internal void Retreat()
     {
         moveSpeed = -retreatSpeed;
-        bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > Mathf.Abs(moveSpeed);
+        bool isTooFast = Mathf.Abs(rb.linearVelocity.magnitude) > Mathf.Abs(moveSpeed);
         if (!isTooFast) Move();
     }
 
     internal void Stay()
     {
-        rb.drag = eso.defaultDeccelerationDrag;
+        rb.linearDamping = eso.defaultDeccelerationDrag;
 
         if (lockedOnPlayer && !canAttack)
         {
@@ -510,10 +510,10 @@ public class Enemy : MonoBehaviour
 
     internal virtual void Move()
     {
-        rb.drag = eso.defaultAccelerationDrag;
+        rb.linearDamping = eso.defaultAccelerationDrag;
         if (moveSpeed > 0)
         {
-            Vector2 currentdir = rb.velocity;
+            Vector2 currentdir = rb.linearVelocity;
             Vector2 desireddir = body.up;
             Vector3 correction = desireddir - currentdir;
             rb.AddForce((body.up * eso.defaultMoveForce * rb.mass) + (correction * eso.snappyness), ForceMode2D.Force);

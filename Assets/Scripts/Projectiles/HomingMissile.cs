@@ -28,7 +28,7 @@ public class HomingMissile : Bullet
 
         if (rotationForce == 0)
         {
-            Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(rb.velocity, Vector3.right, Vector3.back) - 90f);
+            Quaternion newQuat = Quaternion.Euler(0f, 0f, Vector3.SignedAngle(rb.linearVelocity, Vector3.right, Vector3.back) - 90f);
             body.rotation = newQuat;
         }
     }
@@ -49,13 +49,13 @@ public class HomingMissile : Bullet
     {
         if (!target) return;
 
-        bool isTooFast = Mathf.Abs(rb.velocity.magnitude) > maxSpeed;
+        bool isTooFast = Mathf.Abs(rb.linearVelocity.magnitude) > maxSpeed;
 
         rb.AddForce((target.position - transform.position).normalized * force, ForceMode2D.Force);
 
         if (isTooFast)
         {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
         }
     }
 

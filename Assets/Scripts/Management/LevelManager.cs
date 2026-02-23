@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
@@ -183,17 +184,21 @@ public class LevelManager : MonoBehaviour
 
     public void AlertAllEnemiesInCurrentScene(Vector3 alertOrigin)
     {
-        if (!orderedScenes[currentSceneIndex].enemyContainer) return;
+        if (!orderedScenes[currentSceneIndex].enemyContainer)
+        {
+            return;
+        }
 
-        Enemy[] enemies = orderedScenes[currentSceneIndex].enemyContainer.GetComponentsInChildren<Enemy>();
+        BehaviorGraphAgent[] enemies = orderedScenes[currentSceneIndex].enemyContainer.GetComponentsInChildren<BehaviorGraphAgent>();
 
         if (enemies == null) return;
 
         if (enemies.Length > 0)
         {
-            foreach (Enemy enemy in enemies)
+            foreach (var enemy in enemies)
             {
-                enemy.Alert(alertOrigin);
+                enemy.BlackboardReference.SetVariableValue("PlayerDetected", true);
+                //enemy.Alert(alertOrigin);
             }
         }
     }

@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour
         originalRot = transform.rotation;
         rb = GetComponent<Rigidbody2D>();
         sr = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        playerLoc = GameObject.Find("Player").transform;
+        //playerLoc = GameObject.Find("Player").transform;
         //cc = GetComponent<CircleCollider2D>();
         // set the ondied func
         if (TryGetComponent(out hp)) 

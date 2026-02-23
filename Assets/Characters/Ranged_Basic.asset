@@ -15,7 +15,7 @@ MonoBehaviour:
   defaultReactionTime: 0
   viewDistance: 60
   instantDetectDist: 3
-  normalFOV: 60
+  normalFOV: 80
   searchFOV: 120
   rotationCurve:
     serializedVersion: 2
@@ -100,4 +100,3 @@ MonoBehaviour:
   bulletSpeed: 25
   bulletSpread: 10
   bullet: {fileID: 6545307244740321829, guid: 0cc7b3e22e8da2c4aaa8a327dcc3d1ea, type: 3}
-  muzzleFlash: {fileID: 8056495817756034893, guid: e5cca85d035b20343bbe9bc39b5fb577, type: 3}

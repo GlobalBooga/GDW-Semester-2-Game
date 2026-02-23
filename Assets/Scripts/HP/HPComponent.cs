@@ -53,7 +53,8 @@ public class HPComponent : MonoBehaviour
         // DEAD
         if (health == 0f)
         {
-            if (OnHPZero != null) OnHPZero.Invoke();
+            Destroy(gameObject);
+            //if (OnHPZero != null) OnHPZero.Invoke();
 
         }
 

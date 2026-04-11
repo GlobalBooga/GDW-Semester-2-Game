@@ -31,7 +31,7 @@ public class LargeRoomCameraController : MonoBehaviour
 
     private void Update()
     {
-        if (isZoomType)
+        if (isZoomType && player)
         {
             if (player.position.y - Camera.main.ScreenToWorldPoint(Vector3.zero).y < 1f)
             {
@@ -50,7 +50,7 @@ public class LargeRoomCameraController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isZoomType)
+        if (!isZoomType && player)
         {
             Vector3 pos = new Vector3(player.position.y, player.position.y, Camera.main.transform.position.z);
 

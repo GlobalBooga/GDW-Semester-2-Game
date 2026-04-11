@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 164047363424833836, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
@@ -28,19 +29,19 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[2]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[2]'
       value: 501292755
       objectReference: {fileID: 0}
     - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[3]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[3]'
       value: 308344455
       objectReference: {fileID: 0}
     - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[4]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[4]'
       value: -1822970695
       objectReference: {fileID: 0}
     - target: {fileID: 1090698378541788265, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[5]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[5]'
       value: 1897906131
       objectReference: {fileID: 0}
     - target: {fileID: 5002369006622895712, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}
@@ -92,4 +93,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9aa65e4c7fd542a4fb0b78404cdecf6e, type: 3}

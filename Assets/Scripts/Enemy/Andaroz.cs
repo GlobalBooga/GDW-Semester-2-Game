@@ -34,20 +34,20 @@ public class Andaroz : Enemy
 
     // ANIMATION KEYWORDS
 
-    private const string SWIPE_ATTACK = "Andaroz_Swipe";
-    private const string SLAM_ATTACK = "Andaroz_Slam";
-    private const string GUN_ATTACK = "Andaroz_Shoot";
-    private const string MISSILE_ATTACK = "Andaroz_Missiles";
-    private const string LASER_ATTACK = "Andaroz_Lasers";
-    private const string LASER_ATTACK_LONG = "Andaroz_Lasers_FirstTime";
-    private const string IDLE = "Andaroz_Idle";
-    private const string WALK = "Andaroz_Walk";
-    private const string RUN = "Andaroz_Run";
-    private const string DEATH = "Andaroz_Death";
-    private const string LEGS_WALK = "Andaroz_Legs_Walk";
-    private const string LEGS_RUN = "Andaroz_Legs_Run";
-    private const string LEGS_ATTACKSTANCE = "Andaroz_Legs_AttackStance";
-    private const string LEGS_SHOOT = "Andaroz_Legs_Shoot";
+    public const string SWIPE_ATTACK = "Andaroz_Swipe";
+    public const string SLAM_ATTACK = "Andaroz_Slam";
+    public const string GUN_ATTACK = "Andaroz_Shoot";
+    public const string MISSILE_ATTACK = "Andaroz_Missiles";
+    public const string LASER_ATTACK = "Andaroz_Lasers";
+    public const string LASER_ATTACK_LONG = "Andaroz_Lasers_FirstTime";
+    public const string IDLE = "Andaroz_Idle";
+    public const string WALK = "Andaroz_Walk";
+    public const string RUN = "Andaroz_Run";
+    public const string DEATH = "Andaroz_Death";
+    public const string LEGS_WALK = "Andaroz_Legs_Walk";
+    public const string LEGS_RUN = "Andaroz_Legs_Run";
+    public const string LEGS_ATTACKSTANCE = "Andaroz_Legs_AttackStance";
+    public const string LEGS_SHOOT = "Andaroz_Legs_Shoot";
 
     private bool stage2;
 

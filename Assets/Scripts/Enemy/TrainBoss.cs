@@ -34,22 +34,22 @@ public class TrainBoss : MonoBehaviour
     private int deftroopsamount = 5;
 
     // animations
-    const string TURRETS_EXTRACT = "TurretExtract";
-    const string TURRETS_RETRACT = "TurretRetract";
-    const string MISSILES_EXTRACT = "MissilesExtract";
-    const string MISSILES_RETRACT = "MissilesRetract";
-    const string FLAMETHROWER_SHOOT0 = "FlamethrowerShoot0";
-    const string FLAMETHROWER_END0 = "FlamethrowerEnd0";
-    const string FLAMETHROWER_SHOOT1 = "FlamethrowerShoot1";
-    const string FLAMETHROWER_END1 = "FlamethrowerEnd1";
-    const string FLAMETHROWER_EXTRACT = "FlamethrowerExtract";
-    const string FLAMETHROWER_RETRACT = "FlamethrowerRetract";
+    public const string TURRETS_EXTRACT = "TurretExtract";
+    public const string TURRETS_RETRACT = "TurretRetract";
+    public const string MISSILES_EXTRACT = "MissilesExtract";
+    public const string MISSILES_RETRACT = "MissilesRetract";
+    public const string FLAMETHROWER_SHOOT0 = "FlamethrowerShoot0";
+    public const string FLAMETHROWER_END0 = "FlamethrowerEnd0";
+    public const string FLAMETHROWER_SHOOT1 = "FlamethrowerShoot1";
+    public const string FLAMETHROWER_END1 = "FlamethrowerEnd1";
+    public const string FLAMETHROWER_EXTRACT = "FlamethrowerExtract";
+    public const string FLAMETHROWER_RETRACT = "FlamethrowerRetract";
 
-    const int LAYER_FLAMETHROWERS = 0;
-    const int LAYER_FIREZONE0 = 10;
-    const int LAYER_FIREZONE1 = 11;
-    const int LAYER_TURRETS = 1;
-    const int LAYER_MISSILES = 2;
+    public const int LAYER_FLAMETHROWERS = 0;
+    public const int LAYER_FIREZONE0 = 10;
+    public const int LAYER_FIREZONE1 = 11;
+    public const int LAYER_TURRETS = 1;
+    public const int LAYER_MISSILES = 2;
 
     private void Start()
     {

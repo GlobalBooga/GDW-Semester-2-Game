@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dd922ae02c94c87a66e46a10a7319b9, type: 3}
+  m_Name: CommonTrain
+  m_EditorClassIdentifier: Unity.Behavior.Authoring::Unity.Behavior.BehaviorBlackboardAuthoringAsset
+  AssetID:
+    m_Value0: 11500748424279073144
+    m_Value1: 15485685214838138744
+  m_Variables:
+  - rid: 8686587429936693589
+  - rid: 8686587429936693989
+  - rid: 8686587429936694214
+  m_VersionTimestamp: 639115287675570450
+  m_CommandBuffer:
+    m_Commands: []
+  m_RuntimeBlackboardAsset: {fileID: 6815620244971695472}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8686587429936693589
+      type: {class: 'TypedVariableModel`1[[TrainBossScriptableObject, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 2524699956049512705
+          m_Value1: 3501786535219407990
+        Name: TrainScriptableObject
+        IsExposed: 1
+        m_IsShared: 1
+        m_Value: {fileID: 11400000, guid: 67be3fb3c14da5b42ad741eb99b627a7, type: 2}
+    - rid: 8686587429936693989
+      type: {class: 'TypedVariableModel`1[[UnityEngine.Transform, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 9518190616963037633
+          m_Value1: 9392350260424776828
+        Name: Target
+        IsExposed: 1
+        m_IsShared: 1
+        m_Value: {fileID: 0}
+    - rid: 8686587429936694214
+      type: {class: 'TypedVariableModel`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 12587986501895752480
+          m_Value1: 11222802253450955889
+        Name: Animator
+        IsExposed: 1
+        m_IsShared: 1
+        m_Value: {fileID: 0}
+--- !u!114 &6815620244971695472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c02bb70996b49eba31d0c206e28da24, type: 3}
+  m_Name: CommonTrain
+  m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.RuntimeBlackboardAsset
+  VersionTimestamp: 639115287675570450
+  AssetID:
+    m_Value0: 11500748424279073144
+    m_Value1: 15485685214838138744
+  m_Blackboard:
+    m_Variables:
+    - rid: 8686587429936693590
+    - rid: 8686587429936693990
+    - rid: 8686587429936694215
+  m_SharedBlackboardVariableGuids:
+  - m_Value0: 2524699956049512705
+    m_Value1: 3501786535219407990
+  - m_Value0: 9518190616963037633
+    m_Value1: 9392350260424776828
+  - m_Value0: 12587986501895752480
+    m_Value1: 11222802253450955889
+  references:
+    version: 2
+    RefIds:
+    - rid: 8686587429936693590
+      type: {class: 'BlackboardVariable`1[[TrainBossScriptableObject, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 2524699956049512705
+          m_Value1: 3501786535219407990
+        Name: TrainScriptableObject
+        m_Value: {fileID: 11400000, guid: 67be3fb3c14da5b42ad741eb99b627a7, type: 2}
+    - rid: 8686587429936693990
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Transform, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 9518190616963037633
+          m_Value1: 9392350260424776828
+        Name: Target
+        m_Value: {fileID: 0}
+    - rid: 8686587429936694215
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 12587986501895752480
+          m_Value1: 11222802253450955889
+        Name: Animator
+        m_Value: {fileID: 0}

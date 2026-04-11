@@ -38,7 +38,8 @@ public class AndarozRoom : BossRoomManager
         }
         else
         {
-            LevelManager.instance.CurrentScene.enemyContainer.GetComponent<Andaroz>().StartBossFight();
+            LevelManager.instance.EnablePlayerInput();
+            //LevelManager.instance.CurrentScene.enemyContainer.GetComponent<NewAnderoz>().StartBossFight();
         }
     }
 

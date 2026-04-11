@@ -6,7 +6,7 @@ public class TrainBossManager : BossRoomManager
     [Header("Enter Cutscene")]
     public Transform cutsceneFocusPoint;
     public Transform enemiesGoToPoint;
-    public TrainBoss boss;
+    //public TrainBoss boss;
 
     private Animator roomAnimator;
     private Player player;
@@ -43,7 +43,7 @@ public class TrainBossManager : BossRoomManager
         CameraShake.instance.restoreCamPosAfterShake = false;
 
 
-        if (boss) boss.enabled = false;
+        //if (boss) boss.enabled = false;
 
         StartCoroutine(nameof(StartCutscene));
     }
@@ -164,7 +164,7 @@ public class TrainBossManager : BossRoomManager
         LevelManager.instance.EnablePlayerInput();
         CameraShake.instance.restoreCamPosAfterShake = true;
 
-        boss.enabled = true;
+        //boss.enabled = true;
     }
 
 

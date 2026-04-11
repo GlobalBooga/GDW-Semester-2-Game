@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2866174601983034054}
   - component: {fileID: 609913262914422396}
   - component: {fileID: 177371849153530730}
-  - component: {fileID: 5216627657541005897}
+  - component: {fileID: 3942893608638445211}
   m_Layer: 18
   m_Name: Pillar
   m_TagString: Untagged
@@ -183,7 +183,7 @@ MonoBehaviour:
   hp: {fileID: 609913262914422396}
   respawn: 0
   respawnDelay: 0
---- !u!114 &5216627657541005897
+--- !u!114 &3942893608638445211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -192,16 +192,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2866174601983034059}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
-  m_SerializedVersion: 0
+  m_EditorClassIdentifier: NavMeshPlus::NavMeshPlus.Components.NavMeshModifier
   m_OverrideArea: 1
   m_Area: 1
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
   m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
 --- !u!1001 &6576980591437631839
 PrefabInstance:

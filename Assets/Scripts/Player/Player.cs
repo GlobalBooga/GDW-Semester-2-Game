@@ -140,6 +140,7 @@ public class Player : MonoBehaviour
             gameData.weaponID = weapon.GetID();
             LevelManager.instance.Save(gameData);
         }
+        
     }
 
     private void Update()

@@ -1,0 +1,1 @@
+All of the work for the final project (AI System Re-Implementation) is in this branch. All of the code and behaviour trees are under Assets/BehaviourTrees/. The boss that works is named Anderoz so look for assets in /NewAnderoz.
